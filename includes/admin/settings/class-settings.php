@@ -437,9 +437,9 @@ class Affiliate_WP_Settings {
 			$referral_pretty_urls_desc .= '<p>' . __( 'Note: Pretty affiliate URLs may not always work as expected when using AffiliateWP in combination with WooCommerce and Polylang.', 'affiliate-wp' ) . '</p>';
 		}
 
-		$coupon_templates = affwp_get_coupon_templates();
-		$coupon_admin     = new AffWP_Coupons_Admin;
-		$coupons_form     = $coupon_admin->coupons_form();
+		$coupon_templates  = affwp_get_coupon_templates();
+		$coupons_admin     = new AffWP_Coupons_Admin;
+		$coupons_form      = $coupons_admin->coupons_form();
 
 		$settings = array(
 			/**

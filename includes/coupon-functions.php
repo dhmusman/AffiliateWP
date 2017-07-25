@@ -555,6 +555,11 @@ function affwp_generate_integration_coupon( $args = array() ) {
 
 	$integration_data = call_user_func( 'affwp_generate_integration_coupon_' . $args[ 'integration' ], $args );
 
+	if ( affiliate_wp()->settings->get( 'debug_mode' ) ) {
+		error_log( 'Integration coupon data: '. print_r( $integration_data, true ) );
+		affiliate_wp()->utils->log( 'Integration coupon data: '. print_r( $integration_data, true ) );
+	}
+
 	if ( ! $integration_data || empty( $integration_data ) ) {
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: Could not generate integration coupon via dynamic caller.' );
 		return false;

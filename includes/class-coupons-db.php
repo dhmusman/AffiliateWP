@@ -86,7 +86,8 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 			'integration'           => '%s',
 			'owner'                 => '%d',
 			'status'                => '%s',
-			'expiration_date'       => '%s'
+			'expiration_date'       => '%s',
+			'is_template'           => '%d'
 		);
 	}
 
@@ -102,7 +103,8 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 			'coupon_id'             => 0,
 			'owner'                 => 0,
 			'status'                => 'active',
-			'expiration_date'       => date( 'Y-m-d H:i:s' )
+			'expiration_date'       => date( 'Y-m-d H:i:s' ),
+			'is_template'           => 0
 		);
 	}
 
@@ -135,6 +137,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 			'integration'           => '',
 			'owner'                 => get_current_user_id(),
 			'status'                => 'active',
+			'is_template'           => '%d'
 		) );
 
 		$args['affiliate_id'] = absint( $args['affiliate_id'] );
@@ -162,6 +165,10 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 			$args['referrals'] = (array) absint( $args['referrals'] );
 		}
 
+		if ( $args[ 'integration_coupon_id' ] === affwp_get_coupon_template_id( $args[ 'integration' ] ) ) {
+			$args['is_template'] = true;
+		}
+
 		$referrals = array();
 
 		foreach ( $args['referrals'] as $referral_id ) {
@@ -173,11 +180,8 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 			}
 		}
 
-		$args['referrals'] = implode( ',', $referrals );
-
-		if ( ! empty( $args['integration'] ) ) {
-			$args['integration'] = sanitize_key( $args['integration'] );
-		}
+		$args['referrals']   = implode( ',', $referrals );
+		$args['integration'] = sanitize_key( $args['integration'] );
 
 		if ( $add = $this->insert( $args, 'coupon' ) ) {
 			/**
@@ -296,6 +300,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 			'owner'                 => '',
 			'status'                => '',
 			'expiration_date'       => '',
+			'is_template'           => false,
 			'order'                 => 'DESC',
 			'orderby'               => 'coupon_id',
 			'fields'                => '',
@@ -571,7 +576,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 		}
 
 		/**
-		 * Filters the coupon template URL for the given integration.
+		 * Filters the coupon URL for the given integration.
 		 *
 		 * @since 2.1
 		 *
@@ -744,21 +749,29 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 		 * @param array $available  Array of currently-enabled integrations which have coupon support.
 		 * @since 2.1
 		 */
-		return apply_filters( 'affwp_integrations', $available );
-
+		return apply_filters( 'affwp_coupon_integrations', $available );
 	}
 
 
+	/**
+	 * Echoes the output of get_coupon_templates.
+	 * If no coupon templates are defined for any integrations, echoes a notice.
+	 *
+	 * @since  2.2
+	 *
+	 * @return void
+	 */
 	public function coupon_templates() {
 		$templates = $this->get_coupon_templates();
+		$notice    = __( 'No coupon templates were found.', 'affiliate-wp' );
 
 		if ( empty( $templates ) ) {
-			affiliate_wp()->utils->log( 'No coupon templates were found.' );
-			return false;
+			affiliate_wp()->utils->log( $notice );
 		}
 
-		echo $templates;
+		echo ! empty( $templates ) ? $templates : $notice;
 	}
+
 	/**
 	 * Returns a list of integrations which are currently-enabled, have coupon support,
 	 * and have a coupon template presently set.
@@ -805,6 +818,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 			status tinytext NOT NULL,
 			coupon_code tinytext NOT NULL,
 			expiration_date datetime NOT NULL,
+			is_template bigint(20) NOT NULL,
 			PRIMARY KEY  (coupon_id),
 			KEY coupon_id (coupon_id)
 			) CHARACTER SET utf8 COLLATE utf8_general_ci;";
@@ -813,5 +827,4 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
-
 }

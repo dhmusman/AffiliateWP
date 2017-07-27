@@ -2,14 +2,14 @@
 /**
  * Coupon functions
  *
- * @since 2.1
+ * @since 2.2
  * @package Affiliate_WP
  */
 
 /**
  * Retrieves a coupon object.
  *
- * @since 2.1
+ * @since 2.2
  *
  * @param int|AffWP\Affiliate\Coupon $coupon Coupon ID or object.
  * @return AffWP\Affiliate\Coupon|false Coupon object if found, otherwise false.
@@ -34,7 +34,7 @@ function affwp_get_coupon( $coupon = 0 ) {
  * For methods which generate coupons for integrations,
  * see `affwp_add_integration_coupon`.
  *
- * @since 2.1
+ * @since 2.2
  *
  * @param array $args {
  *     Arguments for adding a new coupon record. Default empty array.
@@ -53,7 +53,7 @@ function affwp_add_coupon( $args = array() ) {
 		/**
 		 * Fires immediately after a coupon has been added.
 		 *
-		 * @since 2.1
+		 * @since 2.2
 		 *
 		 * @param int $coupon ID of the newly-added coupon.
 		 */
@@ -67,7 +67,7 @@ function affwp_add_coupon( $args = array() ) {
 /**
  * Deletes a coupon.
  *
- * @since 2.1
+ * @since 2.2
  *
  * @param int|\AffWP\Affiliate\Coupon $coupon_id  AffiliateWP coupon ID or object.
  * @return bool True if the coupon was successfully deleted, otherwise false.
@@ -81,7 +81,7 @@ function affwp_delete_coupon( $coupon ) {
 		/**
 		 * Fires immediately after a coupon has been deleted.
 		 *
-		 * @since 2.1
+		 * @since 2.2
 		 *
 		 * @param int $coupon_id Core coupon ID.
 		 */
@@ -96,7 +96,7 @@ function affwp_delete_coupon( $coupon ) {
 /**
  * Retrieves all coupons associated with a specified affiliate.
  *
- * @since 2.1
+ * @since 2.2
  *
  * @param int $affiliate_id Affiliate ID.
  * @return array An array of coupon objects associated with the affiliate.
@@ -113,7 +113,7 @@ function affwp_get_affiliate_coupons( $affiliate_id ) {
 	/**
 	 * Returns coupon objects filtered by a provided affiliate ID.
 	 *
-	 * @since 2.1
+	 * @since 2.2
 	 *
 	 * @param array $coupons      Affiliate coupons.
 	 * @param int   $affiliate_id Affiliate ID.
@@ -127,7 +127,7 @@ function affwp_get_affiliate_coupons( $affiliate_id ) {
  *
  * @param int|AffWP\Affiliate\Coupon $coupon Coupon ID or object.
  * @return string|false The localized version of the coupon status label, otherwise false.
- * @since 2.1
+ * @since 2.2
  */
 function affwp_get_coupon_status_label( $coupon ) {
 
@@ -145,7 +145,7 @@ function affwp_get_coupon_status_label( $coupon ) {
 	/**
 	 * Filters the coupon status label.
 	 *
-	 * @since 2.1
+	 * @since 2.2
 	 *
 	 * @param string                 $label  A localized version of the coupon status label.
 	 * @param AffWP\Affiliate\Coupon $coupon Coupon object.
@@ -159,7 +159,7 @@ function affwp_get_coupon_status_label( $coupon ) {
  * @param  int         $integration_coupon_id  Integration coupon ID.
  * @return array|false                         List of referral objects associated with the coupon,
  *                                             otherwise false.
- * @since  2.1
+ * @since  2.2
  */
 function affwp_get_coupon_referrals( $integration_coupon_id = 0, $integration = '' ) {
 
@@ -177,7 +177,7 @@ function affwp_get_coupon_referrals( $integration_coupon_id = 0, $integration = 
 /**
  * Retrieves an array of coupon IDs based on the specified AffiliateWP integration and affiliate ID.
  *
- * @since 2.1
+ * @since 2.2
  *
  * @param array $args {
  *     Arguments for retrieving coupons by integration.
@@ -257,7 +257,7 @@ function affwp_get_coupons_by_integration( $args ) {
 /**
  * Returns an array of inegrations which support coupons.
  *
- * @since  2.1
+ * @since  2.2
  *
  * @return array Array of integrations.
  */
@@ -267,7 +267,7 @@ function affwp_has_coupon_support_list() {
 	 * An array of integration which support coupons.
 	 *
 	 * @param array $list Array of integrations which support coupons.
-	 * @since 2.1
+	 * @since 2.2
 	 */
 	return apply_filters( 'affwp_has_coupon_support_list', array(
 			'edd'          => 'Easy Digital Downloads',
@@ -290,7 +290,7 @@ function affwp_has_coupon_support_list() {
  *
  * @param  string  $integration The integration to check.
  * @return bool                 Returns true if the integration is supported, otherwise false.
- * @since  2.1
+ * @since  2.2
  */
 function affwp_has_coupon_support( $integration ) {
 
@@ -312,7 +312,7 @@ function affwp_has_coupon_support( $integration ) {
 	 * An array of coupon-supporting integrations in AffiliateWP core are provided by
 	 * `$supported` for reference.
 	 *
-	 * @since 2.1
+	 * @since 2.2
 	 *
 	 * @param bool   $has_support True if the given integration has support, otherwise false.
 	 * @param string $integration Integration being checked.
@@ -326,7 +326,7 @@ function affwp_has_coupon_support( $integration ) {
  *
  * @param  string $integration The integration.
  * @return int    The coupon template ID if set, otherwise returns 0.
- * @since  2.1
+ * @since  2.2
  */
 function affwp_get_coupon_template_id( $integration ) {
 	return affiliate_wp()->affiliates->coupons->get_coupon_template_id( $integration );
@@ -335,7 +335,7 @@ function affwp_get_coupon_template_id( $integration ) {
 /**
  * Retrieves the coupon template URL for the given integration coupon ID and integration.
  *
- * @since 2.1
+ * @since 2.2
  *
  * @param int    $integration_coupon_id The integration coupon ID.
  * @param string $integration           Integration.
@@ -348,15 +348,15 @@ function affwp_get_coupon_edit_url( $integration_coupon_id, $integration_id ) {
 /**
  * Retrieves a list of active integrations with both coupon support and a selected coupon template.
  *
- * @since  2.1
+ * @since  2.2
  *
- * @return string $output Formatted list of integration coupon templates, otherwise an error message.
+ * @return string $output Formatted list of integration coupon templates, otherwise a notice.
  */
 function affwp_get_coupon_templates() {
 
-	$integrations       = affiliate_wp()->integrations->get_enabled_integrations();
-	$integration_output = array();
-	$output             = '';
+	$integrations        = affiliate_wp()->integrations->get_enabled_integrations();
+	$integrations_output = array();
+	$output              = false;
 
 	if ( ! empty( $integrations ) ) {
 
@@ -373,12 +373,12 @@ function affwp_get_coupon_templates() {
 				} else {
 					$template_url = affiliate_wp()->affiliates->coupons->get_coupon_edit_url( $template_id, $integration_id );
 
-					$integration_output[] = sprintf( '<li data-integration="%1$s">%2$s: %3$s</li>',
+					$integrations_output[] = sprintf( '<li data-integration="%1$s">%2$s: %3$s</li>',
 						esc_html( $integration_id ),
 						esc_html( $integration_term ),
 						sprintf( '<a href="%1$s">View coupon (ID %2$s)</a>',
-							esc_url( $template_url ),
-							esc_html( $template_id )
+						esc_url( $template_url ),
+						esc_html( $template_id )
 						)
 					);
 				}
@@ -386,17 +386,17 @@ function affwp_get_coupon_templates() {
 		}
 	}
 
-	if ( ! empty( $integration_output ) ) {
+	if ( ! empty( $integrations_output ) ) {
 		$output = '<ul class="affwp-coupon-template-list">';
 
-		foreach ( $integration_output as $item_output ) {
-			$output .= $item_output;
+		foreach ( $integrations_output as $integration_output ) {
+			$output .= $integration_output;
 		}
 
 		$output .= '</ul>';
 	}
 
-	return $output ? $output : __( 'No coupon templates have been selected for any active AffiliateWP integrations.', 'affiliate-wp' );
+	return $output ? $output : __( 'No coupon templates have been defined for any active AffiliateWP integrations.', 'affiliate-wp' );
 
 }
 
@@ -406,7 +406,7 @@ function affwp_get_coupon_templates() {
  *
  * The affiliate ID is used optionally in cases where data may be passed to the integration.
  *
- * @since  2.1
+ * @since  2.2
  *
  * @param  string  $integration   The integration.
  * @param  int     $affiliate_id  Affiliate ID.
@@ -448,24 +448,24 @@ function affwp_get_coupon_create_url( $integration, $affiliate_id = 0, $html = f
 	return $url;
 }
 
-/**
- * Integration-specific coupon functions.
- *
- * @since 2.1
- */
+// function affwp_get_coupon_code( $args = array() ) {
+
+// 	$args[ 'integration' ]
+// 	$args[ 'integration_coupon_id' ]
+// 	$args[ 'coupon_id' ]
+// }
 
 /**
  * Generates a unique coupon code string, used when generating an integration coupon.
  *
  * @param  integer            $affiliate_id  Affiliate ID.
- * @param  string             $integration  Integration.
- * @param  bool               $auto         Whether or not this is an auto-generated process.
- *                                          Default is false.
+ * @param  string             $integration   Integration.
+ * @param  string             $base          The base coupon code string.
  *
- * @return mixed array|false  $coupon       Coupon code string if successful, otherwise returns false.
- * @since  2.1
+ * @return mixed array|false  $coupon        Coupon code string if successful, otherwise returns false.
+ * @since  2.2
  */
-function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $auto = false ) {
+function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base = '' ) {
 
 	$coupon_code = false;
 
@@ -474,33 +474,50 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $auto
 		return false;
 	}
 
-	$template_id = affwp_get_coupon_template_id( $integration );
-	$user_login  = affwp_get_affiliate_login( $affiliate_id ) ? affwp_get_affiliate_login( $affiliate_id ) : '';
+	// Define coupon code base.
+	if ( empty( $base ) ) {
+
+		// Generate a base coupon code from the existing coupon template, for the provided integration.
+		$template = affiliate_wp()->affiliates->coupons->get_coupons( array(
+				'integration' => $integration,
+				'is_template' => true,
+				'number'      => 1,
+
+			)
+		);
+
+		$base = sanitize_text_field( $template->coupon_code );
+
+		// Get the coupon template
+		$template_id = affwp_get_coupon_template_id( $integration );
+
+	}
 
 	/**
-	 * Uses the following data to build a coupon code:
+	 * If no existing coupon code is defined for the integration coupon template,
+	 * this statement uses the following data to build a new coupon code:
+	 *
 	 * - `affiliate_id`
 	 * - `user_login`
 	 * - Integration name, eg `edd` or `woocommerce`
 	 * - The integration coupon template ID
 	 */
-	if ( $template_id && $user_login ) {
-		// Given the following data:
-		// affiliate_id = 1
-		// user_login = `alf`
-		// integration = woocommerce
-		// template ID = 123
-		//
-		// The generated coupon code would be:
-		//
-		// 1-893f53c159eab9178ab181bad8da4262-woocommerce-123
-		$coupon_code = $affiliate_id . '-' . md5( $user_login ) . '-' . $integration . '-' . $template_id;
-	} elseif ( $template_id ) {
-		// Get the affiliate user name, since the user_login is not available.
-		$name = affwp_get_affiliate_name( $affiliate_id );
-		$coupon_code = $affiliate_id . '-' . md5( $name ) . '-' . $integration . '-' . $template_id;
+	if ( ! empty( $base ) ) {
+
+		/**
+		 * Given the following data:
+		 *
+		 * base         = base_example
+		 * affiliate_id = 1
+		 * user_login   = alfalferson
+		 *
+		 * The generated coupon code would be:
+		 *
+		 * base_example-1-alfalferson
+		 */
+		$coupon_code = $base . '-' . $affiliate_id . '-' . affwp_get_affiliate_login( $affiliate_id );
 	} else {
-		// Bail, since the coupon template is not available for this integration.
+		// The coupon template is not available for this integration.
 		affiliate_wp()->utils->log( 'affwp_generate_coupon_code: Unable to determine coupon template ID when generating coupon code for ' . $integration . '. Make sure to set the coupon template for this integration.' );
 	}
 
@@ -508,10 +525,10 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $auto
 	 * Sets the coupon code when generating a coupon for a supported integration.
 	 *
 	 * Specify a string to use for the coupon code,
-	 * ensuring that the strings formatting is supported by the integration's coupon code sanitization.
+	 * ensuring that the formatting is supported by the integrations coupon code sanitization.
 	 *
 	 * @param mixed string|false $coupon_code The generated coupon code string, otherwise returns false.
-	 * @since 2.1
+	 * @since 2.2
 	 */
 	return apply_filters( 'affwp_generate_coupon_code', $coupon_code );
 }
@@ -610,7 +627,7 @@ function affwp_generate_integration_coupon( $args = array() ) {
  *
  * @return mixed array|false  $coupon  Array of coupon data if successful, otherwise returns false.
  * @see    affwp_generate_integration_coupon
- * @since  2.1
+ * @since  2.2
  */
 function affwp_generate_integration_coupon_edd( $args = array() ) {
 

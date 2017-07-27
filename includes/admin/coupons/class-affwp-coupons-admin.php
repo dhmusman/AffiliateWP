@@ -45,49 +45,21 @@ class AffWP_Coupons_Admin {
 	 * @return void
 	 */
 	public function coupons_form() {
-		$to_generate = array();
 
-		$all = false; ?>
+		$output      = '';
+		$submit_text = __( 'Generate coupons', 'affiliate-wp' );
 
-		<p>
-			<strong>
-				<?php echo __( 'Create affiliate coupons:', 'affiliate-wp' ); ?>
-			</strong>
-		</p>
-		<form method="post" enctype="multipart/form-data" class="affwp-batch-form" data-batch_id="generate-coupons" data-nonce="<?php echo esc_attr( wp_create_nonce( 'generate-coupons_step_nonce' ) ); ?>">
+		$output .= '<form method="post" enctype="multipart/form-data" class="affwp-batch-form" data-batch_id="generate-coupons" data-nonce="' . esc_attr( wp_create_nonce( 'generate-coupons_step_nonce' ) ) . '">';
 
-			<select name="coupon_integration" id="coupon_integration">
+		$output .= get_submit_button( $submit_text, 'secondary', 'generate-coupons-submit', false );
 
-				<option value="<?php echo $all; ?>" <?php selected( $all, $all ); ?>><?php _e( 'Create a coupon for all integrations listed', 'affiliate-wp' ); ?></option>
-			<?php
-			$to_generate = affiliate_wp()->settings->get( 'coupon_integrations' );
+		$output .= '</form>';
 
-			foreach ( $integrations as $integration ) {
+		$output .= '<p class="description">';
+		$output .= __( 'AffiliateWP integrations which are active and currently have coupon support will be shown in the dropdown select above. To create a coupon for a specific integration for this affiliate, select the desired integration and click Create Coupon. You can also optionally set the desired coupon code, or create coupons for this affiliate for every integration listed at once, by selecting "Create a coupon for all integrations listed" in the dropdown select above.', 'affiliate-wp' );
+		$output .= '</p>';
 
-				if ( affwp_has_coupon_support( $integration ) ) { ?>
-
-					<option value="<?php echo $integration; ?>" <?php selected( $integration, $integration_id ); ?>><?php echo $integration_term; ?></option>
-
-				<?php }
-
-			}
-		?>
-			</select>
-
-			<input type="text" id="coupon_code" name="coupon_code" size="24" value="" placeholder="<?php _e( 'Coupon code (optional)', 'affiliate-wp' ); ?>" />
-
-			<?php
-
-			$submit_text = __( 'Create Coupon(s)', 'A submit button which will trigger the creation of one or more affiliate coupons. This element is shown on the affiliate edit and new screens, ', 'affiliate-wp' );
-
-			submit_button( $submit_text, 'secondary', 'generate-coupons-submit', false ); ?>
-
-		</form>
-
-		<p class="description">
-			<?php _e( 'AffiliateWP integrations which are active and currently have coupon support will be shown in the dropdown select above. To create a coupon for a specific integration for this affiliate, select the desired integration and click Create Coupon. You can also optionally set the desired coupon code, or create coupons for this affiliate for every integration listed at once, by selecting "Create a coupon for all integrations listed" in the dropdown select above.', 'affiliate-wp' ); ?>
-		</p>
-<?php
+		return $output;
 	}
 
 	/**

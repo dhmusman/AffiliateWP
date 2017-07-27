@@ -7,7 +7,7 @@ use AffWP\Utils\Batch_Process as Batch;
 /**
  * Implements a batch processor for generating coupons logs and exporting them to a CSV file.
  *
- * @since 2.1
+ * @since 2.2
  *
  * @see \AffWP\Utils\Batch_Process
  * @see \AffWP\Utils\Batch_Process\With_PreFetch
@@ -18,7 +18,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * Batch process ID.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 * @var    string
 	 */
 	public $batch_id = 'generate-coupons';
@@ -27,7 +27,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * Capability needed to perform the current export.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 * @var    string
 	 */
 	public $capability = 'manage_coupons';
@@ -36,7 +36,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * The number of coupons to generate in each step.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 * @var    int
 	 */
 	public $per_step = 20;
@@ -45,7 +45,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * Integration the affiliate coupons will be generated for.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 * @var    string
 	 */
 	public $integration = '';
@@ -54,10 +54,10 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * ID for the integration coupon template.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 * @var    int
 	 */
-	public $integration_coupon_id = 0;
+	public $template_id = 0;
 
 	/**
 	 * Initializes the batch process.
@@ -66,7 +66,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * and it only runs on the first step.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param null|array $data Optional. Submitted form data to use for prefetching – and ultimately for
 	 *                         use by subsequent steps. Default null.
@@ -79,8 +79,8 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 				$this->integration = sanitize_key( $data['integration'] );
 			}
 
-			if ( ! empty( $data['integration_coupon_id'] ) ) {
-				$this->integration_coupon_id = absint( $data['integration_coupon_id'] );
+			if ( ! empty( $data['template_id'] ) ) {
+				$this->template_id = absint( $data['template_id'] );
 			}
 
 		}
@@ -91,7 +91,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * Pre-fetches data to speed up processing.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 */
 	public function pre_fetch() {
 		$total_affiliates = affiliate_wp()->affiliates->count( array(
@@ -105,10 +105,10 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * Processes a single step for generating affiliate coupons.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 */
 	public function process_step() {
-		if ( ! $this->integration || ! $this->integration_coupon_id ) {
+		if ( ! $this->integration || ! $this->template_id ) {
 			return new \WP_Error(
 				'missing_integration_data',
 				__( 'The integration and coupon template must be defined to generate affiliate coupons.', 'affiliate-wp' )
@@ -129,22 +129,28 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 			return 'done';
 		}
 
-		$generated   = array();
-		$to_generate = affiliate_wp()->settings->get( 'coupon_integrations' );
+		$generated    = array();
+		$integrations = affiliate_wp()->settings->get( 'coupon_integrations' );
 
 		foreach ( $affiliate_ids as $affiliate_id ) {
-			$args = array(
-				'affiliate_id'          => $affiliate_id,
-				'integration'           => $this->integration,
-				'integration_coupon_id' => $this->integration_coupon_id
-			);
 
-			if ( affwp_generate_integration_coupon( $args ) ) {
-				$added = affwp_add_coupon( $args );
-			}
+			foreach ( $integrations as $integration ) {
+				$args = array(
+					'affiliate_id' => $affiliate_id,
+					'integration'  => $this->integration,
+					'template_id'  => $this->template_id
+				);
 
-			if ( $added ) {
-				$generated[] = $added;
+				// Generate an integration coupon
+				if ( affwp_generate_integration_coupon( $args ) ) {
+
+					// If successful, generate an internal AffiliateWP coupon object.
+					$added = affwp_add_coupon( $args );
+				}
+
+				if ( $added ) {
+					$generated[] = $added;
+				}
 			}
 		}
 
@@ -157,7 +163,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * Retrieves a message for the given code.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param string $code Message code.
 	 * @return string Message.

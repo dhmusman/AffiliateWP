@@ -703,10 +703,10 @@ class Affiliate_WP_Settings {
 			 * @param array $settings Array of coupon settings.
 			 * @since 2.2
 			 */
-			'coupons' => apply_filters( 'coupons',
+			'coupons' => apply_filters( 'affwp_settings_coupons',
 				array(
 					'auto_generate_coupons_enabled' => array(
-						'name' => __( 'Automatically generate affiliate coupons', 'affiliate-wp' ),
+						'name' => __( 'Auto-generate coupons', 'affiliate-wp' ),
 						'desc' => __( 'If checked, a coupon will be generated automatically for an affiliate when their affiliate account is registered and approved.', 'affiliate-wp' ),
 						'type' => 'checkbox'
 					),
@@ -724,8 +724,8 @@ class Affiliate_WP_Settings {
 						'options' => affiliate_wp()->affiliates->coupons->get_supported_integrations()
 					),
 					'generate_coupons' => array(
-						'name' => __( 'Generate coupons', 'affiliate-wp' ),
-						'desc' => __( 'Generate coupons for all affiliates without an existing coupon.', 'affiliate-wp' ),
+						'name' => __( 'Generate coupons for existing affiliates', 'affiliate-wp' ),
+						'desc' => __( 'Generate coupons for all existing and active affiliates who do not already have an existing coupon.', 'affiliate-wp' ),
 						'type' => 'display',
 						'std' => $coupons_form,
 						'sanitize_callback' => 'sanitize_text_field'

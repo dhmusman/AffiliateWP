@@ -620,6 +620,14 @@ function affwp_generate_integration_coupon( $args = array() ) {
 		return false;
 	}
 
+	/**
+	 * Fires immediately after an integration coupon is generated.
+	 *
+	 * @param array $integration_data  The generated integration coupon data.
+	 * @since 2.2
+	 */
+	do_action( 'affwp_post_generate_integration_coupon', $integration_data );
+
 	$integration_coupon_id = false;
 
 	// intval will return a 1 for non-empty arrays.

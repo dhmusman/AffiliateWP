@@ -94,16 +94,24 @@ class Regenerate_Coupons extends Generate_Coupons implements Batch\With_PreFetch
 		$generated = array();
 
 		foreach ( $affiliate_ids as $affiliate_id ) {
-			$args = array(
-				'affiliate_id'          => $affiliate_id,
-				'integration'           => $this->integration,
-				'integration_coupon_id' => $this->integration_coupon_id
-			);
 
-			$added = affwp_add_coupon( $args );
+			foreach ( $integrations as $integration ) {
+				$args = array(
+					'affiliate_id' => $affiliate_id,
+					'integration'  => $this->integration,
+					'template_id'  => $this->template_id
+				);
 
-			if ( $added ) {
-				$generated[] = $added;
+				// Generate an integration coupon
+				if ( affwp_generate_integration_coupon( $args ) ) {
+
+					// If successful, generate an internal AffiliateWP coupon object.
+					$added = affwp_add_coupon( $args );
+				}
+
+				if ( $added ) {
+					$generated[] = $added;
+				}
 			}
 		}
 

@@ -493,15 +493,6 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base
 
 	}
 
-	/**
-	 * If no existing coupon code is defined for the integration coupon template,
-	 * this statement uses the following data to build a new coupon code:
-	 *
-	 * - `affiliate_id`
-	 * - `user_login`
-	 * - Integration name, eg `edd` or `woocommerce`
-	 * - The integration coupon template ID
-	 */
 	if ( ! empty( $base ) ) {
 
 		/**
@@ -546,6 +537,7 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base
 function affwp_generate_integration_coupon( $args = array() ) {
 
 	if ( ! isset( $args[ 'integration' ] ) || empty( $args[ 'integration'] ) ) {
+
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: The integration must be specified when attempting to generate a coupon for an integration.' );
 		return false;
 	}

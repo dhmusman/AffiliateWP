@@ -42,13 +42,13 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	public $per_step = 20;
 
 	/**
-	 * Integration the affiliate coupons will be generated for.
+	 * Integrations for which affiliate coupons will be generated.
 	 *
 	 * @access public
 	 * @since  2.2
 	 * @var    string
 	 */
-	public $integration = '';
+	public $integrations = array();
 
 	/**
 	 * ID for the integration coupon template.
@@ -75,8 +75,11 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 
 		if ( null !== $data ) {
 
-			if ( ! empty( $data['integration'] ) ) {
-				$this->integration = sanitize_key( $data['integration'] );
+			if ( ! empty( $data['integrations'] ) ) {
+				$this->integrations = ! empty( $data['integrations'] ) ? (array) $data['integrations'] : array();
+				$this->integrations = array_map( 'esc_attr', $this->integrations );
+			} else {
+				$this->integrations = affiliate_wp()->settings->get( 'coupon_integrations' );
 			}
 
 			if ( ! empty( $data['template_id'] ) ) {
@@ -98,6 +101,8 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 			'status' => 'active'
 		) );
 
+
+
 		$this->set_total_count( $total_affiliates );
 	}
 
@@ -108,7 +113,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * @since  2.2
 	 */
 	public function process_step() {
-		if ( ! $this->integration || ! $this->template_id ) {
+		if ( ! $this->integrations || ! $this->template_id ) {
 			return new \WP_Error(
 				'missing_integration_data',
 				__( 'The integration and coupon template must be defined to generate affiliate coupons.', 'affiliate-wp' )
@@ -130,22 +135,23 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 		}
 
 		$generated    = array();
-		$integrations = affiliate_wp()->settings->get( 'coupon_integrations' );
+		$integrations = $this->integrations;
 
 		foreach ( $affiliate_ids as $affiliate_id ) {
 
 			foreach ( $integrations as $integration ) {
 				$args = array(
 					'affiliate_id' => $affiliate_id,
-					'integration'  => $this->integration,
-					'template_id'  => $this->template_id
+					'integration'  => $integration,
+					'template_id'  => affwp_get_coupon_template_id( $integration )
 				);
 
 				// Generate an integration coupon
 				if ( affwp_generate_integration_coupon( $args ) ) {
-
 					// If successful, generate an internal AffiliateWP coupon object.
 					$added = affwp_add_coupon( $args );
+				} else {
+					affiliate_wp()->utils->log( 'Unable to generate integration coupon during batch process. Provided data: ' . print_r( $args, true ) );
 				}
 
 				if ( $added ) {

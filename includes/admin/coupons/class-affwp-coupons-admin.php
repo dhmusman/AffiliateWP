@@ -46,6 +46,8 @@ class AffWP_Coupons_Admin {
 	 */
 	public function coupons_form() {
 
+		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/coupons/class-batch-generate-coupons.php';
+
 		$output      = '';
 		$submit_text = __( 'Generate coupons', 'affiliate-wp' );
 

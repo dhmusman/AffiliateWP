@@ -36,35 +36,6 @@ class AffWP_Coupons_Admin {
 	}
 
 	/**
-	 * Renders create coupons UI on affiliate edit and new screens.
-	 *
-	 * @since  2.2
-	 *
-	 * @param  integer $affiliate_id Affiliate ID.
-	 *
-	 * @return void
-	 */
-	public function coupons_form() {
-
-		// require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/coupons/class-batch-generate-coupons.php';
-
-		$output      = '';
-		$submit_text = __( 'Generate coupons', 'affiliate-wp' );
-
-		$output .= '<form method="post" enctype="multipart/form-data" class="affwp-batch-form" data-batch_id="generate-coupons" data-nonce="' . esc_attr( wp_create_nonce( 'generate-coupons_step_nonce' ) ) . '">';
-
-		$output .= get_submit_button( $submit_text, 'secondary', 'generate-coupons-submit', false );
-
-		$output .= '</form>';
-
-		$output .= '<p class="description">';
-		$output .= __( 'AffiliateWP integrations which are active and currently have coupon support will be shown in the dropdown select above. To create a coupon for a specific integration for this affiliate, select the desired integration and click Create Coupon. You can also optionally set the desired coupon code, or create coupons for this affiliate for every integration listed at once, by selecting "Create a coupon for all integrations listed" in the dropdown select above.', 'affiliate-wp' );
-		$output .= '</p>';
-
-		return $output;
-	}
-
-	/**
 	 * Renders the coupons table on affiliate edit and new screens.
 	 *
 	 * @since  2.2

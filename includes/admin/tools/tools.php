@@ -205,7 +205,7 @@ function affwp_coupons_tab() {
 						<h4><span><?php esc_html_e( 'Select Integrations', 'affiliate-wp' ); ?></span></h4>
 						<?php foreach ( $integrations as $integration => $term ) : ?>
 							<label>
-								<input type="checkbox" name="integrations[]" value="<?php echo esc_attr( $integration ); ?>" <?php checked( $integration ); disabled( $integration ) ?>>
+								<input type="checkbox" name="integrations[]" value="<?php echo esc_attr( $integration ); ?>" <?php checked( $integration ); disabled( ! $integration ) ?>>
 								<span class="label"><?php echo esc_html( $term ); ?></span>
 							</label>
 							<br>

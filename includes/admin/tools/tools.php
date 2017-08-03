@@ -32,6 +32,11 @@ require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/tools/export/class-export-
 require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/tools/export/class-export-settings.php';
 require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/tools/import/class-import-settings.php';
 
+require_once AFFILIATEWP_PLUGIN_DIR . 'includes/interfaces/interface-batch-process.php';
+require_once AFFILIATEWP_PLUGIN_DIR . 'includes/interfaces/interface-batch-process-with-prefetch.php';
+require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/utilities/class-batch-process.php';
+require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/coupons/class-batch-generate-coupons.php';
+
 /**
  * Options Page
  *
@@ -89,6 +94,7 @@ function affwp_get_tools_tabs() {
 
 	$tabs['recount']       = __( 'Recount Stats', 'affiliate-wp' );
 	$tabs['migration']     = __( 'Migration Assistant', 'affiliate-wp' );
+	$tabs['coupons']       = __( 'Generate Coupons', 'affiliate-wp' );
 
 	if ( current_user_can( 'manage_affiliate_options' ) ) {
 		$tabs['system_info'] = __( 'System Info', 'affiliate-wp' );
@@ -171,6 +177,50 @@ function affwp_recount_tab() {
 <?php
 }
 add_action( 'affwp_tools_tab_recount', 'affwp_recount_tab' );
+
+/**
+ * Generate Coupons tab
+ *
+ * @return void
+ * @since  2.2
+ */
+function affwp_coupons_tab() {
+
+	$integrations = affiliate_wp()->affiliates->coupons->get_supported_integrations();
+?>
+	<div id="affwp-dashboard-widgets-wrap">
+		<div class="metabox-holder">
+			<div class="postbox">
+				<div class="inside">
+					<p><?php esc_html_e( 'This tool will generate affiliate coupons for any active affiliate accounts.', 'affiliate-wp' ); ?></p>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+
+			<div class="postbox">
+				<h3><span><?php esc_html_e( 'Coupons', 'affiliate-wp' ); ?></span></h3>
+				<div class="inside">
+					<p><?php esc_html_e( 'Use this tool to create affiliate accounts for each of your existing WordPress user accounts that belong to the selected roles below.', 'affiliate-wp' ); ?></p>
+					<form method="post" enctype="multipart/form-data" class="affwp-batch-form" data-batch_id="generate-coupons" data-nonce="<?php echo esc_attr( wp_create_nonce( 'generate-coupons_step_nonce' ) ); ?>">
+
+						<h4><span><?php esc_html_e( 'Select Integrations', 'affiliate-wp' ); ?></span></h4>
+						<?php foreach ( $integrations as $integration => $term ) : ?>
+							<label>
+								<input type="checkbox" name="integrations[]" value="<?php echo esc_attr( $integration ); ?>" <?php checked( $integration ); disabled( $integration ) ?>>
+								<span class="label"><?php echo esc_html( $term ); ?></span>
+							</label>
+							<br>
+						<?php endforeach; ?>
+						<p>
+							<input type="submit" value="<?php esc_html_e( 'Create Affiliate Coupons', 'affiliate-wp' ); ?>" class="button" />
+						</p>
+					</form>
+				</div><!-- .inside -->
+			</div><!-- .postbox -->
+		</div><!-- .metabox-holder -->
+	</div><!-- #affwp-dashboard-widgets-wrap -->
+<?php
+}
+add_action( 'affwp_tools_tab_coupons', 'affwp_coupons_tab' );
 
 /**
  * Migration assistant tab

@@ -5,7 +5,7 @@
  * @package   AffiliateWP\Admin\Coupons
  * @copyright Copyright (c) 2017, AffiliateWP, LLC
  * @license   http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since     2.1
+ * @since     2.2
  *
  */
 
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Renders the Coupons table on Affiliate-edit and screens.
  *
- * @since 2.1
+ * @since 2.2
  */
 class AffWP_Coupons_Admin {
 
@@ -25,7 +25,7 @@ class AffWP_Coupons_Admin {
 	 * Coupons table constructor.
 	 *
 	 * @access public
-	 * @since 2.1
+	 * @since 2.2
 	 *
 	 * @see WP_List_Table::__construct()
 	 *
@@ -38,7 +38,7 @@ class AffWP_Coupons_Admin {
 	/**
 	 * Renders create coupons UI on affiliate edit and new screens.
 	 *
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param  integer $affiliate_id Affiliate ID.
 	 *
@@ -46,7 +46,7 @@ class AffWP_Coupons_Admin {
 	 */
 	public function coupons_form() {
 
-		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/coupons/class-batch-generate-coupons.php';
+		// require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/coupons/class-batch-generate-coupons.php';
 
 		$output      = '';
 		$submit_text = __( 'Generate coupons', 'affiliate-wp' );
@@ -67,7 +67,7 @@ class AffWP_Coupons_Admin {
 	/**
 	 * Renders the coupons table on affiliate edit and new screens.
 	 *
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param  integer $affiliate_id Affiliate ID.
 	 *
@@ -93,7 +93,7 @@ class AffWP_Coupons_Admin {
 		/**
 		 * Fires at the top of coupons admin table views.
 		 *
-		 * @since 2.1
+		 * @since 2.2
 		 */
 		do_action( 'affwp_affiliate_coupons_table_top' );
 
@@ -202,7 +202,7 @@ class AffWP_Coupons_Admin {
 		/**
 		 * Fires at the bottom of coupons admin table views.
 		 *
-		 * @since 2.1
+		 * @since 2.2
 		 */
 		do_action( 'affwp_affiliate_coupons_table_bottom' );
 	}

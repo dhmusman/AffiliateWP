@@ -438,8 +438,6 @@ class Affiliate_WP_Settings {
 		}
 
 		$coupon_templates  = affwp_get_coupon_templates();
-		$coupons_admin     = new AffWP_Coupons_Admin;
-		$coupons_form      = $coupons_admin->coupons_form();
 
 		$settings = array(
 			/**
@@ -719,16 +717,10 @@ class Affiliate_WP_Settings {
 					),
 					'coupon_integrations' => array(
 						'name' => __( 'Integrations', 'affiliate-wp' ),
-						'desc' => sprintf( __( 'Choose the integrations to enable for auto-generated coupons. For each integration enabled, a coupon will automatically be generated for all affiliates, when their affiliate account is both registered and approved. Refer to the <a href="%s" target="_blank">documentation</a> for help using this option.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/TODO' ),
+						'desc' => sprintf( __( 'Choose the integrations to enable for auto-generated coupons. For each integration enabled, a coupon will automatically be generated for all affiliates, when their affiliate account is both registered and approved.<br />Refer to the <a href="%1$s" target="_blank">documentation</a> for help using this option.<br/ >Visit the  <a href="%2$s">Tools &rarr; Coupons screen</a> to generate coupons for existing affiliates.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/59-affiliate-coupon-tracking',
+							affwp_admin_url( 'tools', array( 'tab' => 'coupons' ) ) ),
 						'type' => 'multicheck',
 						'options' => affiliate_wp()->affiliates->coupons->get_supported_integrations()
-					),
-					'generate_coupons' => array(
-						'name' => __( 'Generate coupons for existing affiliates', 'affiliate-wp' ),
-						'desc' => __( 'Generate coupons for all existing and active affiliates who do not already have an existing coupon.', 'affiliate-wp' ),
-						'type' => 'display',
-						'std' => $coupons_form,
-						'sanitize_callback' => 'sanitize_text_field'
 					)
 				)
 			),

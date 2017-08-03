@@ -186,7 +186,7 @@ add_action( 'affwp_tools_tab_recount', 'affwp_recount_tab' );
  */
 function affwp_coupons_tab() {
 
-	$integrations = affiliate_wp()->affiliates->coupons->get_supported_integrations();
+	$integrations = affiliate_wp()->settings->get( 'coupon_integrations' );
 ?>
 	<div id="affwp-dashboard-widgets-wrap">
 		<div class="metabox-holder">
@@ -199,17 +199,28 @@ function affwp_coupons_tab() {
 			<div class="postbox">
 				<h3><span><?php esc_html_e( 'Generate Affiliate Coupons', 'affiliate-wp' ); ?></span></h3>
 				<div class="inside">
-					<p><?php esc_html_e( 'Use this tool to generate affiliate coupons for each of your desired integrations below.', 'affiliate-wp' ); ?></p>
+					<p><?php esc_html_e( 'Use this tool to generate affiliate coupons for each of the listed integrations below.', 'affiliate-wp' ); ?></p>
 					<form method="post" enctype="multipart/form-data" class="affwp-batch-form" data-batch_id="generate-coupons" data-nonce="<?php echo esc_attr( wp_create_nonce( 'generate-coupons_step_nonce' ) ); ?>">
 
-						<h4><span><?php esc_html_e( 'Select Integrations', 'affiliate-wp' ); ?></span></h4>
-						<?php foreach ( $integrations as $integration => $term ) : ?>
-							<label>
-								<input type="checkbox" name="integrations[]" value="<?php echo esc_attr( $integration ); ?>" <?php checked( $integration ); disabled( ! $integration ) ?>>
-								<span class="label"><?php echo esc_html( $term ); ?></span>
-							</label>
-							<br>
-						<?php endforeach; ?>
+						<h4><span><?php esc_html_e( 'Integrations', 'affiliate-wp' ); ?></span></h4>
+						<p>
+							<em>
+								<?php
+									$label = __('Settings &rarr; Coupons screen', 'affiliate-wp' );
+									$url   = affwp_admin_url( 'settings', array( 'tab' => 'coupons' ) );
+
+									echo sprintf( 'Affiliate Coupons will be generated only for the integrations listed below. Visit the <a href="%1$s">%2$s</a> to change the enabled integrations for affiliate coupons.', $url, $label );
+								?>
+							</em>
+						</p>
+						<ul>
+							<?php foreach ( $integrations as $integration => $term ) : ?>
+								<li>
+									<?php echo $term; ?>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+
 						<p>
 							<input type="submit" value="<?php esc_html_e( 'Create Affiliate Coupons', 'affiliate-wp' ); ?>" class="button" />
 						</p>

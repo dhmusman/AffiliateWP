@@ -197,9 +197,9 @@ function affwp_coupons_tab() {
 			</div><!-- .postbox -->
 
 			<div class="postbox">
-				<h3><span><?php esc_html_e( 'Coupons', 'affiliate-wp' ); ?></span></h3>
+				<h3><span><?php esc_html_e( 'Generate Affiliate Coupons', 'affiliate-wp' ); ?></span></h3>
 				<div class="inside">
-					<p><?php esc_html_e( 'Use this tool to create affiliate accounts for each of your existing WordPress user accounts that belong to the selected roles below.', 'affiliate-wp' ); ?></p>
+					<p><?php esc_html_e( 'Use this tool to generate affiliate coupons for each of your desired integrations below.', 'affiliate-wp' ); ?></p>
 					<form method="post" enctype="multipart/form-data" class="affwp-batch-form" data-batch_id="generate-coupons" data-nonce="<?php echo esc_attr( wp_create_nonce( 'generate-coupons_step_nonce' ) ); ?>">
 
 						<h4><span><?php esc_html_e( 'Select Integrations', 'affiliate-wp' ); ?></span></h4>

@@ -270,16 +270,16 @@ function affwp_has_coupon_support_list() {
 	 * @since 2.2
 	 */
 	return apply_filters( 'affwp_has_coupon_support_list', array(
+			'woocommerce'  => 'WooCommerce',
 			'edd'          => 'Easy Digital Downloads',
-			'gravityforms' => 'Gravity Forms' ,
 			'exchange'     => 'iThemes Exchange',
-			'jigoshop'     => 'Jigoshop',
-			'lifterlms'    => 'LifterLMS',
-			'memberpress'  => 'MemberPress',
+			'rcp'          => 'Restrict Content Pro',
 			'pmp'          => 'Paid Memberships Pro',
 			'pms'          => 'Paid Member Subscriptions',
-			'rcp'          => 'Restrict Content Pro',
-			'woocommerce'  => 'WooCommerce'
+			'memberpress'  => 'MemberPress',
+			'jigoshop'     => 'Jigoshop',
+			'lifterlms'    => 'LifterLMS',
+			'gravityforms' => 'Gravity Forms'
 
 		)
 	);

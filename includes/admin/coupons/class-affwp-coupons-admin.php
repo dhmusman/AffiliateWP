@@ -48,11 +48,11 @@ class AffWP_Coupons_Admin {
 
 		if ( ! $affiliate_id ) {
 
-			if ( ! isset( $affiliate ) ) {
+			if ( ! isset( $affiliate ) && isset ( $_GET[ 'affiliate_id' ] ) ) {
 				$affiliate  = affwp_get_affiliate( absint( $_GET['affiliate_id'] ) );
 			}
 
-			$affiliate_id = $affiliate->affiliate_id;
+			$affiliate_id = is_object( $affiliate ) ? $affiliate->affiliate_id : $affiliate[ 'affiliate_id' ];
 
 			if ( ! $affiliate_id ) {
 				affiliate_wp()->utils->log( 'Unable to determine affiliate ID in coupons_table method.' );
@@ -96,6 +96,10 @@ class AffWP_Coupons_Admin {
 			</thead>
 			<tbody>
 				<?php
+
+				$coupons = affwp_get_affiliate_coupons( $affiliate_id );
+
+				error_log( 'Coupons for affiliate ID: ' . $affiliate_id . ' ' . print_r( $coupons, true ) );
 
 				$integrations = affiliate_wp()->integrations->get_enabled_integrations();
 

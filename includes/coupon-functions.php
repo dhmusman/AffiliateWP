@@ -291,7 +291,7 @@ function affwp_has_coupon_support_list( $active = false ) {
 		foreach ( $supported_integrations as $supported_integration ) {
 
 			$integrations = affiliate_wp()->integrations->get_enabled_integrations();
-error_log( 'ergerg: '. print_r( $integrations, true ) );
+
 			$has_support  = array_key_exists( $supported_integration, $integrations );
 
 			if ( $has_support ) {
@@ -641,16 +641,17 @@ function affwp_maybe_generate_coupons( $data, $row_id ) {
 	}
 
 	// Get all coupons for this affiliate.
-	$existing_coupons     = affwp_get_affiliate_coupons( $data[ 'affiliate_id' ] );
+	$existing_coupons     = affwp_get_affiliate_coupons( $row_id );
 	$integrations_to_skip = array();
 
+	// Build an array of integration coupons which exist for the given affiliate ID.
 	foreach ( $existing_coupons as $existing_coupon ) {
 		$integrations_to_skip[] = $existing_coupon->integration;
 	}
 
 	/**
 	 * Check active coupon integrations, and compare it against existing coupons for this affiliate.
-	 * If the affiliate is mising any, generate a coupon for that integration.
+	 * If the affiliate is missing any, generate a coupon for that integration.
 	 */
 	$active_supported = affwp_has_coupon_support_list( true );
 	$added            = array();
@@ -660,10 +661,10 @@ function affwp_maybe_generate_coupons( $data, $row_id ) {
 		if ( ! in_array( $integration_to_skip, $active_supported ) ) {
 
 			$args = array(
-				'affiliate_id'          => $data[ 'affiliate_id' ],
-				'coupon_code'           => affwp_generate_coupon_code( $data[ 'affiliate_id' ], $integration ),
+				'affiliate_id'          => $row_id,
+				'coupon_code'           => affwp_generate_coupon_code( $row_id, $integration_to_skip ),
 				'referrals'             => array(),
-				'integration'           => $integration,
+				'integration'           => $integration_to_skip,
 				'owner'                 => get_current_user_id(),
 				'status'                => 'active',
 			);

@@ -209,7 +209,7 @@ function affwp_get_coupons_by_integration( $args ) {
 		return $coupons;
 	}
 
-	if ( affwp_has_coupon_support( $args['integration'] ) ) {
+	if ( affwp_is_active_has_coupon_support( $args['integration'] ) ) {
 		// Cycle through active integrations, and gets all coupons for the given affiliate ID.
 		switch ( $args[ 'integration' ] ) {
 			case 'edd':
@@ -255,21 +255,22 @@ function affwp_get_coupons_by_integration( $args ) {
 }
 
 /**
- * Returns an array of inegrations which support coupons.
+ * Returns an array of integrations which support coupons.
+ *
+ * @param boolean $active  Whether or not to only return active integrations. Default is false.
+ * @return array Array of integrations.
  *
  * @since  2.2
- *
- * @return array Array of integrations.
  */
-function affwp_has_coupon_support_list() {
+function affwp_has_coupon_support_list( $active = false ) {
 
 	/**
-	 * An array of integration which support coupons.
+	 * Array of integrations which support coupons.
 	 *
-	 * @param array $list Array of integrations which support coupons.
+	 * @param array $supported Array of integrations which support coupons.
 	 * @since 2.2
 	 */
-	return apply_filters( 'affwp_has_coupon_support_list', array(
+	$supported_integrations = apply_filters( 'affwp_has_coupon_support_list', array(
 			'woocommerce'  => 'WooCommerce',
 			'edd'          => 'Easy Digital Downloads',
 			'exchange'     => 'iThemes Exchange',
@@ -283,6 +284,23 @@ function affwp_has_coupon_support_list() {
 
 		)
 	);
+
+	$active_supported = array();
+
+	if ( $active ) {
+		foreach ( $supported_integrations as $supported_integration ) {
+
+			$integrations = affiliate_wp()->integrations->get_enabled_integrations();
+error_log( 'ergerg: '. print_r( $integrations, true ) );
+			$has_support  = array_key_exists( $supported_integration, $integrations );
+
+			if ( $has_support ) {
+				$active_supported[] = $supported_integration;
+			}
+		}
+	}
+
+	return $active ? $active_supported : $supported_integrations;
 }
 
 /**
@@ -292,7 +310,7 @@ function affwp_has_coupon_support_list() {
  * @return bool                 Returns true if the integration is supported, otherwise false.
  * @since  2.2
  */
-function affwp_has_coupon_support( $integration ) {
+function affwp_is_active_has_coupon_support( $integration ) {
 
 	if ( empty( $integration ) ) {
 		affiliate_wp()->utils->log( 'An integration must be provided when querying via affwp_has_coupon_support.' );
@@ -364,7 +382,7 @@ function affwp_get_coupon_templates() {
 
 			// Ensure that this integration has both coupon support,
 			// and a coupon template has also been selected.
-			if ( affwp_has_coupon_support( $integration_id ) ) {
+			if ( affwp_is_active_has_coupon_support( $integration_id ) ) {
 
 				$template_id = affiliate_wp()->affiliates->coupons->get_coupon_template_id( $integration_id );
 
@@ -423,7 +441,7 @@ function affwp_get_coupon_create_url( $integration, $affiliate_id = 0, $html = f
 		return false;
 	}
 
-	if ( affwp_has_coupon_support( $integration ) ) {
+	if ( affwp_is_active_has_coupon_support( $integration ) ) {
 
 		$user_name = affwp_get_affiliate_username( $affiliate_id );
 
@@ -571,13 +589,111 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base
 }
 
 /**
+ * Checks whether the affiliate already has an existing coupon for the given integration.
+ *
+ * @since  2.2
+ *
+ * @param  integer $affiliate_id  Affiliate ID.
+ * @param  string  $integration   Integtation to query.
+ *
+ * @return bool                   True if the coupon exists, otherwise false.
+ */
+function affwp_affiliate_has_existing_coupon( $affiliate_id = 0, $integration = '' ) {
+
+	if ( ! $affiliate_id || empty( $integration ) ) {
+		affiliate_wp()->utils->log( 'affwp_affiliate_has_existing_coupon: The affiliate ID and integration must be specified.' );
+		return false;
+	}
+
+	$args = array(
+		'affiliate_id' => $affiliate_id,
+		'number'       => 1,
+		'integration'  => $integration
+	);
+
+	return affiliate_wp()->affiliates->coupons->get_coupons( $args, true );
+}
+
+/**
+ * May generate one or more coupons for an affiliate, if the following conditions are met:
+ * - Some coupon integrations are enabled for which the affiliate does not have coupons generated.
+ * - The required parameters are provided.
+ *
+ * @since  2.2
+
+ * @param  integer $row_id Affiliate ID.
+ * @param  array   $data   Affiliate data.
+ *
+ * @return array   $added  Array of affiliate coupon objects.
+ */
+function affwp_maybe_generate_coupons( $data, $row_id ) {
+
+	$args = array();
+
+	// Bail if the auto-generate coupons setting is not active.
+	if ( ! affiliate_wp()->settings->get( 'auto_generate_coupons_enabled' ) ) {
+		return false;
+	}
+
+	if ( empty( $data ) ) {
+		affiliate_wp()->utils->log( 'affwp_generate_single_coupon: The affiliate ID must be specified.' );
+		return false;
+	}
+
+	// Get all coupons for this affiliate.
+	$existing_coupons     = affwp_get_affiliate_coupons( $data[ 'affiliate_id' ] );
+	$integrations_to_skip = array();
+
+	foreach ( $existing_coupons as $existing_coupon ) {
+		$integrations_to_skip[] = $existing_coupon->integration;
+	}
+
+	/**
+	 * Check active coupon integrations, and compare it against existing coupons for this affiliate.
+	 * If the affiliate is mising any, generate a coupon for that integration.
+	 */
+	$active_supported = affwp_has_coupon_support_list( true );
+	$added            = array();
+
+	foreach ( $integrations_to_skip as $integration_to_skip ) {
+
+		if ( ! in_array( $integration_to_skip, $active_supported ) ) {
+
+			$args = array(
+				'affiliate_id'          => $data[ 'affiliate_id' ],
+				'coupon_code'           => affwp_generate_coupon_code( $data[ 'affiliate_id' ], $integration ),
+				'referrals'             => array(),
+				'integration'           => $integration,
+				'owner'                 => get_current_user_id(),
+				'status'                => 'active',
+			);
+
+			// Generate a coupon for the affiliate, since none exists.
+			$coupon = affwp_generate_integration_coupon( $args );
+
+			if ( $coupon ) {
+				$added[] = $coupon;
+			} else {
+				affiliate_wp()->utils->log( 'affwp_maybe_generate_coupons: Unable to generate integration coupon for provided data: ' . print_r( $args, true ) );
+			}
+
+		}
+	}
+
+	return $added;
+
+}
+
+add_action( 'affwp_post_update_affiliate', 'affwp_maybe_generate_coupons', 10, 2 );
+
+/**
  * Generates a coupon within the specified integration.
  *
  * Each integration should return either the ID of the generated coupon on success, or an array containing
  * the ID as `integration_coupon_id` or `id`.
  *
  * @param  array         $args   Integration coupon arguments.
- * @return object|false  $coupon Coupon object on success, otherwise false.
+ * @return object|false  $coupon AffiliateWP coupon object on success, otherwise false.
  * @since  2.2
  */
 function affwp_generate_integration_coupon( $args = array() ) {
@@ -588,7 +704,7 @@ function affwp_generate_integration_coupon( $args = array() ) {
 		return false;
 	}
 
-	if ( ! affwp_has_coupon_support( $args[ 'integration' ] ) ) {
+	if ( ! affwp_is_active_has_coupon_support( $args[ 'integration' ] ) ) {
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: The provided integration does not have coupon support in AffiliateWP at this time. Please see affwp_has_coupon_support_list for a list of compatible integrations.' );
 		return false;
 	}

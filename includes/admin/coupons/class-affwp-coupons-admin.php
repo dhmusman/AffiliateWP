@@ -101,7 +101,7 @@ class AffWP_Coupons_Admin {
 
 				foreach ( $integrations as $integration_id => $integration_term ) {
 
-					if ( affwp_has_coupon_support( $integration_id ) ) {
+					if ( affwp_is_active_has_coupon_support( $integration_id ) ) {
 
 						$args = array(
 							'affiliate_id' => $affiliate_id,

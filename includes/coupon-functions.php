@@ -363,7 +363,16 @@ function affwp_get_coupon_edit_url( $integration_coupon_id, $integration_id ) {
 	return affiliate_wp()->affiliates->coupons->get_coupon_edit_url( $integration_coupon_id, $integration_id );
 }
 
-
+/**
+ * Gets the coupon template object for the given integration.
+ * Returns a predictable array of object properties.
+ *
+ * @since  2.2
+ *
+ * @param  [type]  $integration [description]
+ *
+ * @return [type]               [description]
+ */
 function affwp_get_coupon_template( $integration ) {
 
 	if ( empty( $integration ) ) {
@@ -374,23 +383,74 @@ function affwp_get_coupon_template( $integration ) {
 	$template    = false;
 	$template_id = 0;
 
-	$template_id = affwp_get_coupon_template_id( $integration );
 
-	switch ( $integration ) {
-		case 'edd':
-			$template = edd_get_discounts(
-				array(
-					'meta_key'       => 'affwp_is_coupon_template',
-					'meta_value'     => 1,
-					'post_status'    => 'active',
-					'paged'          => true,
-				)
-			);
-			break;
+	// TODO: Create an AffiliateWP coupon object when a coupon is set as as template in an integration.
 
-		default:
-			# code...
-			break;
+	// Attempt to get the coupon template internally, prior to querying an integration.
+	$args = array(
+		'is_template' => true,
+		'integration' => $integration,
+		'number'      => 1
+	);
+
+	$template = affiliate_wp()->affiliates->coupons->get_coupons( $args );
+
+
+
+	// If the template isn't an internal AffiliateWP coupon object,
+	// query the integration directly.
+	if ( ! $template ) {
+		$template_id = affwp_get_coupon_template_id( $integration );
+
+		if ( $template_id ) {
+
+			switch ( $integration ) {
+				case 'edd':
+					$template = edd_get_discount( $template_id ) ? edd_get_discount( $template_id ) : edd_get_discounts(
+						array(
+							'meta_key'       => 'affwp_is_coupon_template',
+							'meta_value'     => 1,
+							'post_status'    => 'active',
+							'paged'          => true,
+						)
+					);
+					break;
+				case 'woocommerce' :
+					$template = get_post( $template_id );
+					break;
+				case 'exchange' :
+					$template = '';
+					break;
+				case 'rcp' :
+					$template = '';
+					break;
+				case 'pmp' :
+					$template = '';
+					break;
+				case 'pms' :
+					$template = '';
+					break;
+				case 'memberpress' :
+					$template = '';
+					break;
+				case 'jigoshop' :
+					$template = '';
+					break;
+				case 'lifterlms' :
+					$template = '';
+					break;
+				case 'gravityforms' :
+					$template = '';
+					break;
+
+				default:
+					# code...
+					break;
+			}
+		} else {
+			affiliate_wp()->utils->log( 'Unable to determine coupon template ID' );
+		}
+
 	}
 
 	return $template;

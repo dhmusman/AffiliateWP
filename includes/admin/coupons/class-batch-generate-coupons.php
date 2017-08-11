@@ -51,15 +51,6 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	public $integrations = array();
 
 	/**
-	 * ID for the integration coupon template.
-	 *
-	 * @access public
-	 * @since  2.2
-	 * @var    int
-	 */
-	public $template_id = 0;
-
-	/**
 	 * Initializes the batch process.
 	 *
 	 * This is the point where any relevant data should be initialized for use by the processor methods,
@@ -82,10 +73,6 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 				$this->integrations = affiliate_wp()->settings->get( 'coupon_integrations' );
 			}
 
-			if ( ! empty( $data['template_id'] ) ) {
-				$this->template_id = absint( $data['template_id'] );
-			}
-
 		}
 
 	}
@@ -101,8 +88,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 			'status' => 'active'
 		) );
 
-
-
+		$this->integrations = affiliate_wp()->settings->get( 'coupon_integrations' );
 		$this->set_total_count( $total_affiliates );
 	}
 
@@ -113,7 +99,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * @since  2.2
 	 */
 	public function process_step() {
-		if ( ! $this->integrations || ! $this->template_id ) {
+		if ( ! $this->integrations ) {
 			return new \WP_Error(
 				'missing_integration_data',
 				__( 'The integration and coupon template must be defined to generate affiliate coupons.', 'affiliate-wp' )
@@ -141,9 +127,15 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 
 			foreach ( $integrations as $integration ) {
 				$args = array(
-					'affiliate_id' => $affiliate_id,
-					'integration'  => $integration,
-					'template_id'  => affwp_get_coupon_template_id( $integration )
+					'affiliate_id'    => $affiliate_id,
+					'coupon_code'     => affwp_generate_coupon_code( $affiliate_id, $integration, '' ),
+					'integration'     => $integration,
+					'template_id'     => affwp_get_coupon_template_id( $integration ),
+					'referrals'       => array(),
+					'owner'           => get_current_user_id(),
+					'status'          => 'active',
+					'expiration_date' => $template->expiration_date,
+					'is_template'     => 0
 				);
 
 				// Generate an integration coupon

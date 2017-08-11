@@ -61,12 +61,20 @@ class AffWP_Coupons_Admin {
 
 		}
 
+
 		/**
 		 * Fires at the top of coupons admin table views.
 		 *
 		 * @since 2.2
 		 */
 		do_action( 'affwp_affiliate_coupons_table_top' );
+
+		$coupons = affwp_get_affiliate_coupons( $affiliate_id );
+
+		if ( empty( $coupons ) ) {
+			_e( 'No coupons found for this affiliate', 'affiliate-wp' );
+			return;
+		}
 
 		?>
 
@@ -99,7 +107,7 @@ class AffWP_Coupons_Admin {
 
 				$coupons = affwp_get_affiliate_coupons( $affiliate_id );
 
-				error_log( 'Coupons for affiliate ID: ' . $affiliate_id . ' ' . print_r( $coupons, true ) );
+				affiliate_wp()->utils->log( 'Coupons for affiliate ID: ' . $affiliate_id . ' ' . print_r( $coupons, true ) );
 
 				$integrations = affiliate_wp()->integrations->get_enabled_integrations();
 
@@ -107,14 +115,16 @@ class AffWP_Coupons_Admin {
 
 					if ( affwp_is_active_has_coupon_support( $integration_id ) ) {
 
+						$template_id = affiliate_wp()->affiliates->coupons->get_coupon_template_id( $integration_id );
+
+						$template_url = affiliate_wp()->affiliates->coupons->get_coupon_edit_url( $template_id, $integration_id );
+
 						$args = array(
 							'affiliate_id' => $affiliate_id,
 							'integration'  => $integration_id
 						);
 
-						// This should be replaced by a call to affwp coupons, instead of directly
-						// querying the integrations.
-						$coupons = affwp_get_coupons_by_integration( $args );
+						$coupons = affiliate_wp()->affiliates->coupons->get_coupons( $args );
 
 						if ( ! empty( $coupons ) ) {
 

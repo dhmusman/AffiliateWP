@@ -126,7 +126,10 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 		foreach ( $affiliate_ids as $affiliate_id ) {
 
 			foreach ( $integrations as $integration ) {
-				$args = array(
+
+				$coupon   = false;
+				$template = affwp_get_coupon_template();
+				$args     = array(
 					'affiliate_id'    => $affiliate_id,
 					'coupon_code'     => affwp_generate_coupon_code( $affiliate_id, $integration, '' ),
 					'integration'     => $integration,
@@ -141,13 +144,13 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 				// Generate an integration coupon
 				if ( affwp_generate_integration_coupon( $args ) ) {
 					// If successful, generate an internal AffiliateWP coupon object.
-					$added = affwp_add_coupon( $args );
+					$coupon = affwp_add_coupon( $args );
 				} else {
 					affiliate_wp()->utils->log( 'Unable to generate integration coupon during batch process. Provided data: ' . print_r( $args, true ) );
 				}
 
-				if ( $added ) {
-					$generated[] = $added;
+				if ( $coupon ) {
+					$generated[] = $coupon;
 				}
 			}
 		}

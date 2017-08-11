@@ -363,6 +363,39 @@ function affwp_get_coupon_edit_url( $integration_coupon_id, $integration_id ) {
 	return affiliate_wp()->affiliates->coupons->get_coupon_edit_url( $integration_coupon_id, $integration_id );
 }
 
+
+function affwp_get_coupon_template( $integration ) {
+
+	if ( empty( $integration ) ) {
+		affiliate_wp()->utils->log( 'affwp_get_coupon_template: Unable to locate coupon template; the integration must be specified.' );
+		return false;
+	}
+
+	$template    = false;
+	$template_id = 0;
+
+	$template_id = affwp_get_coupon_template_id( $integration );
+
+	switch ( $integration ) {
+		case 'edd':
+			$template = edd_get_discounts(
+				array(
+					'meta_key'       => 'affwp_is_coupon_template',
+					'meta_value'     => 1,
+					'post_status'    => 'active',
+					'paged'          => true,
+				)
+			);
+			break;
+
+		default:
+			# code...
+			break;
+	}
+
+	return $template;
+}
+
 /**
  * Retrieves a list of active integrations with both coupon support and a selected coupon template.
  *
@@ -504,7 +537,9 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base
 			)
 		);
 
-		$base = $template->coupon_code;
+		if ( $template ) {
+			$base = $template[ 'coupon_code' ];
+		}
 
 	}
 
@@ -561,31 +596,35 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base
 		$hash       = apply_filters( 'affwp_coupon_code_hash', $hash );
 
 		$coupon_code = sanitize_text_field( $base . $separator . $affiliate_id . $separator . $hash );
+
+		/**
+		 * Sets the coupon code when generating a coupon for a supported integration.
+		 *
+		 * Specify a string to use for the coupon code,
+		 * ensuring that the formatting is supported by the integrations coupon code sanitization.
+		 *
+		 * @param mixed string|false $coupon_code   The generated coupon code string, otherwise returns false.
+		 * @param string             $base          Coupon code base.
+		 * @param string             $separator     Separator character used in the coupon code string.
+		 * @param int                $affiliate_id  Affiliate ID.
+		 * @param string             $hash          Coupon code hash suffix.
+		 * @since 2.2
+		 */
+		return apply_filters( 'affwp_generate_coupon_code',
+			$coupon_code,
+			$base,
+			$separator,
+			$affiliate_id,
+			$hash
+		);
+
 	} else {
 		// The coupon template is not available for this integration.
 		affiliate_wp()->utils->log( 'affwp_generate_coupon_code: Unable to determine coupon template ID when generating coupon code for ' . $integration . '. Make sure to set the coupon template for this integration.' );
 	}
 
-	/**
-	 * Sets the coupon code when generating a coupon for a supported integration.
-	 *
-	 * Specify a string to use for the coupon code,
-	 * ensuring that the formatting is supported by the integrations coupon code sanitization.
-	 *
-	 * @param mixed string|false $coupon_code   The generated coupon code string, otherwise returns false.
-	 * @param string             $base          Coupon code base.
-	 * @param string             $separator     Separator character used in the coupon code string.
-	 * @param int                $affiliate_id  Affiliate ID.
-	 * @param string             $hash          Coupon code hash suffix.
-	 * @since 2.2
-	 */
-	return apply_filters( 'affwp_generate_coupon_code',
-		$coupon_code,
-		$base,
-		$separator,
-		$affiliate_id,
-		$hash
-	);
+	return false;
+
 }
 
 /**
@@ -625,8 +664,9 @@ function affwp_affiliate_has_existing_coupon( $affiliate_id = 0, $integration = 
  * @param  array   $data   Affiliate data.
  *
  * @return array   $added  Array of affiliate coupon objects.
+ *                         Returns an empty array if no coupons are generated.
  */
-function affwp_maybe_generate_coupons( $data, $row_id ) {
+function affwp_maybe_generate_coupons( $affiliate_id, $data ) {
 
 	$args = array();
 
@@ -635,13 +675,13 @@ function affwp_maybe_generate_coupons( $data, $row_id ) {
 		return false;
 	}
 
-	if ( empty( $data ) ) {
+	if ( ! $affiliate_id || empty( $data ) ) {
 		affiliate_wp()->utils->log( 'affwp_generate_single_coupon: The affiliate ID must be specified.' );
 		return false;
 	}
 
 	// Get all coupons for this affiliate.
-	$existing_coupons     = affwp_get_affiliate_coupons( $row_id );
+	$existing_coupons     = affwp_get_affiliate_coupons( $affiliate_id );
 	$integrations_to_skip = array();
 
 	// Build an array of integration coupons which exist for the given affiliate ID.
@@ -661,8 +701,8 @@ function affwp_maybe_generate_coupons( $data, $row_id ) {
 		if ( ! in_array( $integration_to_skip, $active_supported ) ) {
 
 			$args = array(
-				'affiliate_id'          => $row_id,
-				'coupon_code'           => affwp_generate_coupon_code( $row_id, $integration_to_skip ),
+				'affiliate_id'          => $affiliate_id,
+				'coupon_code'           => affwp_generate_coupon_code( $affiliate_id, $integration_to_skip ),
 				'referrals'             => array(),
 				'integration'           => $integration_to_skip,
 				'owner'                 => get_current_user_id(),
@@ -685,7 +725,7 @@ function affwp_maybe_generate_coupons( $data, $row_id ) {
 
 }
 
-add_action( 'affwp_post_update_affiliate', 'affwp_maybe_generate_coupons', 10, 2 );
+add_action( 'affwp_post_insert_affiliate', 'affwp_maybe_generate_coupons', 10, 2 );
 
 /**
  * Generates a coupon within the specified integration.
@@ -725,6 +765,16 @@ function affwp_generate_integration_coupon( $args = array() ) {
 		return false;
 	}
 
+	/**
+	 * Dynamically calls the necessary integration coupon generator function, named per integration.
+	 *
+	 * The name of each integration function has the integration ID appended
+	 * to the name of this caller, `affwp_generate_integration_coupon`.
+	 *
+	 * For example, the function which creates an integration coupon in EDD
+	 * is named `affwp_generate_integration_coupon_edd`.
+	 *
+	 */
 	$integration_data = call_user_func( 'affwp_generate_integration_coupon_' . $args[ 'integration' ], $args );
 
 	if ( affiliate_wp()->settings->get( 'debug_mode' ) ) {

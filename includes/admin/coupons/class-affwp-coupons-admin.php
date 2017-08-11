@@ -72,7 +72,7 @@ class AffWP_Coupons_Admin {
 		$coupons = affwp_get_affiliate_coupons( $affiliate_id );
 
 		if ( empty( $coupons ) ) {
-			_e( 'No coupons found for this affiliate', 'affiliate-wp' );
+			_e( 'No coupons were found for this affiliate.', 'affiliate-wp' );
 
 			return;
 		}

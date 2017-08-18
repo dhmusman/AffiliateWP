@@ -32,26 +32,24 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 		add_filter( 'affwp_referral_reference_column', array( $this, 'reference_link' ), 10, 2 );
 
 		// Discount code tracking actions and filters
-		add_action( 'edd_add_discount_form_bottom', array( $this, 'discount_edit' ) );
+		add_action( 'edd_add_discount_form_bottom',  array( $this, 'discount_edit' ) );
 		add_action( 'edd_edit_discount_form_bottom', array( $this, 'discount_edit' ) );
-		add_action( 'edd_post_update_discount', array( $this, 'store_discount_affiliate' ), 10, 2 );
-		add_action( 'edd_post_insert_discount', array( $this, 'store_discount_affiliate' ), 10, 2 );
+		add_action( 'edd_post_update_discount',      array( $this, 'store_discount_affiliate' ), 10, 2 );
+		add_action( 'edd_post_insert_discount',      array( $this, 'store_discount_affiliate' ), 10, 2 );
 
 		// Integration with EDD commissions to adjust commission rates if a referral is present
-		add_filter( 'eddc_calc_commission_amount', array( $this, 'commission_rate' ), 10, 2 );
-		add_filter( 'affwp_settings_integrations', array( $this, 'commission_settings' ), 10 );
-		add_filter( 'affwp_settings_integrations', array( $this, 'renewal_settings' ), 10 );
+		add_filter( 'eddc_calc_commission_amount',   array( $this, 'commission_rate' ), 10, 2 );
+		add_filter( 'affwp_settings_integrations',   array( $this, 'commission_settings' ), 10 );
+		add_filter( 'affwp_settings_integrations',   array( $this, 'renewal_settings' ), 10 );
 
 		// Per product referral rates
-		add_action( 'edd_meta_box_settings_fields', array( $this, 'download_settings' ), 100 );
-		add_filter( 'edd_metabox_fields_save', array( $this, 'download_save_fields' ) );
+		add_action( 'edd_meta_box_settings_fields',  array( $this, 'download_settings' ), 100 );
+		add_filter( 'edd_metabox_fields_save',       array( $this, 'download_save_fields' ) );
 
-		// Coupon hooks
 
-		add_action( 'affwp_edd_coupon_store_discount_affiliate', array( $this, 'create_affwp_coupon' ), 10, 2 );
-
-		// Create an affiliate coupon when an EDD coupon is generated
-		add_action( 'affwp_add_edd_discount', array( $this, 'create_affwp_coupon' ) );
+		// Affiliate coupon hooks
+		add_action( 'edd_post_insert_discount', array( $this, 'create_coupon' ), 10, 2 );
+		add_action( 'edd_post_update_discount', array( $this, 'create_coupon' ), 10, 2 );
 		add_action( 'edd_post_insert_discount', array( $this, 'set_coupon_template' ), 10, 2 );
 		add_action( 'edd_post_update_discount', array( $this, 'set_coupon_template' ), 10, 2 );
 
@@ -564,7 +562,7 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 		 * @param int  $affiliate_id  Affiliate ID.
 		 * @param bool $is_template   Returns true if this EDD discount is used
 		 *                            as the affiliate coupon template.
-		 * @since 2.1
+		 * @since 2.2
 		 */
 		do_action( 'affwp_edd_coupon_store_discount_affiliate', $discount_id, $affiliate_id, $is_template );
 	}
@@ -715,56 +713,47 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 	 * @return bool                 Returns true if an EDD discount was created, otherwise false.
 	 * @since  2.1
 	 */
-	public function create_coupon( $affiliate_id, $args ) {
+	public function create_coupon( $meta, $discount_id ) {
 
-		if ( ! $affiliate_id ) {
-
-			$suffix = false;
-
-			if ( edd_get_discount( $args->id ) ) {
-				$suffix = __( 'from coupon template', 'affiliate-wp' ) . $args->id . '.';
-			}
-
-			$suffix = $suffix ? $suffix : '.';
-
-			affiliate_wp()->utils->log( 'Missing affiliate ID when creating affiliate coupon' . $suffix );
-
+		if ( ! $discount_id ) {
+			affiliate_wp()->utils->log( 'create_coupon: Missing affiliate ID when creating affiliate coupon' . $suffix );
 			return false;
 		}
 
-		// Get coupon
-		$args = $this->get_coupon_template();
-
-		$details = array(
-			'code'              => $args['code'] . '-' . date( 'U' ) . '-' . $affiliate_id,
-			'name'              => $args['name'],
-			'status'            => $args['status'],
-			'uses'              => $args['uses'],
-			'max_uses'          => $args['max_uses'],
-			'amount'            => $args['amount'],
-			'start'             => $args['start'],
-			'expiration'        => $args['expiration'],
-			'type'              => $args['type'],
-			'min_price'         => $args['min_price'],
-			'product_reqs'      => $args['product_reqs'],
-			'product_condition' => $args['product_condition'],
-			'excluded_products' => $args['excluded_products'],
-			'is_not_global'     => $args['is_not_global'],
-			'is_single_use'     => $args['is_single_use']
-		);
-
-		if ( edd_store_discount( $details ) ) {
-			/**
-			 * Fires when an EDD discount is created via AffiliateWP.
-			 *
-			 * @param $details EDD disount properties.
-			 * @since 2.1
-			 */
-			do_action( 'affwp_add_edd_discount', $details );
+		if ( ! empty( $meta['affwp_discount_affiliate'] ) ) {
+			$affiliate_id = $meta[ 'affwp_discount_affiliate' ];
+		} elseif ( get_user_by( 'login', $_POST['user_name'] ) ) {
+			$user         = get_user_by( 'login', $_POST['user_name'] );
+			$affiliate    = affiliate_wp()->affiliates->get_by( 'user_id', $user->ID );
+			$affiliate_id = $affiliate->affiliate_id;
+		} else {
+			$affiliate_id = get_post_meta( $discount_id, 'affwp_discount_affiliate', true );
 		}
 
+		$affiliate_id = absint( $affiliate_id );
 
-		return edd_store_discount( $details );
+		if ( ! $affiliate_id ) {
+			affiliate_wp()->utils->log( 'create_coupon: Unable to determine affiliate ID when creating affiliate coupon.' );
+			return false;
+		}
+
+		$discount    = edd_get_discount_by_code( $meta[ 'code' ] );
+		$discount_id = $discount->ID;
+
+		$args = array(
+				'affiliate_id'          => $affiliate_id,
+				'coupon_code'           => $meta[ 'code' ],
+				'referrals'             => array(),
+				'is_template'           => get_post_meta( $discount_id, 'affwp_is_coupon_template', true ),
+				'integration'           => $this->context,
+				'integration_coupon_id' => $discount_id,
+				'owner'                 => get_current_user_id(),
+				'expiration'            => $meta[ 'expiration' ],
+				'status'                => $meta[ 'status' ]
+
+			);
+
+		return affwp_add_coupon( $args );
 	}
 
 	/**

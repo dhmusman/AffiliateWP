@@ -46,13 +46,10 @@ class AffWP_Coupons_Admin {
 	 */
 	public function coupons_table( $affiliate_id = 0 ) {
 
-		if ( ! $affiliate_id ) {
+		if ( ! affwp_is_affiliate( $affiliate_id ) ) {
 
-			if ( ! isset( $affiliate ) && isset ( $_GET[ 'affiliate_id' ] ) ) {
-				$affiliate  = affwp_get_affiliate( absint( $_GET['affiliate_id'] ) );
-			}
-
-			$affiliate_id = is_object( $affiliate ) ? $affiliate->affiliate_id : $affiliate[ 'affiliate_id' ];
+			$affiliate    = affwp_get_affiliate( absint( $_GET['affiliate_id'] ) );
+			$affiliate_id = $affiliate ? $affiliate->affiliate_id : 0;
 
 			if ( ! $affiliate_id ) {
 				affiliate_wp()->utils->log( 'Unable to determine affiliate ID in coupons_table method.' );
@@ -60,7 +57,6 @@ class AffWP_Coupons_Admin {
 			}
 
 		}
-
 
 		/**
 		 * Fires at the top of coupons admin table views.
@@ -131,6 +127,8 @@ class AffWP_Coupons_Admin {
 
 							foreach ( $coupons as $coupon ) {
 
+								$coupon = is_array( $coupon ) ? $coupon : (array) $coupon;
+
 								$coupon_referrals = affiliate_wp()->referrals->get_referrals( array(
 										'number'       => -1,
 										'affiliate_id' => $affiliate_id,
@@ -154,15 +152,15 @@ class AffWP_Coupons_Admin {
 										<?php echo $coupon['integration_coupon_id']; ?>
 									</td>
 									<td>
-										<?php echo $referrals_url; ?>
+										<?php echo ! empty( $coupon_referrals ) ? count( $coupon_referrals ) . ' <a href="' . esc_url( $referrals_url ) . '">' . __( 'View', 'affiliate-wp' ) . '</a>' : __( 'No referrals were found.', 'affiliate-wp' ); ?>
 									</td>
 									<td>
 										<?php
-										$coupon_edit_url = affwp_get_coupon_edit_url( $coupon['integration_coupon_id'], $coupon['integration'] );
+										$coupon_edit_url = affwp_get_coupon_edit_url( $coupon[ 'integration_coupon_id' ], $coupon[ 'integration' ] );
 										if ( $coupon_edit_url ) {
 											echo '<a href="' . esc_url( $coupon_edit_url ) . '">' . __( 'View/Edit', 'affiliate-wp' ) . '</a>';
 										} else {
-											affiliate_wp()->utils->log( sprintf( 'Unable to get coupon edit URL for the %s integration.', $coupon['integration'] ) );
+											affiliate_wp()->utils->log( sprintf( 'Unable to get coupon edit URL for the %s integration.', $coupon[ 'integration' ] ) );
 										} ?>
 
 									</td>

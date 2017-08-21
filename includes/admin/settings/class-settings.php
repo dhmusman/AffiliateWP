@@ -705,7 +705,7 @@ class Affiliate_WP_Settings {
 				array(
 					'auto_generate_coupons_enabled' => array(
 						'name' => __( 'Auto-generate coupons', 'affiliate-wp' ),
-						'desc' => __( 'If checked, a coupon will be generated automatically for an affiliate when their affiliate account is registered and approved.', 'affiliate-wp' ),
+						'desc' => __( 'If checked, a coupon will be generated automatically for an affiliate when the action below occurs.', 'affiliate-wp' ),
 						'type' => 'checkbox'
 					),
 					'auto_generate_coupons_action' => array(
@@ -714,7 +714,7 @@ class Affiliate_WP_Settings {
 						'type' => 'select',
 						'options' => array(
 							'registered'  => __( 'Affiliate registration form is submitted', 'affiliate-wp' ),
-							'active'      => __( 'Affiliate status is accepted and set to active', 'affiliate-wp' )
+							'active'      => __( 'Affiliate registers and status is set to active', 'affiliate-wp' )
 						),
 						'sanitize_callback' => 'sanitize_text_field'
 					),

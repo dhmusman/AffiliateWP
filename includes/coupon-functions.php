@@ -748,9 +748,7 @@ function affwp_maybe_generate_coupons( $data, $affiliate_id ) {
 	// If auto coupon generation is set to trigger when an affiliate has an 'active' status,
 	// bail if affiliate status is not 'active'.
 	if ( 'active' === $action ) {
-		if ( $status === $action ) {
-			continue;
-		} else {
+		if ( $status !== $action ) {
 			return;
 		}
 	}

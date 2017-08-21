@@ -744,13 +744,13 @@ function affwp_maybe_generate_coupons( $data, $row_id ) {
 			$affiliate_id = absint( $_GET[ 'affiliate_id' ] );
 		}
 
-		if ( ! is_int( $affiliate_info ) ) {
+		if ( ! is_int( $row_id ) ) {
 			if ( is_int( $data ) ) {
 				$affiliate_id = absint( $data );
 			}
 
-			if ( is_array( $affiliate_info ) ) {
-				$affiliate_id = affiliate_wp()->affiliates->get_by( 'user_id', $affiliate_info['user_id'] );
+			if ( is_array( $row_id ) ) {
+				$affiliate_id = affiliate_wp()->affiliates->get_by( 'user_id', $row_id['user_id'] );
 			}
 
 			if ( ! empty( $_POST[ 'user_login' ] ) ) {

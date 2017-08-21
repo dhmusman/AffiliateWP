@@ -726,18 +726,24 @@ function affwp_affiliate_has_existing_coupon( $affiliate_id = 0, $integration = 
  * @return array   $added  Array of affiliate coupon objects.
  *                         Returns an empty array if no coupons are generated.
  */
-function affwp_maybe_generate_coupons( $data, $affiliate_info ) {
+function affwp_maybe_generate_coupons( $data, $row_id ) {
 
 	$args = array();
 
 	// Bail if the auto-generate coupons setting is not active.
 	if ( ! affiliate_wp()->settings->get( 'auto_generate_coupons_enabled' ) ) {
+
 		return false;
 	}
 
-	$affiliate_id = affwp_get_affiliate_id();
+	$affiliate_id = $row_id ? absint( $row_id ) : affwp_get_affiliate_id();
 
 	if ( ! $affiliate_id ) {
+
+		if ( ! empty( $_GET[ 'affiliate_id' ] ) ) {
+			$affiliate_id = absint( $_GET[ 'affiliate_id' ] );
+		}
+
 		if ( ! is_int( $affiliate_info ) ) {
 			if ( is_int( $data ) ) {
 				$affiliate_id = absint( $data );
@@ -745,6 +751,11 @@ function affwp_maybe_generate_coupons( $data, $affiliate_info ) {
 
 			if ( is_array( $affiliate_info ) ) {
 				$affiliate_id = affiliate_wp()->affiliates->get_by( 'user_id', $affiliate_info['user_id'] );
+			}
+
+			if ( ! empty( $_POST[ 'user_login' ] ) ) {
+				$user = get_user_by( 'login', $_POST[ 'user_login' ] );
+				$affiliate_id = affiliate_wp()->affiliates->get_by( 'user_id', $user->ID );
 			}
 		}
 
@@ -763,7 +774,7 @@ function affwp_maybe_generate_coupons( $data, $affiliate_info ) {
 	// bail if affiliate status is not 'active'.
 	if ( 'active' === $action ) {
 		if ( $status !== $action ) {
-			return;
+			return false;
 		}
 	}
 
@@ -784,6 +795,7 @@ function affwp_maybe_generate_coupons( $data, $affiliate_info ) {
 	$added       = array();
 
 	foreach ( $to_generate as $integration ) {
+
 		$args = array(
 			'affiliate_id'          => $affiliate_id,
 			'coupon_code'           => affwp_generate_coupon_code( $affiliate_id, $integration ),
@@ -807,7 +819,7 @@ function affwp_maybe_generate_coupons( $data, $affiliate_info ) {
 
 }
 
-add_action( 'affwp_post_insert_affiliate', 'affwp_maybe_generate_coupons', 10, 2 );
+// add_action( 'affwp_post_insert_affiliate', 'affwp_maybe_generate_coupons', 10, 2 );
 add_action( 'affwp_post_update_affiliate', 'affwp_maybe_generate_coupons', 10, 2 );
 
 /**

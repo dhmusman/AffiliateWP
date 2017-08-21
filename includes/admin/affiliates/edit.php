@@ -243,8 +243,9 @@ $notes            = affwp_get_affiliate_meta( $affiliate->affiliate_id, 'notes',
 
 					<?php
 
+					$affiliate_id  = isset( $_GET[ 'affiliate_id' ] ) ? absint( $_GET[ 'affiliate_id' ] ) : 0;
 					$coupons_admin = new AffWP_Coupons_Admin;
-					$coupons_admin->coupons_table( $affiliate->affiliate_id );
+					$coupons_admin->coupons_table( $affiliate_id );
 
 					?>
 

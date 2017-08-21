@@ -118,8 +118,9 @@ $default_rate = affwp_abs_number_round( $default_rate );
 
 					<?php
 
+					$affiliate_id  = isset( $_GET[ 'affiliate_id' ] ) ? absint( $_GET[ 'affiliate_id' ] ) : 0;
 					$coupons_admin = new AffWP_Coupons_Admin;
-					$coupons_admin->coupons_table( $_GET[ 'affiliate_id' ] );
+					$coupons_admin->coupons_table( $affiliate_id );
 
 					?>
 

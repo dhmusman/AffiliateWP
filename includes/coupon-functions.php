@@ -726,7 +726,7 @@ function affwp_affiliate_has_existing_coupon( $affiliate_id = 0, $integration = 
  * @return array   $added  Array of affiliate coupon objects.
  *                         Returns an empty array if no coupons are generated.
  */
-function affwp_maybe_generate_coupons( $data, $affiliate_id ) {
+function affwp_maybe_generate_coupons( $data, $affiliate_info ) {
 
 	$args = array();
 
@@ -735,15 +735,29 @@ function affwp_maybe_generate_coupons( $data, $affiliate_id ) {
 		return false;
 	}
 
-	if ( ! $affiliate_id && is_int( $data ) ) {
-		$affiliate_id = absint( $data );
+	$affiliate_id = affwp_get_affiliate_id();
+
+	if ( ! $affiliate_id ) {
+		if ( ! is_int( $affiliate_info ) ) {
+			if ( is_int( $data ) ) {
+				$affiliate_id = absint( $data );
+			}
+
+			if ( is_array( $affiliate_info ) ) {
+				$affiliate_id = affiliate_wp()->affiliates->get_by( 'user_id', $affiliate_info['user_id'] );
+			}
+		}
+
+		if ( ! $affiliate_id ) {
+			affiliate_wp()->utils->log( 'affwp_maybe_generate_coupons: Unable to determine affiliate ID.' );
+			return false;
+		}
 	}
 
 	// Check when coupons should be generated.
 	// Can either be 'active' or 'registered'.
-	$action    = affiliate_wp()->settings->get( 'auto_generate_coupons_action' );
-	$affiliate = affwp_get_affiliate( $affiliate_id );
-	$status    = $affiliate->status;
+	$action = affiliate_wp()->settings->get( 'auto_generate_coupons_action' );
+	$status = affwp_get_affiliate_status( $affiliate_id );
 
 	// If auto coupon generation is set to trigger when an affiliate has an 'active' status,
 	// bail if affiliate status is not 'active'.

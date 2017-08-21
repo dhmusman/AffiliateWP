@@ -739,6 +739,19 @@ function affwp_maybe_generate_coupons( $data, $affiliate_id ) {
 		$affiliate_id = absint( $data );
 	}
 
+	// Check when coupons should be generated.
+	// Can either be 'active' or 'registered'.
+	$action = affiliate_wp()->settings->get( 'auto_generate_coupons_action' );
+
+	$affiliate = affwp_get_affiliate( $affiliate_id );
+	$status    = $affiliate->status;
+
+	// If auto coupon generation is set to trigger when an affiliate has an 'active' status,
+	// bail if affiliate status is not 'active'.
+	if ( 'active' === $action && $action !== $status ) {
+		return false;
+	}
+
 	// Get all coupons for this affiliate.
 	$existing_coupons     = affwp_get_affiliate_coupons( $affiliate_id );
 	$integrations_to_skip = array();

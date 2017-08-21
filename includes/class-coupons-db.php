@@ -340,6 +340,9 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 
 			if ( is_array( $args['affiliate_id'] ) ) {
 				$affiliates = implode( ',', array_map( 'intval', $args['affiliate_id'] ) );
+			} elseif ( is_object( $args['affiliate_id'] ) ) {
+				$affiliates = (array) $args['affiliate_id'];
+				$affiliates = implode( ',', array_map( 'intval', $affiliates ) );
 			} else {
 				$affiliates = intval( $args['affiliate_id'] );
 			}

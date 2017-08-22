@@ -739,10 +739,10 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 		$enabled   = affiliate_wp()->integrations->get_enabled_integrations();
 		$supported = affwp_has_coupon_support_list();
 
-		foreach ( $enabled as $integration ) {
+		foreach ( $enabled as $integration => $label ) {
 
 			if ( array_key_exists( $integration, $supported ) ) {
-				$available[ $integration ] = $integration;
+				$available[ $integration ] = $label;
 			}
 		}
 

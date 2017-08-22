@@ -929,6 +929,9 @@ function affwp_generate_integration_coupon( $args = array() ) {
 		return false;
 	}
 
+	// Update post meta to specify the affiliate ID.
+	update_post_meta( $integration_coupon_id, 'affwp_discount_affiliate', $args[ 'affiliate_id' ] );
+
 	$affwp_coupon_args = array(
 		'affiliate_id'          => $args[ 'affiliate_id' ],
 		'coupon_code'           => $integration_data[ 'coupon_code' ],
@@ -966,8 +969,8 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 	$template      = false;
 
 	// Ensure that a coupon template exists before proceeding.
-	if ( is_int( $args[ 'template_id' ] ) && edd_get_discount( $args[ 'template_id' ] ) ) {
-		$template = edd_get_discount( $args[ 'template_id' ] );
+	if ( is_int( $args[ 'template_id' ] ) && get_post( $args[ 'template_id' ] ) ) {
+		$template = get_post( $args[ 'template_id' ] );
 	} else {
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_edd: Unable to retrieve the EDD discount template.' );
 		return false;
@@ -980,6 +983,8 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 
 	$template = (array) $template;
 
+	// return;
+
 	/**
 	 * If a coupon code is provided, use it.
 	 * Otherwise, generate the coupon code string by using the following data:
@@ -987,14 +992,79 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 	 * - Coupon template data
 	 * - The date
 	 */
-	$discount_args[ 'coupon_code' ]              = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], $template[ 'coupon_code' ] );
-	$discount_args[ 'name' ]                     = ! empty( $template[ 'name' ] ) ? $template[ 'name' ] : $discount_args[ 'coupon_code' ];
-	$discount_args[ 'amount' ]                   = $template[ 'amount' ] ? $template[ 'amount' ] : 0;
-	$discount_args[ 'type' ]                     = $template[ 'type' ] ? $template[ 'type' ] : 'percentage';
-	$discount_args[ 'expiration' ]               = $template[ 'expiration' ];
+	$discount_args[ 'coupon_code' ]              = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], get_post_meta( $template[ 'ID' ], '_edd_discount_code', true ) );
+	$discount_args[ 'name' ]                     = get_post_meta( $template[ 'ID' ], '_edd_discount_name', true );
+	$discount_args[ 'amount' ]                   = get_post_meta( $template[ 'ID' ], [ '_edd_discount_amount' ], true );
+	$discount_args[ 'type' ]                     = get_post_meta( $template[ 'ID' ], [ '_edd_discount_type' ], true );;
+	$discount_args[ 'expiration' ]               = get_post_meta( $template[ 'ID' ], [ '_edd_discount_expiration' ], true );;
 	$discount_args[ 'affwp_discount_affiliate' ] = $args[ 'affiliate_id' ];
 
 
 	return edd_store_discount( $discount_args );
 }
 
+/**
+ * Generates a WooCommerce coupon.
+ *
+ * @param  array              $args    Coupon arguments. The array should contain:
+ *     `affiliate_id`
+ *     `template_id`
+ *     `name`
+ *     `coupon_code`
+ *     `amount`
+ *     `type`
+ *     `affwp_discount_affiliate`
+ *
+ * @return mixed array|false  $coupon  Array of coupon data if successful, otherwise returns false.
+ * @see    affwp_generate_integration_coupon
+ * @since  2.2
+ */
+function affwp_generate_integration_coupon_woocommerce( $args = array() ) {
+	$coupon_args = array();
+	$template    = false;
+
+	if ( ! class_exists( 'WC_API_Coupons' ) ) {
+		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_woocommerce: Class WC_API_Coupons not found.' );
+		return false;
+	}
+
+	$wc_coupons  = new WC_API_Coupons;
+
+	// Ensure that a coupon template exists before proceeding.
+	if ( is_int( $args[ 'template_id' ] ) ) {
+		$template = $wc_coupons->get_coupon( $args[ 'template_id' ] );
+	} else {
+		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_woocommerce: Unable to retrieve WooCommerce coupon template.' );
+		return false;
+	}
+
+	if ( ! $template ) {
+		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_woocommerce: Unable to retrieve WooCommerce coupon template.' );
+		return false;
+	}
+
+	$template = is_object( $template ) ? (array) $template : $template;
+
+	$coupon_args = array (
+		'type'                         => $template[ 'type' ] ? $template[ 'type' ] : 'fixed_cart',
+		'amount'                       => $template[ 'amount' ] ? $template[ 'amount' ] : 0,
+		'individual_use'               => $template[ 'individual_use' ] ? $template[ 'individual_use' ] : false,
+		'product_ids'                  => $template[ 'product_ids' ] ? $template[ 'product_ids' ] : array(),
+		'exclude_product_ids'          => $template[ 'exclude_product_ids' ] ? $template[ 'exclude_product_ids' ] : array(),
+		'usage_limit'                  => $template[ 'usage_limit' ] ? $template[ 'usage_limit' ] : '',
+		'usage_limit_per_user'         => $template[ 'usage_limit_per_user' ] ? $template[ 'usage_limit_per_user' ] : '',
+		'limit_usage_to_x_items'       => $template[ 'limit_usage_to_x_items' ] ? $template[ 'limit_usage_to_x_items' ] : '',
+		'usage_count'                  => $template[ 'usage_count' ] ? $template[ 'usage_count' ] : '',
+		'expiry_date'                  => $template[ 'expiry_date' ] ? $template[ 'expiry_date' ] : '',
+		'enable_free_shipping'         => $template[ 'enable_free_shipping' ] ? $template[ 'enable_free_shipping' ] : false,
+		'product_category_ids'         => $template[ 'product_category_ids' ] ? $template[ 'product_category_ids' ] : array(),
+		'exclude_product_category_ids' => $template[ 'exclude_product_category_ids' ] ? $template[ 'exclude_product_category_ids' ] : array(),
+		'exclude_sale_items'           => $template[ 'exclude_sale_items' ] ? $template[ 'exclude_sale_items' ] : false,
+		'minimum_amount'               => $template[ 'minimum_amount' ] ? $template[ 'minimum_amount' ] : '',
+		'maximum_amount'               => $template[ 'maximum_amount' ] ? $template[ 'maximum_amount' ] : '',
+		'customer_emails'              => $template[ 'customer_emails' ] ? $template[ 'customer_emails' ] : array(),
+		'description'                  => $template[ 'description' ] ? $template[ 'description' ] : ''
+	);
+
+	return $wc_coupons->create_coupon( $coupon_args );
+}

@@ -137,7 +137,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 					'referrals'       => array(),
 					'owner'           => get_current_user_id(),
 					'status'          => 'active',
-					'expiration_date' => $template->expiration_date,
+					'expiration_date' => $template[ 'expiration_date' ],
 					'is_template'     => 0
 				);
 

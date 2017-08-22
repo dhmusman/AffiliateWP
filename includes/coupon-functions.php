@@ -891,18 +891,21 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	 * is named `affwp_generate_integration_coupon_edd`.
 	 *
 	 */
-
 	$function_name    = 'affwp_generate_integration_coupon_' . $args[ 'integration' ];
 	$integration_data = function_exists( $function_name ) ? $function_name( $function_name ) : false;
 
 	affiliate_wp()->utils->log( 'Integration coupon data: '. print_r( $integration_data, true ) );
 
+	if ( is_int( $integration_data ) ) {
+		get_post( $integration_data );
+	}
+
+	$integration_data = is_object( $integration_data ) ? (array) $integration_data : $integration_data;
+
 	if ( ! $integration_data ) {
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: Could not generate integration coupon via dynamic caller.' );
 		return false;
 	}
-
-	$integration_data = is_object( $integration_data ) ? (array) $integration_data : $integration_data;
 
 	/**
 	 * Fires immediately after an integration coupon is generated.

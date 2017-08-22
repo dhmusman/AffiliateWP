@@ -416,7 +416,8 @@ function affwp_get_coupon_template( $integration ) {
 					);
 					break;
 				case 'woocommerce' :
-					$template = get_post( $template_id );
+					$wc_coupons  = new WC_API_Coupons;
+					$template    = $wc_coupons->get_coupon( $template_id );
 					break;
 				case 'exchange' :
 					$template = '';
@@ -453,7 +454,7 @@ function affwp_get_coupon_template( $integration ) {
 
 	}
 
-	return $template;
+	return (array) $template;
 }
 
 /**

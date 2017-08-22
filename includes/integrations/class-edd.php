@@ -488,7 +488,7 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 			$user_name    = $user ? $user->user_login : '';
 		}
 
-		$disabled = get_post_meta( $discount_id, 'affwp_is_coupon_template', true );
+		$is_template = get_post_meta( $discount_id, 'affwp_is_coupon_template', true );
 ?>
 		<table class="form-table">
 			<tbody>
@@ -506,14 +506,11 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 				</tr>
 				<tr class="form-field">
 					<th scope="row" valign="top">
-						<label for="affwp_is_coupon_template"><?php _e( 'Use as Affiliate Coupon Template?', 'affiliate-wp' ); ?>
-						</label>
+						<label for="affwp_is_coupon_template"><?php _e( 'Use as Affiliate Coupon Template?', 'affiliate-wp' ); ?></label>
 					</th>
 					<td>
-						<input type="checkbox" name="affwp_is_coupon_template" id="affwp_is_coupon_template" value="<?php checked( $disabled, true ); ?>" />
-
-						<p class="description"><?php _e( 'Check this option if you would like to use this discount as the template from which all auto-generated EDD affiliate discounts are created.', 'affiliate-wp' ); ?>
-						</p>
+						<input type="checkbox" name="affwp_is_coupon_template" id="affwp_is_coupon_template" value="1"<?php checked( $is_template, true ); ?>/>
+						<p class="description"><?php _e( 'Check this option if you would like to use this discount as the template from which all auto-generated EDD affiliate discounts are created.', 'affiliate-wp' ); ?></p>
 					</td>
 				</tr>
 			</tbody>
@@ -538,10 +535,6 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 			return;
 		}
 
-		if( empty( $_POST['affwp_is_coupon_template'] ) || 0 == $_POST['affwp_is_coupon_template'] ) {
-			return;
-		}
-
 		$data = affiliate_wp()->utils->process_request_data( $_POST, 'user_name' );
 
 		$affiliate_id = affwp_get_affiliate_id( $data['user_id'] );
@@ -554,7 +547,8 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 
 		} else {
 
-			Delete_post_meta( $discount_id, 'affwp_is_coupon_template' );
+			delete_post_meta( $discount_id, 'affwp_is_coupon_template' );
+			return;
 
 		}
 

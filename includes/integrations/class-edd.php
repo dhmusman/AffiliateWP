@@ -722,7 +722,7 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 
 		if ( ! empty( $meta['affwp_discount_affiliate'] ) ) {
 			$affiliate_id = $meta[ 'affwp_discount_affiliate' ];
-		} elseif ( get_user_by( 'login', $_POST['user_name'] ) ) {
+		} elseif ( isset( $_POST['user_name'] ) ) {
 			$user         = get_user_by( 'login', $_POST['user_name'] );
 			$affiliate    = affiliate_wp()->affiliates->get_by( 'user_id', $user->ID );
 			$affiliate_id = $affiliate->affiliate_id;

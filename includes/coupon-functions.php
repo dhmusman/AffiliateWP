@@ -891,13 +891,13 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	 * is named `affwp_generate_integration_coupon_edd`.
 	 *
 	 */
-	$integration_data = call_user_func( 'affwp_generate_integration_coupon_' . $args[ 'integration' ], $args );
 
-	if ( affiliate_wp()->settings->get( 'debug_mode' ) ) {
-		affiliate_wp()->utils->log( 'Integration coupon data: '. print_r( $integration_data, true ) );
-	}
+	$function_name    = 'affwp_generate_integration_coupon_' . $args[ 'integration' ];
+	$integration_data = function_exists( $function_name ) ? $function_name( $function_name ) : false;
 
-	if ( ! $integration_data || empty( $integration_data ) ) {
+	affiliate_wp()->utils->log( 'Integration coupon data: '. print_r( $integration_data, true ) );
+
+	if ( ! $integration_data ) {
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: Could not generate integration coupon via dynamic caller.' );
 		return false;
 	}
@@ -916,15 +916,11 @@ function affwp_generate_integration_coupon( $args = array() ) {
 
 	// intval will return a 1 for non-empty arrays.
 	if ( ! is_array( $integration_data ) && intval( $integration_data ) ) {
-		$integration_coupon_id = $integration_data;
-	} elseif ( isset( $integration_data[ 'integration_coupon_id' ] ) ) {
-		$integration_coupon_id = absint( $integration_data[ 'integration_coupon_id' ] );
+		$integration_coupon_id = absint( $integration_data );
+	} elseif ( isset( $integration_data[ 'ID' ] ) ) {
+		$integration_coupon_id = absint( $integration_data[ 'ID' ] );
 	} else {
-		$integration_coupon_id = absint( $integration_data[ 'id' ] );
-	}
-
-	// The integration coupon ID is required to generate an internal AffiliateWP coupon object.
-	if ( ! is_int( $integration_coupon_id ) ) {
+		// The integration coupon ID is required to generate an internal AffiliateWP coupon object.
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: Could not determine the ID of the integration coupon.' );
 		return false;
 	}
@@ -932,6 +928,7 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	// Update post meta to specify the affiliate ID.
 	update_post_meta( $integration_coupon_id, 'affwp_discount_affiliate', $args[ 'affiliate_id' ] );
 
+	// Build coupon arguments.
 	$affwp_coupon_args = array(
 		'affiliate_id'          => $args[ 'affiliate_id' ],
 		'coupon_code'           => $integration_data[ 'coupon_code' ],
@@ -943,7 +940,6 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	);
 
 	return affwp_add_coupon( $affwp_coupon_args );
-
 }
 
 /**
@@ -983,8 +979,6 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 
 	$template = (array) $template;
 
-	// return;
-
 	/**
 	 * If a coupon code is provided, use it.
 	 * Otherwise, generate the coupon code string by using the following data:
@@ -998,7 +992,6 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 	$discount_args[ 'type' ]                     = get_post_meta( $template[ 'ID' ], [ '_edd_discount_type' ], true );;
 	$discount_args[ 'expiration' ]               = get_post_meta( $template[ 'ID' ], [ '_edd_discount_expiration' ], true );;
 	$discount_args[ 'affwp_discount_affiliate' ] = $args[ 'affiliate_id' ];
-
 
 	return edd_store_discount( $discount_args );
 }

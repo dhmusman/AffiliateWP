@@ -931,12 +931,12 @@ function affwp_generate_integration_coupon( $args = array() ) {
 
 	$affwp_coupon_args = array(
 		'affiliate_id'          => $args[ 'affiliate_id' ],
-		'coupon_code'           => $args[ 'coupon_code' ],
+		'coupon_code'           => $integration_data[ 'coupon_code' ],
 		'integration_coupon_id' => $integration_coupon_id,
 		'referrals'             => array(),
 		'integration'           => $args[ 'integration' ],
 		'owner'                 => get_current_user_id(),
-		'status'                => 'active',
+		'status'                => $integration_data[ 'status' ] ? $integration_data[ 'status' ]: 'active',
 	);
 
 	return affwp_add_coupon( $affwp_coupon_args );

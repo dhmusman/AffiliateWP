@@ -416,8 +416,7 @@ function affwp_get_coupon_template( $integration ) {
 					);
 					break;
 				case 'woocommerce' :
-					$wc_coupons  = new WC_API_Coupons;
-					$template    = $wc_coupons->get_coupon( $template_id );
+					$template = get_post( $template_id );
 					break;
 				case 'exchange' :
 					$template = '';
@@ -445,7 +444,7 @@ function affwp_get_coupon_template( $integration ) {
 					break;
 
 				default:
-					# code...
+					$template = get_post( $template_id );
 					break;
 			}
 		} else {
@@ -1017,16 +1016,9 @@ function affwp_generate_integration_coupon_woocommerce( $args = array() ) {
 	$coupon_args = array();
 	$template    = false;
 
-	if ( ! class_exists( 'WC_API_Coupons' ) ) {
-		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_woocommerce: Class WC_API_Coupons not found.' );
-		return false;
-	}
-
-	$wc_coupons  = new WC_API_Coupons;
-
 	// Ensure that a coupon template exists before proceeding.
 	if ( is_int( $args[ 'template_id' ] ) ) {
-		$template = $wc_coupons->get_coupon( $args[ 'template_id' ] );
+		$template = get_post( $args[ 'template_id' ] );
 	} else {
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_woocommerce: Unable to retrieve WooCommerce coupon template.' );
 		return false;
@@ -1037,28 +1029,41 @@ function affwp_generate_integration_coupon_woocommerce( $args = array() ) {
 		return false;
 	}
 
+	if ( ! $args[ 'affiliate_id' ] ) {
+		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_woocommerce: Unable to retrieve affiliate ID.' );
+		return false;
+	}
+
 	$template = is_object( $template ) ? (array) $template : $template;
 
+	$coupon_code = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integrations' ], $template[ 'code' ] );
+
 	$coupon_args = array (
-		'type'                         => $template[ 'type' ] ? $template[ 'type' ] : 'fixed_cart',
-		'amount'                       => $template[ 'amount' ] ? $template[ 'amount' ] : 0,
-		'individual_use'               => $template[ 'individual_use' ] ? $template[ 'individual_use' ] : false,
-		'product_ids'                  => $template[ 'product_ids' ] ? $template[ 'product_ids' ] : array(),
-		'exclude_product_ids'          => $template[ 'exclude_product_ids' ] ? $template[ 'exclude_product_ids' ] : array(),
-		'usage_limit'                  => $template[ 'usage_limit' ] ? $template[ 'usage_limit' ] : '',
-		'usage_limit_per_user'         => $template[ 'usage_limit_per_user' ] ? $template[ 'usage_limit_per_user' ] : '',
-		'limit_usage_to_x_items'       => $template[ 'limit_usage_to_x_items' ] ? $template[ 'limit_usage_to_x_items' ] : '',
-		'usage_count'                  => $template[ 'usage_count' ] ? $template[ 'usage_count' ] : '',
-		'expiry_date'                  => $template[ 'expiry_date' ] ? $template[ 'expiry_date' ] : '',
-		'enable_free_shipping'         => $template[ 'enable_free_shipping' ] ? $template[ 'enable_free_shipping' ] : false,
-		'product_category_ids'         => $template[ 'product_category_ids' ] ? $template[ 'product_category_ids' ] : array(),
-		'exclude_product_category_ids' => $template[ 'exclude_product_category_ids' ] ? $template[ 'exclude_product_category_ids' ] : array(),
-		'exclude_sale_items'           => $template[ 'exclude_sale_items' ] ? $template[ 'exclude_sale_items' ] : false,
-		'minimum_amount'               => $template[ 'minimum_amount' ] ? $template[ 'minimum_amount' ] : '',
-		'maximum_amount'               => $template[ 'maximum_amount' ] ? $template[ 'maximum_amount' ] : '',
-		'customer_emails'              => $template[ 'customer_emails' ] ? $template[ 'customer_emails' ] : array(),
-		'description'                  => $template[ 'description' ] ? $template[ 'description' ] : ''
+		'post_title' => $coupon_code,
+		'post_type' => 'shop_coupon',
+		'meta_input' => array (
+			'code'                         => $coupon_code,
+			'type'                         => $template[ 'type' ] ? $template[ 'type' ] : 'fixed_cart',
+			'amount'                       => $template[ 'amount' ] ? $template[ 'amount' ] : 0,
+			'individual_use'               => $template[ 'individual_use' ] ? $template[ 'individual_use' ] : false,
+			'product_ids'                  => $template[ 'product_ids' ] ? $template[ 'product_ids' ] : array(),
+			'exclude_product_ids'          => $template[ 'exclude_product_ids' ] ? $template[ 'exclude_product_ids' ] : array(),
+			'usage_limit'                  => $template[ 'usage_limit' ] ? $template[ 'usage_limit' ] : '',
+			'usage_limit_per_user'         => $template[ 'usage_limit_per_user' ] ? $template[ 'usage_limit_per_user' ] : '',
+			'limit_usage_to_x_items'       => $template[ 'limit_usage_to_x_items' ] ? $template[ 'limit_usage_to_x_items' ] : '',
+			'usage_count'                  => $template[ 'usage_count' ] ? $template[ 'usage_count' ] : '',
+			'expiry_date'                  => $template[ 'expiry_date' ] ? $template[ 'expiry_date' ] : '',
+			'enable_free_shipping'         => $template[ 'enable_free_shipping' ] ? $template[ 'enable_free_shipping' ] : false,
+			'product_category_ids'         => $template[ 'product_category_ids' ] ? $template[ 'product_category_ids' ] : array(),
+			'exclude_product_category_ids' => $template[ 'exclude_product_category_ids' ] ? $template[ 'exclude_product_category_ids' ] : array(),
+			'exclude_sale_items'           => $template[ 'exclude_sale_items' ] ? $template[ 'exclude_sale_items' ] : false,
+			'minimum_amount'               => $template[ 'minimum_amount' ] ? $template[ 'minimum_amount' ] : '',
+			'maximum_amount'               => $template[ 'maximum_amount' ] ? $template[ 'maximum_amount' ] : '',
+			'customer_emails'              => $template[ 'customer_emails' ] ? $template[ 'customer_emails' ] : array(),
+			'description'                  => $template[ 'description' ] ? $template[ 'description' ] : ''
+
+		)
 	);
 
-	return $wc_coupons->create_coupon( $coupon_args );
+	return wp_insert_post( $coupon_args );
 }

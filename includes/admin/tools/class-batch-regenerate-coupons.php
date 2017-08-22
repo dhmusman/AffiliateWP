@@ -95,10 +95,11 @@ class Regenerate_Coupons extends Generate_Coupons implements Batch\With_PreFetch
 
 		foreach ( $affiliate_ids as $affiliate_id ) {
 
-			foreach ( $integrations as $integration ) {
+			foreach ( $this->integrations as $integration_id => $integration ) {
+
 				$args = array(
 					'affiliate_id' => $affiliate_id,
-					'integration'  => $this->integration,
+					'integration'  => $integration_id,
 					'template_id'  => $this->template_id
 				);
 

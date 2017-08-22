@@ -121,11 +121,10 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 		}
 
 		$generated    = array();
-		$integrations = $this->integrations;
 
 		foreach ( $affiliate_ids as $affiliate_id ) {
 
-			foreach ( $integrations as $integration_id => $integration ) {
+			foreach ( $this->integrations as $integration_id => $integration ) {
 
 				$coupon   = false;
 				$template = affwp_get_coupon_template( $integration_id );

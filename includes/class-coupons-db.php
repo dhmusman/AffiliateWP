@@ -792,7 +792,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 		$integrations = $this->get_supported_integrations();
 
 		// Ensure that each integration has a coupon template which is currently set.
-		foreach ( $integrations as $integration ) {
+		foreach ( $integrations as $integration => $label ) {
 
 			if ( 0 !== affwp_get_coupon_template_id( $integration ) ) {
 				$templates[ $integration ] = affwp_get_coupon_template_id( $integration );

@@ -545,10 +545,18 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 		$data = affiliate_wp()->utils->process_request_data( $_POST, 'user_name' );
 
 		$affiliate_id = affwp_get_affiliate_id( $data['user_id'] );
-		$is_template  = ( 0 !== $_POST['affwp_is_coupon_template'] ) ? true : false;
 
 		update_post_meta( $discount_id, 'affwp_discount_affiliate', $affiliate_id );
-		update_post_meta( $discount_id, 'affwp_is_coupon_template', $is_template );
+
+		if( ! empty( $_POST['affwp_is_coupon_template'] ) ) {
+
+			update_post_meta( $discount_id, 'affwp_is_coupon_template', $is_template );
+
+		} else {
+
+			Delete_post_meta( $discount_id, 'affwp_is_coupon_template' );
+
+		}
 
 		// Create an AffiliateWP coupon object.
 		if ( affwp_add_coupon( $data ) ) {

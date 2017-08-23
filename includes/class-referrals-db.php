@@ -189,6 +189,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		}
 
 		if ( ! empty( $data['date'] ) ) {
+			// Ensure the date is stored in UTC.
 			$args['date'] = affiliate_wp()->utils->date( $data['date'], 'UTC' )->toDateTimeString();
 		}
 
@@ -450,6 +451,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 
 				if( ! empty( $args['date']['start'] ) ) {
 
+					// The stored date will be in UTC.
 					$start_date = affiliate_wp()->utils->date( $args['date']['start'], 'UTC' );
 
 					if( false !== strpos( $args['date']['start'], ':' ) ) {
@@ -468,6 +470,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 
 				if ( ! empty( $args['date']['end'] ) ) {
 
+					// The stored date will be in UTC.
 					$end_date = affiliate_wp()->utils->date( $args['date']['end'], 'UTC' );
 
 					if ( false !== strpos( $args['date']['end'], ':' ) ) {
@@ -486,6 +489,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 
 			} else {
 
+				// The stored date will be in UTC.
 				$date = affiliate_wp()->utils->date( $args['date'], 'UTC' );
 
 				if( empty( $where ) ) {

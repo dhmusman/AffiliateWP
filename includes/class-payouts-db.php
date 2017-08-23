@@ -496,6 +496,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 
 				if( ! empty( $args['date']['start'] ) ) {
 
+					// The stored date will be in UTC.
 					$start_date = affiliate_wp()->utils->date( $args['date']['start'], 'UTC' );
 
 					if( false !== strpos( $args['date']['start'], ':' ) ) {
@@ -514,6 +515,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 
 				if ( ! empty( $args['date']['end'] ) ) {
 
+					// The stored date will be in UTC.
 					$end_date = affiliate_wp()->utils->date( $args['date']['end'], 'UTC' );
 
 					if ( false !== strpos( $args['date']['end'], ':' ) ) {
@@ -532,6 +534,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 
 			} else {
 
+				// The stored date will be in UTC.
 				$date = affiliate_wp()->utils->date( $args['date'], 'UTC' );
 
 				if( empty( $where ) ) {

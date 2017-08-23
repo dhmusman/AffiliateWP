@@ -495,7 +495,7 @@ function affwp_get_report_dates( $timezone = '' ) {
 		 *
 		 * @param array $dates Array of graph filter dates.
 		 */
-		return apply_filters_deprecated( 'affwp_report_dates', $dates, '2.2', 'affwp_get_filter_dates' );
+		return apply_filters_deprecated( 'affwp_report_dates', array( $dates ), '2.2', 'affwp_get_filter_dates' );
 	} else {
 		/**
 		 * Filters the report dates array.

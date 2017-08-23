@@ -159,8 +159,7 @@ final class Payout extends \AffWP\Base_Object {
 	/**
 	 * Retrieves the (maybe formatted) date for the current payout.
 	 *
-	 * @access public
-	 * @since  2.2
+	 * @since 2.2
 	 *
 	 * @see \AffWP\Utils\Date::format()
 	 *

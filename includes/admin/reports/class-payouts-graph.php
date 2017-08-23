@@ -125,7 +125,7 @@ class Affiliate_WP_Payouts_Graph extends \Affiliate_WP_Graph {
 			$difference = ( strtotime( $this->dates['end'] ) - strtotime( $this->dates['start'] ) );
 
 			foreach ( $payouts as $payout ) {
-				// Can't use Payout->date() here because $referrals aren't full Payout objects.
+				// Can't use Payout->date() here because $payouts aren't full Payout objects.
 				if ( in_array( $this->date_range, array( 'this_year', 'last_year' ), true )
 				     || $difference >= YEAR_IN_SECONDS
 				) {

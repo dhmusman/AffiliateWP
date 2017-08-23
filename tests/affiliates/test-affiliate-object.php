@@ -129,7 +129,7 @@ class Tests extends UnitTestCase {
 	public function test_date_registered_format_true_should_return_datetime_formatted_date_registered() {
 		$affiliate = affwp_get_affiliate( self::$affiliate_id );
 
-		$expected = date( affiliate_wp()->utils->date->datetime_format, strtotime( $affiliate->date_registered ) );
+		$expected = date( affiliate_wp()->utils->date->datetime_format, strtotime( self::$date_registered ) );
 
 		$this->assertSame( $expected, $affiliate->date_registered( true ) );
 	}
@@ -141,7 +141,7 @@ class Tests extends UnitTestCase {
 	public function test_date_registered_format_date_should_return_date_formatted_date_registered() {
 		$affiliate = affwp_get_affiliate( self::$affiliate_id );
 
-		$expected = date( affiliate_wp()->utils->date->date_format, strtotime( $affiliate->date_registered ) );
+		$expected = date( affiliate_wp()->utils->date->date_format, strtotime( self::$date_registered ) );
 
 		$this->assertSame( $expected, $affiliate->date_registered( 'date' ) );
 	}
@@ -153,7 +153,7 @@ class Tests extends UnitTestCase {
 	public function test_date_registered_format_time_should_return_time_formatted_date_registered() {
 		$affiliate = affwp_get_affiliate( self::$affiliate_id );
 
-		$expected = date( affiliate_wp()->utils->date->time_format, strtotime( $affiliate->date_registered ) );
+		$expected = date( affiliate_wp()->utils->date->time_format, strtotime( self::$date_registered ) );
 
 		$this->assertSame( $expected, $affiliate->date_registered( 'time' ) );
 	}
@@ -165,7 +165,7 @@ class Tests extends UnitTestCase {
 	public function test_date_registered_format_datetime_should_return_datetime_formatted_date_registered() {
 		$affiliate = affwp_get_affiliate( self::$affiliate_id );
 
-		$expected = date( affiliate_wp()->utils->date->datetime_format, strtotime( $affiliate->date_registered ) );
+		$expected = date( affiliate_wp()->utils->date->datetime_format, strtotime( self::$date_registered ) );
 
 		$this->assertSame( $expected, $affiliate->date_registered( 'datetime' ) );
 	}
@@ -177,7 +177,7 @@ class Tests extends UnitTestCase {
 	public function test_date_registered_format_utc_should_return_datetime_formatted_date_registered() {
 		$affiliate = affwp_get_affiliate( self::$affiliate_id );
 
-		$expected = date( affiliate_wp()->utils->date->datetime_format, strtotime( $affiliate->date_registered ) );
+		$expected = date( affiliate_wp()->utils->date->datetime_format, strtotime( self::$date_registered ) );
 
 		$this->assertSame( $expected, $affiliate->date_registered( 'utc' ) );
 	}
@@ -199,7 +199,7 @@ class Tests extends UnitTestCase {
 	public function test_date_registered_format_timestamp_should_return_timestamp() {
 		$affiliate = affwp_get_affiliate( self::$affiliate_id );
 
-		$this->assertSame( strtotime( $affiliate->date_registered ), $affiliate->date_registered( 'timestamp' ) );
+		$this->assertSame( strtotime( self::$date_registered ), $affiliate->date_registered( 'timestamp' ) );
 	}
 
 	/**
@@ -211,7 +211,7 @@ class Tests extends UnitTestCase {
 
 		$affiliate = affwp_get_affiliate( self::$affiliate_id );
 
-		$expected = date( $format, strtotime( $affiliate->date_registered ) );
+		$expected = date( $format, strtotime( self::$date_registered ) );
 
 		$this->assertSame( $expected, $affiliate->date_registered( $format ) );
 	}

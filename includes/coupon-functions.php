@@ -772,7 +772,7 @@ function affwp_maybe_generate_coupons( $data, $row_id ) {
 			}
 
 			if ( ! empty( $_POST[ 'user_login' ] ) ) {
-				$user = get_user_by( 'login', $_POST[ 'user_login' ] );
+				$user         = get_user_by( 'login', $_POST[ 'user_login' ] );
 				$affiliate_id = affiliate_wp()->affiliates->get_by( 'user_id', $user->ID );
 			}
 		}
@@ -899,6 +899,11 @@ function affwp_generate_integration_coupon( $args = array() ) {
 		return false;
 	}
 
+	$template = affwp_get_coupon_template( $args[ 'integration' ] );
+	$template = (array) $template;
+	$base = ! empty( $template[ 'coupon_code' ] ) ? $template[ '' ] : '';
+	$args[ 'coupon_code' ] = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], $base );
+
 	/**
 	 * Dynamically calls the necessary integration coupon generator function, named per integration.
 	 *
@@ -910,7 +915,7 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	 *
 	 */
 	$function_name    = 'affwp_generate_integration_coupon_' . $args[ 'integration' ];
-	$integration_data = function_exists( $function_name ) ? $function_name( $function_name ) : false;
+	$integration_data = function_exists( $function_name ) ? $function_name( $args ) : false;
 
 	affiliate_wp()->utils->log( 'Integration coupon data: '. print_r( $integration_data, true ) );
 

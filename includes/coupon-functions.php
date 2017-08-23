@@ -11,7 +11,7 @@
  *
  * @since 2.2
  *
- * @param int|AffWP\Affiliate\Coupon $coupon Coupon ID or object.
+ * @param int|AffWP\Affiliate\Coupon $coupon Coupon ID, coupon object, or an array containing the affiliate ID and integration at a minimum.
  * @return AffWP\Affiliate\Coupon|false Coupon object if found, otherwise false.
  */
 function affwp_get_coupon( $coupon = 0 ) {
@@ -20,6 +20,22 @@ function affwp_get_coupon( $coupon = 0 ) {
 		$coupon_id = $coupon->coupon_id;
 	} elseif ( is_numeric( $coupon ) ) {
 		$coupon_id = absint( $coupon );
+	} elseif ( is_array( $coupon ) ) {
+		$coupon_id = is_numeric( $coupon[ 'coupon_id' ] )    ? absint( $coupon[ 'coupon_id' ] )    : 0;
+
+		if ( ( 0 === $coupon_id ) && isset( $coupon[ 'affiliate_id' ] ) && isset( $coupon[ 'integration' ] ) ) {
+			$affiliate_id = absint( $coupon[ 'affiliate_id' ] );
+			$integration  = $coupon[ 'integration' ];
+
+			$args = array(
+				'affiliate_id' => $affiliate_id,
+				'number'       => 1,
+				'integration'  => $integration
+			);
+
+			return affiliate_wp()->affiliates->coupons->get_coupons( $args, true );
+		}
+
 	} else {
 		return false;
 	}

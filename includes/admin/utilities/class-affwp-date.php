@@ -14,44 +14,39 @@ final class Date {
 	/**
 	 * The current WordPress timezone.
 	 *
-	 * @access public
-	 * @since  2.2
-	 * @var    string
+	 * @since 2.2
+	 * @var   string
 	 */
 	public $timezone;
 
 	/**
 	 * The current WordPress date format.
 	 *
-	 * @access public
-	 * @since  2.2
-	 * @var    string
+	 * @since 2.2
+	 * @var   string
 	 */
 	public $date_format;
 
 	/**
 	 * The current WordPress time format.
 	 *
-	 * @access public
-	 * @since  2.2
-	 * @var    string
+	 * @since 2.2
+	 * @var   string
 	 */
 	public $time_format;
 
 	/**
 	 * A shorthand combination of the WordPress date and time formats.
 	 *
-	 * @access public
-	 * @since  2.2
-	 * @var    string
+	 * @since 2.2
+	 * @var   string
 	 */
 	public $datetime_format;
 
 	/**
 	 * Sets up the class.
 	 *
-	 * @access public
-	 * @since  2.2
+	 * @since 2.2
 	 */
 	public function __construct() {
 		$this->timezone        = $this->get_core_timezone();
@@ -63,8 +58,7 @@ final class Date {
 	/**
 	 * Formats a given date string according to WP date and time formats and timezone.
 	 *
-	 * @access public
-	 * @since  2.2
+	 * @since 2.2
 	 *
 	 * @param string      $date_string Date string to format.
 	 * @param string|true $type        Optional. How to format the date string.  Accepts 'date',
@@ -115,8 +109,7 @@ final class Date {
 	/**
 	 * Attempts to retrieve the WP timezone, or if not set, the timezone derived from the gmt_offset.
 	 *
-	 * @access private
-	 * @since  2.2
+	 * @since 2.2
 	 *
 	 * @return string Timezone string, or if all checks fail, default is 'UTC'.
 	 */

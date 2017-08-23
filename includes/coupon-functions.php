@@ -601,106 +601,108 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base
 		return false;
 	}
 
+	// if base is empty from params, get it from coupon template. if not from coupon template, generate it.
+
 	// Define the coupon code base from the coupon template, if one is not provided.
 	if ( empty( $base ) ) {
 
 		// Generate a base coupon code from the existing coupon template, for the provided integration.
-		$template = affiliate_wp()->affiliates->coupons->get_coupons( array(
-				'integration'           => $integration,
-				'integration_coupon_id' => affwp_get_coupon_template_id( $integration ),
-				'number'                => 1,
+		$template = affwp_get_coupon_template( $args[ 'integration'] );
 
-			)
-		);
-
-		if ( $template ) {
+		if ( isset( $template[ 'coupon_code' ] ) ) {
 			$base = $template[ 'coupon_code' ];
+		} elseif ( isset( $template[ 'code' ] ) ) {
+			$base = $template[ 'code' ];
+		} else {
+			$base = '';
+			affiliate_wp()->utils->log( 'affwp_generate_coupon_code: Unable to generate coupon code $base.' );
 		}
 
 	}
 
-	if ( ! empty( $base ) ) {
-
-		/**
-		 * Coupon code string.
-		 *
-		 * @param string $base          Base coupon code, to which a suffix is applied.
-		 * @param int    $affiliate_id  Affiliate ID.
-		 * @param string $hash          Eight-digit substring of md5 hash of affiliate ID (eight digits).
-		 *
-		 * The generated coupon code would be:
-		 *
-		 * base_example-1-c4ca4238
-		 */
+	/**
+	 * Coupon code string.
+	 *
+	 * @param string $base          Base coupon code, to which a suffix is applied.
+	 * @param int    $affiliate_id  Affiliate ID.
+	 * @param string $hash          Eight-digit substring of md5 hash of affiliate ID (eight digits).
+	 *
+	 * The generated coupon code would be:
+	 *
+	 * base_example-1-c4ca4238
+	 */
 
 
-		// Define default values.
-		$hash      = substr( md5( $affiliate_id, false ), 0, 8 );
-		$separator = '-';
+	// Define default values.
+	$hash      = substr( md5( $affiliate_id, false ), 0, 8 );
+	$separator = '-';
 
-		/**
-		 * Defines the coupon code base.
-		 *
-		 * @param string $base  Coupon code base.
-		 * @since 2.2
-		 */
-		$base      = apply_filters( 'affwp_coupon_code_base', $base );
+	/**
+	 * Defines the coupon code base.
+	 *
+	 * @param string $base  Coupon code base.
+	 * @since 2.2
+	 */
+	$base      = apply_filters( 'affwp_coupon_code_base', $base );
 
-		/**
-		 * Defines the separator used in the coupon code string.
-		 *
-		 * @param
-		 * @since 2.2
-		 */
-		$separator  = apply_filters( 'affwp_coupon_code_separator', $separator );
+	/**
+	 * Defines the separator used in the coupon code string.
+	 * Specify a single-character separator.
+	 *
+	 * @param string $separator Separator character used in coupon code string generation.
+	 *                          Defaults to a hyphen, '-'.
+	 * @since 2.2
+	 */
+	$separator  = apply_filters( 'affwp_coupon_code_separator', $separator );
 
-		/**
-		 * Defines the affiliate ID used in the coupon code string.
-		 *
-		 * @param int $affiliate_id  Affiliate ID.
-		 * @since 2.2
-		 */
-		$affiliate_id  = apply_filters( 'affwp_coupon_code_affiliate_id', $affiliate_id );
+	/**
+	 * Defines the affiliate ID used in the coupon code string.
+	 *
+	 * @param int $affiliate_id  Affiliate ID.
+	 * @since 2.2
+	 */
+	$affiliate_id  = apply_filters( 'affwp_coupon_code_affiliate_id', $affiliate_id );
 
-		/**
-		 * Defines the hash suffix of the coupon code.
-		 *
-		 * @param string $hash  Coupon code hash suffix. Defaults to an eight-digit
-		 *                      substring of an md5 hash of the provided affiliate ID.
-		 * @since 2.2
-		 */
-		$hash       = apply_filters( 'affwp_coupon_code_hash', $hash );
+	/**
+	 * Defines the hash suffix of the coupon code.
+	 *
+	 * @param string $hash  Coupon code hash suffix. Defaults to an eight-digit
+	 *                      substring of an md5 hash of the provided affiliate ID.
+	 * @since 2.2
+	 */
+	$hash       = apply_filters( 'affwp_coupon_code_hash', $hash );
 
-		$coupon_code = sanitize_text_field( $base . $separator . $affiliate_id . $separator . $hash );
+	$coupon_code = sanitize_text_field(
+		implode( $separator,
+			array(
+				$base,
+				$affiliate_id,
+				$hash
+			)
+		)
+	);
 
-		/**
-		 * Sets the coupon code when generating a coupon for a supported integration.
-		 *
-		 * Specify a string to use for the coupon code,
-		 * ensuring that the formatting is supported by the integrations coupon code sanitization.
-		 *
-		 * @param mixed string|false $coupon_code   The generated coupon code string, otherwise returns false.
-		 * @param string             $base          Coupon code base.
-		 * @param string             $separator     Separator character used in the coupon code string.
-		 * @param int                $affiliate_id  Affiliate ID.
-		 * @param string             $hash          Coupon code hash suffix.
-		 * @since 2.2
-		 */
-		return apply_filters( 'affwp_generate_coupon_code',
-			$coupon_code,
-			$base,
-			$separator,
-			$affiliate_id,
-			$hash
-		);
-
-	} else {
-		// The coupon template is not available for this integration.
-		affiliate_wp()->utils->log( 'affwp_generate_coupon_code: Unable to determine coupon template ID when generating coupon code for ' . $integration . '. Make sure to set the coupon template for this integration.' );
-	}
-
-	return false;
-
+	/**
+	 * Sets the coupon code when generating a coupon for a supported integration.
+	 *
+	 * Specify a string to use for the coupon code,
+	 * ensuring that the formatting is supported by the integrations coupon code sanitization.
+	 *
+	 * @param mixed string|false $coupon_code   The generated coupon code string,
+	 *                                          otherwise returns false.
+	 * @param string             $base          Coupon code base.
+	 * @param string             $separator     Separator character used in the coupon code string.
+	 * @param int                $affiliate_id  Affiliate ID.
+	 * @param string             $hash          Coupon code hash suffix.
+	 * @since 2.2
+	 */
+	return apply_filters( 'affwp_generate_coupon_code',
+		$coupon_code,
+		$base,
+		$separator,
+		$affiliate_id,
+		$hash
+	);
 }
 
 /**
@@ -713,10 +715,10 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base
  *
  * @return bool                   True if the coupon exists, otherwise false.
  */
-function affwp_affiliate_has_existing_coupon( $affiliate_id = 0, $integration = '' ) {
+function affwp_coupon_exists( $affiliate_id = 0, $integration = '' ) {
 
 	if ( ! $affiliate_id || empty( $integration ) ) {
-		affiliate_wp()->utils->log( 'affwp_affiliate_has_existing_coupon: The affiliate ID and integration must be specified.' );
+		affiliate_wp()->utils->log( 'affwp_coupon_exists: The affiliate ID and integration must be specified.' );
 		return false;
 	}
 
@@ -726,7 +728,7 @@ function affwp_affiliate_has_existing_coupon( $affiliate_id = 0, $integration = 
 		'integration'  => $integration
 	);
 
-	return affiliate_wp()->affiliates->coupons->get_coupons( $args, true );
+	return affwp_get_coupon( $args );
 }
 
 /**

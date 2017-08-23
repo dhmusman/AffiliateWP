@@ -81,7 +81,11 @@ class Affiliate_WP_Utilities {
 	 * @since  2.0
 	 */
 	public function includes() {
-		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/libraries/Carbon/Carbon.php';
+		// Only load Carbon if not already loaded by another plugin.
+		if ( ! class_exists( '\Carbon\Carbon' ) ) {
+			require_once AFFILIATEWP_PLUGIN_DIR . 'includes/libraries/Carbon/Carbon.php';
+		}
+
 		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/utilities/class-affwp-date.php';
 		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/class-logging.php';
 		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/admin/utilities/class-upgrade-registry.php';

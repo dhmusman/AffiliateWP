@@ -123,7 +123,22 @@ function affwp_get_filter_dates( $values = 'strings', $timezone = '' ) {
 		}
 	}
 
-	return $dates;
+	/**
+	 * Filters the start and end date filters for use with the Graphs API.
+	 *
+	 * @since 2.2
+	 *
+	 * @param array $dates {
+	 *     Query date range for the current graph filter request.
+	 *
+	 *     @type string|\Carbon\Carbon $start Start day and time (based on the beginning of the given day).
+	 *                                        If `$values` is 'objects', a Carbon object, otherwise a date
+	 *                                        time string.
+	 *     @type string|\Carbon\Carbon $end   End day and time (based on the end of the given day). If `$values`
+	 *                                        is 'objects', a Carbon object, otherwise a date time string.
+	 * }
+	 */
+	return apply_filters( 'affwp_get_filter_dates', $dates );
 
 }
 

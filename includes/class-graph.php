@@ -485,12 +485,26 @@ function affwp_get_report_dates( $timezone = '' ) {
 		'year_end'  => $filter_dates['end']->year,
 	);
 
-	/**
-	 * Filters the report dates array.
-	 *
-	 * @since 1.0
-	 *
-	 * @param array $dates Array of graph filter dates.
-	 */
-	return apply_filters( 'affwp_report_dates', $dates );
+	if ( function_exists( 'apply_filters_deprecated' ) ) {
+		/**
+		 * Filters the report dates array.
+		 *
+		 * @since 1.0
+		 * @deprecated 2.2 Use 'affwp_get_filter_dates'
+		 * @see 'affwp_get_filter_dates'
+		 *
+		 * @param array $dates Array of graph filter dates.
+		 */
+		return apply_filters_deprecated( 'affwp_report_dates', $dates, '2.2', 'affwp_get_filter_dates' );
+	} else {
+		/**
+		 * Filters the report dates array.
+		 *
+		 * @since 1.0
+		 *
+		 * @param array $dates Array of graph filter dates.
+		 */
+		return apply_filters( 'affwp_report_dates', $dates );
+	}
+
 }

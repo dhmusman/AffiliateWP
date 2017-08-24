@@ -89,4 +89,83 @@ class Tests extends UnitTestCase {
 		$this->assertSame( $date_format . ' ' . $time_format, self::$date->datetime_format );
 	}
 
+	/**
+	 * @covers \AffWP\Utils\Date::format()
+	 */
+	public function test_format_type_timestamp_should_return_a_timestamp() {
+		$expected = strtotime( self::$date_string );
+
+		$this->assertSame( $expected, self::$date->format( self::$date_string, 'timestamp' ) );
+	}
+
+	/**
+	 * @covers \AffWP\Utils\Date::format()
+	 */
+	public function test_format_type_object_should_return_a_Carbon_object() {
+		$this->assertInstanceOf( '\Carbon\Carbon', self::$date->format( self::$date_string, 'object' ) );
+	}
+
+	/**
+	 * @covers \AffWP\Utils\Date::format()
+	 */
+	public function test_format_type_date_format_should_return_a_date_with_that_format() {
+		$expected = date( self::$date->date_format, strtotime( self::$date_string ) );
+
+		$this->assertSame( $expected, self::$date->format( self::$date_string, 'date' ) );
+	}
+
+	/**
+	 * @covers \AffWP\Utils\Date::format()
+	 */
+	public function test_format_type_empty_should_return_a_datetime_formatted_date() {
+		$expected = date( self::$date->datetime_format, strtotime( self::$date_string ) );
+
+		$this->assertSame( $expected, self::$date->format( self::$date_string, '' ) );
+	}
+
+	/**
+	 * @covers \AffWP\Utils\Date::format()
+	 */
+	public function test_format_type_true_should_return_a_datetime_formatted_date() {
+		$expected = date( self::$date->datetime_format, strtotime( self::$date_string ) );
+
+		$this->assertSame( $expected, self::$date->format( self::$date_string, true ) );
+	}
+
+	/**
+	 * @covers \AffWP\Utils\Date::format()
+	 */
+	public function test_format_type_date_should_return_a_date_formatted_date() {
+		$expected = date( self::$date->date_format, strtotime( self::$date_string ) );
+
+		$this->assertSame( $expected, self::$date->format( self::$date_string, 'date' ) );
+	}
+
+	/**
+	 * @covers \AffWP\Utils\Date::format()
+	 */
+	public function test_format_type_time_should_return_a_time_formatted_date() {
+		$expected = date( self::$date->time_format, strtotime( self::$date_string ) );
+
+		$this->assertSame( $expected, self::$date->format( self::$date_string, 'time' ) );
+	}
+
+	/**
+	 * @covers \AffWP\Utils\Date::format()
+	 */
+	public function test_format_type_datetime_should_return_a_datetime_formatted_date() {
+		$expected = date( self::$date->datetime_format, strtotime( self::$date_string ) );
+
+		$this->assertSame( $expected, self::$date->format( self::$date_string, 'datetime' ) );
+	}
+
+	/**
+	 * @covers \AffWP\Utils\Date::format()
+	 */
+	public function test_format_type_utc_should_return_a_datetime_formatted_date() {
+		$expected = date( self::$date->datetime_format, strtotime( self::$date_string ) );
+
+		$this->assertSame( $expected, self::$date->format( self::$date_string, 'utc' ) );
+	}
+
 }

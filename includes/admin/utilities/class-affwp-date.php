@@ -113,7 +113,7 @@ final class Date {
 	 *
 	 * @return string Timezone string, or if all checks fail, default is 'UTC'.
 	 */
-	private function get_core_timezone() {
+	public function get_core_timezone() {
 
 		// Passing a $default value doesn't work for the timezeon_string option.
 		$timezone = get_option( 'timezone_string' );

@@ -496,6 +496,11 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			$data['context'] = sanitize_key( substr( $data['context'], 0, 50 ) );
 		}
 
+		if ( ! empty( $data['date'] ) ) {
+			// Ensure the date is stored in UTC.
+			$args['date'] = affiliate_wp()->utils->date( $data['date'], 'UTC' )->toDateTimeString();
+		}
+
 		if ( ! empty( $data['affiliate_id'] ) ) {
 			// If the passed affiliate ID is invalid, ignore the new value.
 			if ( ! affwp_get_affiliate( $data['affiliate_id'] ) ) {

@@ -265,6 +265,27 @@ class Affiliate_WP_Creatives_DB extends Affiliate_WP_DB {
 
 	}
 
+	/**
+	 * Updates an existing creative in the database.
+	 *
+	 * @since 2.2
+	 *
+	 * @param int    $row_id Creative ID.
+	 * @param array  $data   Optional. Array of columns and associated data to update. Default empty array.
+	 * @param string $where  Optional. Column to match against in the WHERE clause. If empty, $primary_key
+	 *                       will be used. Default empty.
+	 * @param string $type   Optional. Data type context, e.g. 'affiliate', 'creative', etc. Default 'creative'.
+	 * @return bool          False if the record could not be updated, true otherwise.
+	 */
+	public function update( $row_id, $data = array(), $where = '', $type = 'creative' ) {
+		if ( ! empty( $data['date'] ) ) {
+			// Ensure the date is stored in UTC.
+			$data['date'] = affiliate_wp()->utils->date( $data['date'], 'UTC' )->toDateTimeString();
+		}
+
+		return parent::update( $row_id, $data, $where, $type );
+	}
+
 	public function create_table() {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 

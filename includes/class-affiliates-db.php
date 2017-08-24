@@ -551,6 +551,27 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	}
 
 	/**
+	 * Updates an existing affiliate in the database.
+	 *
+	 * @since 2.2
+	 *
+	 * @param int    $row_id Affiliate ID.
+	 * @param array  $data   Optional. Array of columns and associated data to update. Default empty array.
+	 * @param string $where  Optional. Column to match against in the WHERE clause. If empty, $primary_key
+	 *                       will be used. Default empty.
+	 * @param string $type   Optional. Data type context, e.g. 'affiliate', 'creative', etc. Default 'affiliate'.
+	 * @return bool          False if the record could not be updated, true otherwise.
+	 */
+	public function update( $row_id, $data = array(), $where = '', $type = 'affiliate' ) {
+		if ( ! empty( $data['date_registered'] ) ) {
+			// Ensure the date is stored in UTC.
+			$data['date_registered'] = affiliate_wp()->utils->date( $data['date_registered'], 'UTC' )->toDateTimeString();
+		}
+
+		return parent::update( $row_id, $data, $where, $type );
+	}
+
+	/**
 	 * Create the table
 	 *
 	 * @access public

@@ -324,6 +324,7 @@ function affwp_has_coupon_support_list( $active = false ) {
  *
  * @param  string  $integration The integration to check.
  * @return bool                 Returns true if the integration is supported, otherwise false.
+ *
  * @since  2.2
  */
 function affwp_is_active_has_coupon_support( $integration ) {
@@ -346,11 +347,11 @@ function affwp_is_active_has_coupon_support( $integration ) {
 	 * An array of coupon-supporting integrations in AffiliateWP core are provided by
 	 * `$supported` for reference.
 	 *
-	 * @since 2.2
-	 *
 	 * @param bool   $has_support True if the given integration has support, otherwise false.
 	 * @param string $integration Integration being checked.
 	 * @param array  $supported   Supported integrations.
+	 *
+	 * @since 2.2
 	 */
 	return apply_filters( 'affwp_has_coupon_support', $integration, $supported );
 }
@@ -359,7 +360,8 @@ function affwp_is_active_has_coupon_support( $integration ) {
  * Retrieves the coupon template ID, if set.
  *
  * @param  string $integration The integration.
- * @return int    The coupon template ID if set, otherwise returns 0.
+ * @return int                 The coupon template ID if set, otherwise returns 0.
+ *
  * @since  2.2
  */
 function affwp_get_coupon_template_id( $integration ) {
@@ -369,11 +371,12 @@ function affwp_get_coupon_template_id( $integration ) {
 /**
  * Retrieves the coupon template URL for the given integration coupon ID and integration.
  *
- * @since 2.2
+ * @param int     $integration_coupon_id The integration coupon ID.
+ * @param string  $integration           Integration.
+ * @return string                        The template edit URL for the integration coupon ID,
+ *                                       otherwise an empty string.
  *
- * @param int    $integration_coupon_id The integration coupon ID.
- * @param string $integration           Integration.
- * @return string The template edit URL for the integration coupon ID, otherwise empty string.
+ * @since 2.2
  */
 function affwp_get_coupon_edit_url( $integration_coupon_id, $integration_id ) {
 	return affiliate_wp()->affiliates->coupons->get_coupon_edit_url( $integration_coupon_id, $integration_id );
@@ -383,11 +386,10 @@ function affwp_get_coupon_edit_url( $integration_coupon_id, $integration_id ) {
  * Gets the coupon template object for the given integration.
  * Returns a predictable array of object properties.
  *
+ * @param  string $integration The integration.
+ * @return array  $template    Coupon template properties array on success, an empty array otherwise.
+ *
  * @since  2.2
- *
- * @param  [type]  $integration [description]
- *
- * @return [type]               [description]
  */
 function affwp_get_coupon_template( $integration ) {
 
@@ -396,7 +398,7 @@ function affwp_get_coupon_template( $integration ) {
 		return false;
 	}
 
-	$template    = false;
+	$template    = array();
 	$template_id = 0;
 
 
@@ -410,8 +412,6 @@ function affwp_get_coupon_template( $integration ) {
 	);
 
 	$template = affiliate_wp()->affiliates->coupons->get_coupons( $args );
-
-
 
 	// If the template isn't an internal AffiliateWP coupon object,
 	// query the integration directly.
@@ -475,9 +475,8 @@ function affwp_get_coupon_template( $integration ) {
 /**
  * Retrieves a list of active integrations with both coupon support and a selected coupon template.
  *
- * @since  2.2
- *
  * @return string $output Formatted list of integration coupon templates, otherwise a notice.
+ * @since  2.2
  */
 function affwp_get_coupon_templates() {
 
@@ -533,14 +532,13 @@ function affwp_get_coupon_templates() {
  *
  * The affiliate ID is used optionally in cases where data may be passed to the integration.
  *
- * @since  2.2
- *
  * @param  string  $integration   The integration.
  * @param  int     $affiliate_id  Affiliate ID.
  * @param  bool    $html          Whether or not to provide an html anchor tag in the return.
  *                                Specify true to output an anchor tag. Default is false.
  *
  * @return string|false         The coupon creation admin url, otherwise false.
+ * @since  2.2
  */
 function affwp_get_coupon_create_url( $integration, $affiliate_id = 0, $html = false ) {
 
@@ -607,7 +605,7 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base
 	if ( empty( $base ) ) {
 
 		// Generate a base coupon code from the existing coupon template, for the provided integration.
-		$template = affwp_get_coupon_template( $args[ 'integration'] );
+		$template = affwp_get_coupon_template( $integration );
 
 		if ( isset( $template[ 'coupon_code' ] ) ) {
 			$base = $template[ 'coupon_code' ];
@@ -838,7 +836,7 @@ function affwp_maybe_generate_coupons( $data, $row_id ) {
 
 		$args = array(
 			'affiliate_id'          => $affiliate_id,
-			'coupon_code'           => affwp_generate_coupon_code( $affiliate_id, $integration ),
+			'coupon_code'           => affwp_generate_coupon_code( $affiliate_id, $integration, '' ),
 			'referrals'             => array(),
 			'integration'           => $integration_id,
 			'owner'                 => get_current_user_id(),
@@ -901,7 +899,7 @@ function affwp_generate_integration_coupon( $args = array() ) {
 
 	$template = affwp_get_coupon_template( $args[ 'integration' ] );
 	$template = (array) $template;
-	$base = ! empty( $template[ 'coupon_code' ] ) ? $template[ '' ] : '';
+	$base     = ! empty( $template[ 'coupon_code' ] ) ? $template[ 'coupon_code' ] : get_the_title( $args[ 'template_id' ]);
 	$args[ 'coupon_code' ] = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], $base );
 
 	/**
@@ -954,6 +952,10 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	// Update post meta to specify the affiliate ID.
 	update_post_meta( $integration_coupon_id, 'affwp_discount_affiliate', $args[ 'affiliate_id' ] );
 
+	// if ( empty( $integration_data[ 'coupon_code' ] ) ) {
+	// 	$integration_data[ 'coupon_code' ] = get_the_title( $args[ 'ID' ] );
+	// }
+
 	// Build coupon arguments.
 	$affwp_coupon_args = array(
 		'affiliate_id'          => $args[ 'affiliate_id' ],
@@ -1005,6 +1007,21 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 
 	$template = (array) $template;
 
+	$template_code = '';
+
+	if ( ! empty( get_post_meta( $template[ 'ID' ], '_edd_discount_code', true ) ) ) {
+		$template_code = get_post_meta( $template[ 'ID' ], '_edd_discount_code', true );
+	} elseif ( ! empty( get_post_meta( $template[ 'ID' ], '_edd_discount_name', true ) ) ) {
+		$template_code = get_post_meta( $template[ 'ID' ], '_edd_discount_name', true );
+	} else {
+		$template_code = get_the_title( $template[ 'ID' ] );
+	}
+
+	if ( empty( $template_code ) ) {
+		affiliate_wp()->utils->log( 'Unable to generate coupon code.' );
+		return false;
+	}
+
 	/**
 	 * If a coupon code is provided, use it.
 	 * Otherwise, generate the coupon code string by using the following data:
@@ -1012,14 +1029,29 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 	 * - Coupon template data
 	 * - The date
 	 */
-	$discount_args[ 'coupon_code' ]              = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], get_post_meta( $template[ 'ID' ], '_edd_discount_code', true ) );
-	$discount_args[ 'name' ]                     = get_post_meta( $template[ 'ID' ], '_edd_discount_name', true );
-	$discount_args[ 'amount' ]                   = get_post_meta( $template[ 'ID' ], [ '_edd_discount_amount' ], true );
-	$discount_args[ 'type' ]                     = get_post_meta( $template[ 'ID' ], [ '_edd_discount_type' ], true );;
-	$discount_args[ 'expiration' ]               = get_post_meta( $template[ 'ID' ], [ '_edd_discount_expiration' ], true );;
+	$discount_args[ 'coupon_code' ]              = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], $template_code );
+	$discount_args[ 'name' ]                     = ! empty( get_post_meta( $template[ 'ID' ], '_edd_discount_name', true ) ) ? get_post_meta( $template[ 'ID' ], '_edd_discount_name', true ) : get_the_title( $template[ 'ID' ] );
+	$discount_args[ 'amount' ]                   = ! empty( get_post_meta( $template[ 'ID' ], [ '_edd_discount_amount' ], true ) ) ? get_post_meta( $template[ 'ID' ], [ '_edd_discount_amount' ], true ) : '';
+	$discount_args[ 'type' ]                     = ! empty( get_post_meta( $template[ 'ID' ], [ '_edd_discount_type' ], true ) ) ? get_post_meta( $template[ 'ID' ], [ '_edd_discount_type' ], true ) : 'percentage';
+	$discount_args[ 'expiration' ]               = ! empty( get_post_meta( $template[ 'ID' ], [ '_edd_discount_expiration' ], true ) ) ? get_post_meta( $template[ 'ID' ], [ '_edd_discount_expiration' ], true ) : '';
 	$discount_args[ 'affwp_discount_affiliate' ] = $args[ 'affiliate_id' ];
 
-	return edd_store_discount( $discount_args );
+	$discount_id = edd_store_discount( $discount_args );
+
+	if ( $discount_id ) {
+		$discount = edd_get_discount( $discount_id );
+		$coupon_args = array(
+			'coupon_code' => $discount->code,
+			'integration' => 'edd',
+			'status'      => $discount->status,
+			'integration_coupon_id' => $discount->ID,
+			'affiliate_id' => $args[ 'affiliate_id' ],
+		);
+
+		return $coupon_args;
+	}
+
+	return false;
 }
 
 /**

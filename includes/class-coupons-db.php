@@ -729,13 +729,14 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Filters the `affwp_has_coupon_support_list` function by enabled integrations.
 	 * Gets an array of currently-enabled integrations which have coupon support.
 	 *
-	 * @return array $integrations  Array of currently-enabled integrations which support coupons.
+	 * @return mixed false|array $integrations  Array of currently-enabled integrations which support coupons,
+	 *                              otherwise false.
 	 * @see Affiliate_WP_Coupons_DB::get_coupon_template_id()
 	 * @since  2.1
 	 */
 	public function get_supported_integrations() {
 
-		$available = array();
+		$available = false;
 		$enabled   = affiliate_wp()->integrations->get_enabled_integrations();
 		$supported = affwp_has_coupon_support_list();
 

@@ -72,6 +72,13 @@ class Tests extends UnitTestCase {
 	}
 
 	/**
+	 * @covers \Affiliate_WP_Utilities::$date
+	 */
+	public function test_date_should_be_a_Date_instance() {
+		$this->assertInstanceOf( '\AffWP\Utils\Date', self::$utils->date );
+	}
+
+	/**
 	 * @covers \Affiliate_WP_Utilities::process_request_data()
 	 */
 	public function test_process_request_data_should_return_data_unchanged_if_old_key_empty() {
@@ -136,6 +143,45 @@ class Tests extends UnitTestCase {
 		$result = self::$utils->process_request_data( $data, '_affwp_affiliate_user_name' );
 
 		$this->assertArrayHasKey( 'user_id', $result );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Utilities::date()
+	 */
+	public function test_date_default_date_string_and_timeszone_should_return_a_Carbon_instance() {
+		$this->assertInstanceOf( '\Carbon\Carbon', self::$utils->date() );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Utilities::date()
+	 */
+	public function test_date_with_now_date_string_should_use_now() {
+		$format = self::$utils->date->datetime_format;
+
+		$this->assertSame( self::$utils->date()->format( $format ), current_time( $format ) );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Utilities::date()
+	 */
+	public function test_date_with_date_string_and_default_timezone_should_use_WP_timezone() {
+		$date_string = '3/30/2015';
+
+		$expected = date( self::$utils->date->datetime_format, strtotime( $date_string ) );
+		$result   = self::$utils->date( $date_string );
+
+		$this->assertSame( $expected, $result->toDateTimeString() );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Utilities::date()
+	 */
+	public function test_date_with_date_string_and_timezone_should_use_that_timezone() {
+		$timezone = 'Pacific/Auckland';
+
+		$result = self::$utils->date( '7/4/1976', $timezone );
+
+		$this->assertSame( $timezone, $result->timezoneName );
 	}
 
 }

@@ -14,7 +14,7 @@ use AffWP\Tests\UnitTestCase;
 class Tests extends UnitTestCase {
 
 	/**
-	 * Utilities object.
+	 * Utilities object fixture.
 	 *
 	 * @access protected
 	 * @var    \Affiliate_WP_Utilities
@@ -22,12 +22,19 @@ class Tests extends UnitTestCase {
 	protected static $utils;
 
 	/**
-	 * Date object.
+	 * Date object fixture.
 	 *
 	 * @access protected
 	 * @var    \AffWP\Utils\Date
 	 */
 	protected static $date;
+
+	/**
+	 * Date string fixture.
+	 *
+	 * @var string
+	 */
+	protected static $date_string = '4/4/2004';
 
 	/**
 	 * Test batch ID.

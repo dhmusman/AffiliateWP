@@ -166,11 +166,12 @@ class Tests extends UnitTestCase {
 	 */
 	public function test_date_with_date_string_and_default_timezone_should_use_WP_timezone() {
 		$date_string = '3/30/2015';
+		$format      = self::$utils->date->datetime_format;
 
-		$expected = date( self::$utils->date->datetime_format, strtotime( $date_string ) );
+		$expected = date( $format, strtotime( $date_string ) );
 		$result   = self::$utils->date( $date_string );
 
-		$this->assertSame( $expected, $result->toDateTimeString() );
+		$this->assertSame( $expected, $result->format( $format ) );
 	}
 
 	/**

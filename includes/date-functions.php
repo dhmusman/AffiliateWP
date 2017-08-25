@@ -18,7 +18,7 @@
  *                         Accepts 'strings' or 'objects'. Default 'strings'.
  * @param string $timezone Optional. Timezone to force for filter dates. Primarily used for
  *                         legacy testing purposes. Default empty.
- * @return array {
+ * @return array|\Carbon\Carbon[] {
  *     Query date range for the current graph filter request.
  *
  *     @type string|\Carbon\Carbon $start Start day and time (based on the beginning of the given day).
@@ -128,7 +128,7 @@ function affwp_get_filter_dates( $values = 'strings', $timezone = '' ) {
 	 *
 	 * @since 2.2
 	 *
-	 * @param array $dates {
+	 * @param array|\Carbon\Carbon[] $dates {
 	 *     Query date range for the current graph filter request.
 	 *
 	 *     @type string|\Carbon\Carbon $start Start day and time (based on the beginning of the given day).

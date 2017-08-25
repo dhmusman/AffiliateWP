@@ -44,14 +44,6 @@ final class Date {
 	public $datetime_format;
 
 	/**
-	 * A shorthand version of the MySQL date format.
-	 *
-	 * @since 2.2
-	 * @var   string
-	 */
-	public $mysql_format = 'Y-m-d H:i:s';
-
-	/**
 	 * Sets up the class.
 	 *
 	 * @since 2.2

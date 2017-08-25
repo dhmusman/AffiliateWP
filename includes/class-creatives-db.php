@@ -69,8 +69,8 @@ class Affiliate_WP_Creatives_DB extends Affiliate_WP_DB {
 		$creative = $this->get_core_object( $creative, $this->query_object_type );
 
 		if ( false !== $creative ) {
-			// Ensure the date coming out uses the WP timezone by setting a format and using the helper.
-			$creative->date = $creative->date( affiliate_wp()->utils->date->mysql_format );
+			// Ensure the date coming out uses the WP timezone.
+			$creative->date = $creative->date( 'object' )->toDateTimeString();
 		}
 
 		return $creative;

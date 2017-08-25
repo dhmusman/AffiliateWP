@@ -75,12 +75,12 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	 * @return AffWP\Affiliate|false Affiliate object, otherwise false.
 	 */
 	public function get_object( $affiliate ) {
-		/** @var \AffWP\Affiliate $object */
+		/** @var \AffWP\Affiliate $affiliate */
 		$affiliate = $this->get_core_object( $affiliate, $this->query_object_type );
 
 		if ( false !== $affiliate ) {
-			// Ensure the date coming out uses the WP timezone by setting a format and using the helper.
-			$affiliate->date_registered = $affiliate->date_registered( affiliate_wp()->utils->date->mysql_format );
+			// Ensure the date coming out uses the WP timezone.
+			$affiliate->date_registered = $affiliate->date_registered( 'object' )->toDateTimeString();
 		}
 
 		return $affiliate;

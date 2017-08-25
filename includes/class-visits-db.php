@@ -59,11 +59,12 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 	 * @return AffWP\Visit|false Visit object, null otherwise.
 	 */
 	public function get_object( $visit ) {
+		/** @var \AffWP\Visit $visit */
 		$visit = $this->get_core_object( $visit, $this->query_object_type );
 
 		if ( false !== $visit ) {
-			// Ensure the date coming out uses the WP timezone by setting a format and using the helper.
-			$visit->date = $visit->date( affiliate_wp()->utils->date->mysql_format );
+			// Ensure the date coming out uses the WP timezone.
+			$visit->date = $visit->date( 'object' )->toDateTimeString();
 		}
 
 		return $visit;

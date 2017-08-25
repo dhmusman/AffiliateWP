@@ -65,15 +65,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 	 * @return AffWP\Referral|false Referral object, null otherwise.
 	 */
 	public function get_object( $referral ) {
-		/** @var \AffWP\Referral $referral */
-		$referral = $this->get_core_object( $referral, $this->query_object_type );
-
-		if ( false !== $referral ) {
-			// Ensure the date coming out uses the WP timezone.
-			$referral->date = $referral->date( 'object' )->toDateTimeString();
-		}
-
-		return $referral;
+		return $this->get_core_object( $referral, $this->query_object_type );
 	}
 
 	/**

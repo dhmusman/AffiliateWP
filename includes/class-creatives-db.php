@@ -65,15 +65,7 @@ class Affiliate_WP_Creatives_DB extends Affiliate_WP_DB {
 	 * @return AffWP\Creative|false Creative object, otherwise false.
 	 */
 	public function get_object( $creative ) {
-		/** @var \AffWP\Creative $creative */
-		$creative = $this->get_core_object( $creative, $this->query_object_type );
-
-		if ( false !== $creative ) {
-			// Ensure the date coming out uses the WP timezone.
-			$creative->date = $creative->date( 'object' )->toDateTimeString();
-		}
-
-		return $creative;
+		return $this->get_core_object( $creative, $this->query_object_type );
 	}
 
 	/**

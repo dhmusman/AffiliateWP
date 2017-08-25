@@ -67,15 +67,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 	 * @return AffWP\Affiliate\Payout|false Payout object, null otherwise.
 	 */
 	public function get_object( $payout ) {
-		/** @var \AffWP\Affiliate\Payout $payout */
-		$payout = $this->get_core_object( $payout, $this->query_object_type );
-
-		if ( false !== $payout ) {
-			// Ensure the date coming out uses the WP timezone.
-			$payout->date = $payout->date( 'object' )->toDateTimeString();
-		}
-
-		return $payout;
+		return $this->get_core_object( $payout, $this->query_object_type );
 	}
 
 	/**

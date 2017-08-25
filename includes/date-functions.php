@@ -162,11 +162,26 @@ function affwp_get_filter_date_values( $now = false ) {
 		$default = '';
 	}
 
-	return array(
+	$values = array(
 		'start' => empty( $_REQUEST['filter_from'] ) ? $default : $_REQUEST['filter_from'],
 		'end'   => empty( $_REQUEST['filter_to'] )   ? $default : $_REQUEST['filter_to']
 	);
 
+	/**
+	 * Filters the start and end filter date values for a Graph API request.
+	 *
+	 * @since 2.2
+	 *
+	 * @param array {
+	 *     Query date range for the current date filter request.
+	 *
+	 *     @type string $start Start day and time string based on the WP timezone.
+	 *     @type string $end   End day and time string based on the WP timezone.
+	 * }
+	 * @param string $default The fallback value if 'filter_from' and/or 'filter_to' `$_REQUEST`
+	 *                        values are empty. If `$now` is true, will be 'now', otherwise empty.
+	 */
+	return apply_filters( 'affwp_get_filter_date_values', $values, $default );
 }
 
 /**

@@ -173,5 +173,4 @@ class Tests extends UnitTestCase {
 		$this->assertSame( $expected, $referral->date( $format ) );
 	}
 
-
 }

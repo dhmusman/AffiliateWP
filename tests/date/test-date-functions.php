@@ -399,6 +399,60 @@ class Tests extends UnitTestCase {
 	}
 
 	/**
+	 * @covers ::affwp_get_filter_date_values()
+	 */
+	public function test_get_filter_date_values_should_return_empty_strings_for_both_values_if_no_REQUEST_values() {
+		$expected = array_fill_keys( array( 'start', 'end' ), '' );
+
+		$this->assertEqualSets( $expected, affwp_get_filter_date_values() );
+	}
+
+	/**
+	 * @covers ::affwp_get_filter_date_values()
+	 */
+	public function test_get_filter_date_values_with_now_true_should_return_now_strings_for_both_values_with_no_REQUEST_values() {
+		$expected = array_fill_keys( array( 'start', 'end' ), 'now' );
+
+		$this->assertEqualSets( $expected, affwp_get_filter_date_values( true ) );
+	}
+
+	/**
+	 * @covers ::affwp_get_filter_date_values()
+	 */
+	public function test_get_filter_date_values_should_return_REQUEST_values_if_set() {
+		$_REQUEST['filter_from'] = '1/2/2003';
+		$_REQUEST['filter_to']   = '1/2/2004';
+
+		$expected = array(
+			'start' => $_REQUEST['filter_from'],
+			'end'   => $_REQUEST['filter_to'],
+		);
+
+		$this->assertEqualSets( $expected, affwp_get_filter_date_values() );
+
+		unset( $_REQUEST['filter_from'] );
+		unset( $_REQUEST['filter_to'] );
+	}
+
+	/**
+	 * @covers ::affwp_get_filter_date_range()
+	 */
+	public function test_get_filter_date_range_should_default_to_this_month_if_no_REQUEST_value() {
+		$this->assertSame( 'this_month', affwp_get_filter_date_range() );
+	}
+
+	/**
+	 * @covers ::affwp_get_filter_date_range()
+	 */
+	public function test_get_filter_date_range_should_return_value_of_REQUEST_value() {
+		$_REQUEST['range'] = 'other';
+
+		$this->assertSame( 'other', affwp_get_filter_date_range() );
+
+		unset( $_REQUEST['range'] );
+	}
+
+	/**
 	 * Helper to convert object dates to strings for comparison.
 	 *
 	 * @param \Carbon\Carbon[] $dates Array of date objects.

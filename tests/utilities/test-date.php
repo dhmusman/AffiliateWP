@@ -90,6 +90,13 @@ class Tests extends UnitTestCase {
 	}
 
 	/**
+	 * @covers \AffWP\Utils\Date::$mysql_format
+	 */
+	public function test_mysql_format_should_format_in_mysql_style() {
+		$this->assertSame( 'Y-m-d H:i:s', self::$date->mysql_format );
+	}
+
+	/**
 	 * @covers \AffWP\Utils\Date::format()
 	 */
 	public function test_format_type_timestamp_should_return_a_timestamp() {

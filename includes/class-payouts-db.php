@@ -72,7 +72,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 
 		if ( false !== $payout ) {
 			// Ensure the date coming out uses the WP timezone by setting a format and using the helper.
-			$payout->date = $payout->date( 'datetime');
+			$payout->date = $payout->date( affiliate_wp()->utils->date->mysql_format );
 		}
 
 		return $payout;

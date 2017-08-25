@@ -80,7 +80,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 
 		if ( false !== $affiliate ) {
 			// Ensure the date coming out uses the WP timezone by setting a format and using the helper.
-			$affiliate->date_registered = $affiliate->date_registered( 'datetime' );
+			$affiliate->date_registered = $affiliate->date_registered( affiliate_wp()->utils->date->mysql_format );
 		}
 
 		return $affiliate;

@@ -63,7 +63,7 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 
 		if ( false !== $visit ) {
 			// Ensure the date coming out uses the WP timezone by setting a format and using the helper.
-			$visit->date = $visit->date( 'datetime');
+			$visit->date = $visit->date( affiliate_wp()->utils->date->mysql_format );
 		}
 
 		return $visit;

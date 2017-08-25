@@ -65,7 +65,15 @@ class Affiliate_WP_Creatives_DB extends Affiliate_WP_DB {
 	 * @return AffWP\Creative|false Creative object, otherwise false.
 	 */
 	public function get_object( $creative ) {
-		return $this->get_core_object( $creative, $this->query_object_type );
+		/** @var \AffWP\Creative $creative */
+		$creative = $this->get_core_object( $creative, $this->query_object_type );
+
+		if ( false !== $creative ) {
+			// Ensure the date coming out uses the WP timezone by setting a format and using the helper.
+			$creative->date = $creative->date( 'datetime');
+		}
+
+		return $creative;
 	}
 
 	/**
@@ -280,7 +288,7 @@ class Affiliate_WP_Creatives_DB extends Affiliate_WP_DB {
 	public function update( $row_id, $data = array(), $where = '', $type = 'creative' ) {
 		if ( ! empty( $data['date'] ) ) {
 			// Ensure the date is stored in UTC.
-			$data['date'] = affiliate_wp()->utils->date( $data['date'], 'UTC' )->toDateTimeString();
+			$data['date'] = affiliate_wp()->utils->date( $data['date'] )->setTimezone( 'UTC' )->toDateTimeString();
 		}
 
 		return parent::update( $row_id, $data, $where, $type );

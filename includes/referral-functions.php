@@ -240,7 +240,7 @@ function affwp_add_referral( $data = array() ) {
 	}
 
 	if ( ! empty( $data['date'] ) ) {
-		$args['date'] = affiliate_wp()->utils->date( $data['date'], 'utc' )->format( true );
+		$args['date'] = affiliate_wp()->utils->date( $data['date'] )->setTimezone( 'UTC' )->format( true );
 	}
 
 	$referral_id = affiliate_wp()->referrals->add( $args );

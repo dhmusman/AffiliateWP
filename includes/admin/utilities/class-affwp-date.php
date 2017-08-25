@@ -65,12 +65,22 @@ final class Date {
 	 *                                 'time', 'datetime', 'utc', 'timestamp', 'object', or any
 	 *                                 valid date_format() string. If true, 'datetime' will be
 	 *                                 used. Default 'datetime'.
+	 * @param string      $timezone    Optional. Timezone to convert the date to before formatting.
+	 *                                 Default empty string (WP timezone).
 	 * @return string|int|\Carbon\Carbon Formatted date string, timestamp if `$type` is timestamp,
 	 *                                   or a Carbon object if `$type` is 'object'.
 	 */
-	public function format( $date_string, $type = 'datetime' ) {
-		$timezone = 'utc' === $type ? 'UTC' : $this->timezone;
-		$date     = affiliate_wp()->utils->date( $date_string, $timezone );
+	public function format( $date_string, $type = 'datetime', $timezone = '' ) {
+		if ( empty( $timezone ) ) {
+			$timezone = affiliate_wp()->utils->date->timezone;
+		}
+
+		if ( 'utc' === $type ) {
+			$timezone = 'UTC';
+			$type     = 'datetime';
+		}
+
+		$date = affiliate_wp()->utils->date( $date_string )->setTimezone( $timezone );
 
 		if ( empty( $type ) || true === $type ) {
 			$type = 'datetime';
@@ -86,7 +96,6 @@ final class Date {
 				break;
 
 			case 'datetime':
-			case 'utc':
 				$formatted = $date->format( $this->date_format . ' ' . $this->time_format );
 				break;
 

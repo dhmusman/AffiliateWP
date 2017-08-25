@@ -75,7 +75,15 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	 * @return AffWP\Affiliate|false Affiliate object, otherwise false.
 	 */
 	public function get_object( $affiliate ) {
-		return $this->get_core_object( $affiliate, $this->query_object_type );
+		/** @var \AffWP\Affiliate $object */
+		$affiliate = $this->get_core_object( $affiliate, $this->query_object_type );
+
+		if ( false !== $affiliate ) {
+			// Ensure the date coming out uses the WP timezone by setting a format and using the helper.
+			$affiliate->date_registered = $affiliate->date_registered( 'datetime' );
+		}
+
+		return $affiliate;
 	}
 
 	/**
@@ -264,7 +272,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 				if( ! empty( $args['date']['start'] ) ) {
 
 					// The stored date will be in UTC.
-					$start_date = affiliate_wp()->utils->date( $args['date']['start'], 'UTC' );
+					$start_date = affiliate_wp()->utils->date( $args['date']['start'] )->setTimezone( 'UTC' );
 
 					if( false !== strpos( $args['date']['start'], ':' ) ) {
 						$start = esc_sql( $start_date->toDateTimeString() );
@@ -283,7 +291,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 				if ( ! empty( $args['date']['end'] ) ) {
 
 					// The stored date will be in UTC.
-					$end_date = affiliate_wp()->utils->date( $args['date']['end'], 'UTC' );
+					$end_date = affiliate_wp()->utils->date( $args['date']['end'] )->setTimezone( 'UTC' );
 
 					if ( false !== strpos( $args['date']['end'], ':' ) ) {
 						$end = esc_sql( $end_date->toDateTimeString() );
@@ -302,7 +310,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			} else {
 
 				// The stored date will be in UTC.
-				$date = affiliate_wp()->utils->date( $args['date'], 'UTC' );
+				$date = affiliate_wp()->utils->date( $args['date'] )->setTimezone( 'UTC' );
 
 				if( empty( $where ) ) {
 					$where .= "WHERE ";
@@ -565,7 +573,9 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	public function update( $row_id, $data = array(), $where = '', $type = 'affiliate' ) {
 		if ( ! empty( $data['date_registered'] ) ) {
 			// Ensure the date is stored in UTC.
-			$data['date_registered'] = affiliate_wp()->utils->date( $data['date_registered'], 'UTC' )->toDateTimeString();
+			$data['date_registered'] = affiliate_wp()->utils->date( $data['date_registered'] )
+			                                                ->setTimezone( 'UTC' )
+			                                                ->toDateTimeString();
 		}
 
 		return parent::update( $row_id, $data, $where, $type );

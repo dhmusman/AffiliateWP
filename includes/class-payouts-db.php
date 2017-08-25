@@ -67,7 +67,15 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 	 * @return AffWP\Affiliate\Payout|false Payout object, null otherwise.
 	 */
 	public function get_object( $payout ) {
-		return $this->get_core_object( $payout, $this->query_object_type );
+		/** @var \AffWP\Affiliate\Payout $payout */
+		$payout = $this->get_core_object( $payout, $this->query_object_type );
+
+		if ( false !== $payout ) {
+			// Ensure the date coming out uses the WP timezone by setting a format and using the helper.
+			$payout->date = $payout->date( 'datetime');
+		}
+
+		return $payout;
 	}
 
 	/**
@@ -234,7 +242,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 	public function update( $row_id, $data = array(), $where = '', $type = 'payout' ) {
 		if ( ! empty( $data['date'] ) ) {
 			// Ensure the date is stored in UTC.
-			$data['date'] = affiliate_wp()->utils->date( $data['date'], 'UTC' )->toDateTimeString();
+			$data['date'] = affiliate_wp()->utils->date( $data['date'] )->setTimezone( 'UTC' )->toDateTimeString();
 		}
 
 		return parent::update( $row_id, $data, $where, $type );
@@ -518,7 +526,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 				if( ! empty( $args['date']['start'] ) ) {
 
 					// The stored date will be in UTC.
-					$start_date = affiliate_wp()->utils->date( $args['date']['start'], 'UTC' );
+					$start_date = affiliate_wp()->utils->date( $args['date']['start'] )->setTimezone( 'UTC' );
 
 					if( false !== strpos( $args['date']['start'], ':' ) ) {
 						$start = esc_sql( $start_date->toDateTimeString() );
@@ -537,7 +545,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 				if ( ! empty( $args['date']['end'] ) ) {
 
 					// The stored date will be in UTC.
-					$end_date = affiliate_wp()->utils->date( $args['date']['end'], 'UTC' );
+					$end_date = affiliate_wp()->utils->date( $args['date']['end'] )->setTimezone( 'UTC' );
 
 					if ( false !== strpos( $args['date']['end'], ':' ) ) {
 						$end = esc_sql( $end_date->toDateTimeString() );
@@ -556,7 +564,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 			} else {
 
 				// The stored date will be in UTC.
-				$date = affiliate_wp()->utils->date( $args['date'], 'UTC' );
+				$date = affiliate_wp()->utils->date( $args['date'] )->setTimezone( 'UTC' );
 
 				if( empty( $where ) ) {
 					$where .= " WHERE";

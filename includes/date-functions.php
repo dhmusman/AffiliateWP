@@ -199,14 +199,15 @@ function affwp_get_filter_date_range() {
 	}
 
 	/**
-	 * Filters the date range value for the Graph API.
+	 * Filters the date range value for a Graph API request.
+	 *
+	 * The value is derived from a sanitized version of `$_REQUEST['range']`.
 	 *
 	 * @since 2.2
 	 *
-	 * @param string $range    Sanitized date range.
-	 * @param array  $_REQUEST Request variables for the current request.
+	 * @param string $range Sanitized date range.
 	 */
-	return apply_filters( 'affwp_get_filter_date_range', $range, $_REQUEST );
+	return apply_filters( 'affwp_get_filter_date_range', $range );
 }
 
 /**

@@ -401,9 +401,6 @@ function affwp_get_coupon_template( $integration ) {
 	$template    = array();
 	$template_id = 0;
 
-
-	// TODO: Create an AffiliateWP coupon object when a coupon is set as as template in an integration.
-
 	// Attempt to get the coupon template internally, prior to querying an integration.
 	$args = array(
 		'is_template' => true,
@@ -422,14 +419,8 @@ function affwp_get_coupon_template( $integration ) {
 
 			switch ( $integration ) {
 				case 'edd':
-					$template = edd_get_discount( $template_id ) ? edd_get_discount( $template_id ) : edd_get_discounts(
-						array(
-							'meta_key'       => 'affwp_is_coupon_template',
-							'meta_value'     => 1,
-							'post_status'    => 'active',
-							'paged'          => true,
-						)
-					);
+					$template = edd_get_discount( $template_id ) ? edd_get_discount( $template_id ) : false;
+
 					break;
 				case 'woocommerce' :
 					$template = get_post( $template_id );
@@ -573,39 +564,36 @@ function affwp_get_coupon_create_url( $integration, $affiliate_id = 0, $html = f
 	return $url;
 }
 
-// function affwp_get_coupon_code( $args = array() ) {
-
-// 	$args[ 'integration' ]
-// 	$args[ 'integration_coupon_id' ]
-// 	$args[ 'coupon_id' ]
-// }
-
 /**
  * Generates a unique coupon code string, used when generating an integration coupon.
  *
- * @param  integer            $affiliate_id  Affiliate ID.
- * @param  string             $integration   Integration.
- * @param  string             $base          The base coupon code string.
+ * @param  integer             $affiliate_id       Affiliate ID.
+ * @param  string              $integration        Integration.
+ * @param  string              $base               The base coupon code string.
  *
- * @return mixed array|false  $coupon        Coupon code string if successful, otherwise returns false.
+ * @return mixed string|false  $coupon             Coupon code string if successful, otherwise returns false.
  * @since  2.2
  */
 function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base = '' ) {
 
-	$coupon_code = false;
+	$coupon_code = '';
 
 	if ( ! $affiliate_id || empty( $integration ) ) {
 		affiliate_wp()->utils->log( 'affwp_generate_coupon_code: Both the integration and the Affiliate ID  must be provided.' );
 		return false;
 	}
 
-	// if base is empty from params, get it from coupon template. if not from coupon template, generate it.
-
 	// Define the coupon code base from the coupon template, if one is not provided.
 	if ( empty( $base ) ) {
 
 		// Generate a base coupon code from the existing coupon template, for the provided integration.
 		$template = affwp_get_coupon_template( $integration );
+
+
+		if ( ! $template ) {
+			affiliate_wp()->utils->log( 'affwp_generate_coupon_code: Unable to determine coupon template.' );
+			return false;
+		}
 
 		if ( isset( $template[ 'coupon_code' ] ) ) {
 			$base = $template[ 'coupon_code' ];
@@ -993,32 +981,27 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 	$template      = false;
 
 	// Ensure that a coupon template exists before proceeding.
-	if ( is_int( $args[ 'template_id' ] ) && get_post( $args[ 'template_id' ] ) ) {
-		$template = get_post( $args[ 'template_id' ] );
+	if ( edd_get_discount( $args[ 'template_id' ] ) ) {
+		$template = edd_get_discount( $args[ 'template_id' ] );
 	} else {
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_edd: Unable to retrieve the EDD discount template.' );
 		return false;
 	}
 
-	if ( ! $template ) {
-		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_edd: Unable to retrieve EDD discount template.' );
-		return false;
-	}
+	$template_code = $template->code ? $template->code: '';
 
-	$template = (array) $template;
-
-	$template_code = '';
-
-	if ( ! empty( get_post_meta( $template[ 'ID' ], '_edd_discount_code', true ) ) ) {
-		$template_code = get_post_meta( $template[ 'ID' ], '_edd_discount_code', true );
-	} elseif ( ! empty( get_post_meta( $template[ 'ID' ], '_edd_discount_name', true ) ) ) {
-		$template_code = get_post_meta( $template[ 'ID' ], '_edd_discount_name', true );
-	} else {
-		$template_code = get_the_title( $template[ 'ID' ] );
+	if ( empty( $template->code ) ) {
+		if ( ! empty( get_post_meta( $template->ID, '_edd_discount_code', true ) ) ) {
+			$template_code = get_post_meta( $template->ID, '_edd_discount_code', true );
+		} elseif ( ! empty( get_post_meta( $template->ID, '_edd_discount_name', true ) ) ) {
+			$template_code = get_post_meta( $template->ID, '_edd_discount_name', true );
+		} else {
+			$template_code = get_the_title( $template->ID );
+		}
 	}
 
 	if ( empty( $template_code ) ) {
-		affiliate_wp()->utils->log( 'Unable to generate coupon code.' );
+		affiliate_wp()->utils->log( 'Unable to locate EDD discount template code.' );
 		return false;
 	}
 
@@ -1029,17 +1012,39 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 	 * - Coupon template data
 	 * - The date
 	 */
-	$discount_args[ 'coupon_code' ]              = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], $template_code );
-	$discount_args[ 'name' ]                     = ! empty( get_post_meta( $template[ 'ID' ], '_edd_discount_name', true ) ) ? get_post_meta( $template[ 'ID' ], '_edd_discount_name', true ) : get_the_title( $template[ 'ID' ] );
-	$discount_args[ 'amount' ]                   = ! empty( get_post_meta( $template[ 'ID' ], [ '_edd_discount_amount' ], true ) ) ? get_post_meta( $template[ 'ID' ], [ '_edd_discount_amount' ], true ) : '';
-	$discount_args[ 'type' ]                     = ! empty( get_post_meta( $template[ 'ID' ], [ '_edd_discount_type' ], true ) ) ? get_post_meta( $template[ 'ID' ], [ '_edd_discount_type' ], true ) : 'percentage';
-	$discount_args[ 'expiration' ]               = ! empty( get_post_meta( $template[ 'ID' ], [ '_edd_discount_expiration' ], true ) ) ? get_post_meta( $template[ 'ID' ], [ '_edd_discount_expiration' ], true ) : '';
-	$discount_args[ 'affwp_discount_affiliate' ] = $args[ 'affiliate_id' ];
+	$discount_args = array(
+		'code'              => affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], $template_code ),
+		'name'              => get_post_meta( $template->ID, '_edd_discount_name', true ),
+		'status'            => isset( $args[ 'status' ] )            ? $args['status' ]             : get_post_meta( $template->ID, '_edd_discount_status', true ),
+		'uses'              => isset( $template->uses )              ? $template->uses              : '',
+		'max_uses'          => isset( $template->max )               ? $template->max               : '',
+		'amount'            => isset( $template->amount )            ? $template->amount            : '',
+		'start'             => isset( $template->start )             ? $template->start             : '',
+		'expiration'        => isset( $template->expiration )        ? $template->expiration        : '',
+		'type'              => isset( $template->type )              ? $template->type              : '',
+		'min_price'         => isset( $template->min_price )         ? $template->min_price         : '',
+		'product_reqs'      => isset( $template->products )          ? $template->products          : array(),
+		'product_condition' => isset( $template->product_condition ) ? $template->product_condition : '',
+		'excluded_products' => isset( $template->excluded_products ) ? $template->excluded_products : array(),
+		'is_not_global'     => isset( $template->not_global )        ? $template->not_global        : false,
+		'is_single_use'     => isset( $template->use_once )          ? $template->use_once          : false,
+		'affwp_discount_affiliate' => $args[ 'affiliate_id' ]
+	);
 
-	$discount_id = edd_store_discount( $discount_args );
+	$discount_id = edd_store_discount( $discount_args, null );
 
 	if ( $discount_id ) {
 		$discount = edd_get_discount( $discount_id );
+
+		/**
+		 * @see EDD/#5974
+		 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5974
+		 */
+		if ( empty( $discount->code ) ) {
+			affiliate_wp()->utils->log( 'No coupon code generated for discount ID ' . $discount_id );
+			return false;
+		}
+
 		$coupon_args = array(
 			'coupon_code' => $discount->code,
 			'integration' => 'edd',

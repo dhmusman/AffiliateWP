@@ -876,18 +876,18 @@ function affwp_generate_integration_coupon( $args = array() ) {
 
 	// Bail if no affiliate ID or coupon template is provided.
 	if ( ! $args[ 'affiliate_id' ] ) {
-		affiliate_wp()->utils->log( 'The affiliate ID must be set when generating a coupon for an integration.' );
+		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: The affiliate ID must be set when generating a coupon for an integration.' );
 		return false;
 	}
 
 	if ( ! $args[ 'template_id' ] ) {
-		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_edd: The ID of the coupon template must be specified.' );
+		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: The ID of the coupon template must be specified.' );
 		return false;
 	}
 
 	$template = affwp_get_coupon_template( $args[ 'integration' ] );
 	$template = (array) $template;
-	$base     = ! empty( $template[ 'coupon_code' ] ) ? $template[ 'coupon_code' ] : get_the_title( $args[ 'template_id' ]);
+	$base     = ! empty( $template[ 'coupon_code' ] ) ? $template[ 'coupon_code' ] : sanitize_text_field( strtolower( get_the_title( $args[ 'template_id' ] ) ) );
 	$args[ 'coupon_code' ] = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], $base );
 
 	/**
@@ -939,10 +939,6 @@ function affwp_generate_integration_coupon( $args = array() ) {
 
 	// Update post meta to specify the affiliate ID.
 	update_post_meta( $integration_coupon_id, 'affwp_discount_affiliate', $args[ 'affiliate_id' ] );
-
-	// if ( empty( $integration_data[ 'coupon_code' ] ) ) {
-	// 	$integration_data[ 'coupon_code' ] = get_the_title( $args[ 'ID' ] );
-	// }
 
 	// Build coupon arguments.
 	$affwp_coupon_args = array(
@@ -1013,7 +1009,7 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 	 * - The date
 	 */
 	$discount_args = array(
-		'code'              => affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integration' ], $template_code ),
+		'code'              => $args[ 'coupon_code' ],
 		'name'              => get_post_meta( $template->ID, '_edd_discount_name', true ),
 		'status'            => isset( $args[ 'status' ] )            ? $args['status' ]             : get_post_meta( $template->ID, '_edd_discount_status', true ),
 		'uses'              => isset( $template->uses )              ? $template->uses              : '',
@@ -1097,9 +1093,14 @@ function affwp_generate_integration_coupon_woocommerce( $args = array() ) {
 		return false;
 	}
 
+	if ( ! $args[ 'coupon_code' ] ) {
+		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon_woocommerce: Unable to retrieve template coupon code.' );
+		return false;
+	}
+
 	$template = is_object( $template ) ? (array) $template : $template;
 
-	$coupon_code = affwp_generate_coupon_code( $args[ 'affiliate_id' ], $args[ 'integrations' ], $template[ 'code' ] );
+	$coupon_code = $args[ 'coupon_code' ];
 
 	$coupon_args = array (
 		'post_title' => $coupon_code,

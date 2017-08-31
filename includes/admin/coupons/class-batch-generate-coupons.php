@@ -128,15 +128,16 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 
 				$coupon   = false;
 				$template = affwp_get_coupon_template( $integration_id );
+
 				$args     = array(
 					'affiliate_id'    => $affiliate_id,
-					'coupon_code'     => affwp_generate_coupon_code( $affiliate_id, $integration_id, '' ),
+					'coupon_code'     => isset( $template[ 'coupon_code' ] ) ? $template[ 'coupon_code' ] : affwp_generate_coupon_code( $affiliate_id, $integration_id, '' ),
 					'integration'     => $integration_id,
 					'template_id'     => affwp_get_coupon_template_id( $integration_id ),
 					'referrals'       => array(),
 					'owner'           => get_current_user_id(),
 					'status'          => 'active',
-					'expiration_date' => $template[ 'expiration_date' ],
+					'expiration'      => isset( $template[ 'expiration_date' ] ) ? $template[ 'expiration_date' ] : '',
 					'is_template'     => 0
 				);
 

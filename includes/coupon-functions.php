@@ -65,6 +65,11 @@ function affwp_get_coupon( $coupon = 0 ) {
  */
 function affwp_add_coupon( $args = array() ) {
 
+	if ( empty( $args ) ) {
+		affiliate_wp()->utils->log( 'affwp_add_coupon: No arguments provided.' );
+		return false;
+	}
+
 	if ( $coupon = affiliate_wp()->affiliates->coupons->add( $args ) ) {
 		/**
 		 * Fires immediately after a coupon has been added.
@@ -75,9 +80,10 @@ function affwp_add_coupon( $args = array() ) {
 		 */
 		do_action( 'affwp_add_coupon', $coupon );
 
+		return $coupon;
 	}
 
-	return $coupon;
+	return false;
 }
 
 /**

@@ -911,16 +911,13 @@ function affwp_generate_integration_coupon( $args = array() ) {
 
 	affiliate_wp()->utils->log( 'Integration coupon data: '. print_r( $integration_data, true ) );
 
-	if ( is_int( $integration_data ) ) {
-		get_post( $integration_data );
-	}
-
-	$integration_data = is_object( $integration_data ) ? (array) $integration_data : $integration_data;
-
 	if ( ! $integration_data ) {
 		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: Could not generate integration coupon via dynamic caller.' );
 		return false;
 	}
+
+	$integration_data = is_object( $integration_data ) ? (array) $integration_data : $integration_data;
+
 
 	/**
 	 * Fires immediately after an integration coupon is generated.
@@ -933,7 +930,7 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	$integration_coupon_id = false;
 
 	// intval will return a 1 for non-empty arrays.
-	if ( ! is_array( $integration_data ) && intval( $integration_data ) ) {
+	if ( ! is_array( $integration_data ) && is_int( $integration_data ) ) {
 		$integration_coupon_id = absint( $integration_data );
 	} elseif ( isset( $integration_data[ 'ID' ] ) ) {
 		$integration_coupon_id = absint( $integration_data[ 'ID' ] );
@@ -944,7 +941,10 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	}
 
 	// Update post meta to specify the affiliate ID.
-	update_post_meta( $integration_coupon_id, 'affwp_discount_affiliate', $args[ 'affiliate_id' ] );
+
+	if ( get_post( $integration_coupon_id ) ) {
+		update_post_meta( $integration_coupon_id, 'affwp_discount_affiliate', $args[ 'affiliate_id' ] );
+	}
 
 	// Build coupon arguments.
 	$affwp_coupon_args = array(
@@ -957,7 +957,7 @@ function affwp_generate_integration_coupon( $args = array() ) {
 		'status'                => $integration_data[ 'status' ] ? $integration_data[ 'status' ]: 'active',
 	);
 
-	return affwp_add_coupon( $affwp_coupon_args );
+	return $affwp_coupon_args;
 }
 
 /**
@@ -1048,11 +1048,11 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 		}
 
 		$coupon_args = array(
-			'coupon_code' => $discount->code,
-			'integration' => 'edd',
-			'status'      => $discount->status,
+			'coupon_code'           => $discount->code,
+			'integration'           => 'edd',
+			'status'                => $discount->status,
 			'integration_coupon_id' => $discount->ID,
-			'affiliate_id' => $args[ 'affiliate_id' ],
+			'affiliate_id'          => $args[ 'affiliate_id' ],
 		);
 
 		return $coupon_args;
@@ -1135,5 +1135,30 @@ function affwp_generate_integration_coupon_woocommerce( $args = array() ) {
 		)
 	);
 
-	return wp_insert_post( $coupon_args );
+	$wc_coupon_id = wp_insert_post( $coupon_args );
+
+	if ( $wc_coupon_id ) {
+		$wc_coupon = get_post( $wc_coupon_id );
+
+		/**
+		 * @see EDD/#5974
+		 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5974
+		 */
+		if ( empty( get_post_meta( $wc_coupon_id, 'code', true ) ) ) {
+			affiliate_wp()->utils->log( 'No coupon code generated for discount ID ' . $discount_id );
+			return false;
+		}
+
+		$coupon_args = array(
+			'coupon_code'           => get_post_meta( $wc_coupon_id, 'code', true ),
+			'integration'           => 'woocommerce',
+			'status'                => ! empty( $template[ 'status' ] ) ? $template[ 'status' ] : 'active',
+			'integration_coupon_id' => $wc_coupon->ID,
+			'affiliate_id'          => $args[ 'affiliate_id' ],
+		);
+
+		return $coupon_args;
+	}
+
+	return false;
 }

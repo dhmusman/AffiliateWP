@@ -717,7 +717,7 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 	public function create_coupon( $meta, $discount_id ) {
 
 		if ( empty( $meta[ 'code' ] ) || ! $discount_id ) {
-			$property = ! $discount_id ? 'affiliate ID' : 'coupon code';
+			$property = ! $discount_id ? 'discount ID' : 'coupon code';
 			affiliate_wp()->utils->log( 'Affiliate_WP_EDD::create_coupon: Missing ' . $property . ' when creating AffiliateWP coupon object' . $suffix );
 			return false;
 		}

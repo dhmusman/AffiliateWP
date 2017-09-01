@@ -38,8 +38,6 @@ class Affiliate_WP_WooCommerce extends Affiliate_WP_Base {
 
 		add_filter( 'affwp_referral_reference_column', array( $this, 'reference_link' ), 10, 2 );
 
-		add_action( 'woocommerce_coupon_options', array( $this, 'coupon_option' ) );
-		add_action( 'woocommerce_coupon_options_save', array( $this, 'store_discount_affiliate' ) );
 
 		// Per product referral rates
 		add_filter( 'woocommerce_product_data_tabs', array( $this, 'product_tab' ) );
@@ -57,6 +55,13 @@ class Affiliate_WP_WooCommerce extends Affiliate_WP_Base {
 		// Affiliate Area link in My Account menu.
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'my_account_affiliate_area_link' ), 100 );
 		add_filter( 'woocommerce_get_settings_account', array( $this, 'account_settings' ) );
+
+		// Affiliate coupon hooks
+		add_action( 'woocommerce_coupon_options',      array( $this, 'coupon_option' ) );
+		add_action( 'woocommerce_coupon_options_save', array( $this, 'store_discount_affiliate' ) );
+
+		add_action( 'woocommerce_coupon_options_save', array( $this, 'create_coupon' ) );
+		add_action( 'woocommerce_coupon_options_save', array( $this, 'set_coupon_template' ) );
 	}
 
 	/**
@@ -883,6 +888,37 @@ class Affiliate_WP_WooCommerce extends Affiliate_WP_Base {
 		$settings = array_merge( $settings, $affwp_settings );
 
 		return $settings;
+	}
+
+	/**
+	 * Sets the WooCommerce coupon template.
+	 * Searches for post meta of `affwp_is_coupon_template`.
+	 *
+	 * @see AffWP\Affiliate\Coupon::set_coupon_template()
+	 * @since  2.2
+	 * @return mixed int|bool Returns a WooCommerce shop_coupon ID if a coupon template is located in WooCommerce, otherwise returns false.
+	 */
+	public function set_coupon_template() {
+
+		global $post;
+
+		// Only one coupon template should exist per integration.
+		if ( $this->has_template ) {
+			affiliate_wp()->utils->log( 'A coupon template already exists for ' . $this->context );
+			return false;
+		}
+
+		if ( ! $post->ID || ! affiliate_wp()->settings->get( 'auto_generate_coupons_enabled' ) ) {
+			affiliate_wp()->utils->log( sprintf( 'Unable to set coupon template for coupon %s.', $post->ID ) );
+			return false;
+		}
+
+		if ( get_post( $post->ID ) ) {
+			update_post_meta( $post->ID, 'affwp_is_coupon_template', true );
+			return true;
+		}
+
+		return false;
 	}
 
 }

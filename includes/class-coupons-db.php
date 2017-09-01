@@ -131,12 +131,13 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 
 		$args = wp_parse_args( $args, array(
 			'affiliate_id'          => 0,
-			'coupon_code'           => 0,
+			'coupon_code'           => '',
 			'integration_coupon_id' => 0,
 			'referrals'             => array(),
 			'integration'           => '',
 			'owner'                 => get_current_user_id(),
 			'status'                => 'active',
+			'expiration_date'       => '',
 			'is_template'           => '%d'
 		) );
 

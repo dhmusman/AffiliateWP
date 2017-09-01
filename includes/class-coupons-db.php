@@ -636,10 +636,10 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 				    );
 
 					$query = new \WP_Query;
-					$discount = $query->query( $args );
+					$coupon = $query->query( $args );
 
-				    if ( ! empty( $discount[0] ) ) {
-				        $template_id = absint( $discount[0] );
+				    if ( ! empty( $coupon[0] ) ) {
+				        $template_id = absint( $coupon[0] );
 				    }
 
 				break;

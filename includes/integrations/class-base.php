@@ -407,6 +407,20 @@ abstract class Affiliate_WP_Base {
 	}
 
 	/**
+	 * Gets all coupons for this integration.
+	 *
+	 * @return array $coupons Array of AffiliateWP coupon objects.
+	 * @since  2.2
+	 */
+	public function get_integration_coupons() {
+		$coupons = affiliate_wp()->affiliates->coupons->get_coupons( array(
+			'integration' => $this->context
+		) );
+
+		return $coupons;
+	}
+
+	/**
 	 * Write log message
 	 *
 	 * @since 1.8

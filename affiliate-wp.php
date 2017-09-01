@@ -483,6 +483,9 @@ final class Affiliate_WP {
 		self::$instance->capabilities   = new Affiliate_WP_Capabilities;
 		self::$instance->utils          = new Affiliate_WP_Utilities;
 
+		// Load integrations.
+		self::$instance->integrations->load();
+
 		self::$instance->updater();
 	}
 

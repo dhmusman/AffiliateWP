@@ -596,27 +596,28 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * @access public
 	 * @since  2.1
 	 *
-	 * @param string $integration The integration to retrieve the template ID for.
-	 * @return int A coupon ID if a coupon template is located for the specified integration, otherwise 0.
+	 * @param string $integration  The integration for which to retrieve the coupon template ID.
+	 * @return int   $template_id  An integration coupon ID, if a coupon template is located
+	 *                             for the integration, otherwise returns 0.
 	 */
 	public function get_coupon_template_id( $integration ) {
 
 		$template_id = 0;
 
+		$args = array(
+	        'meta_key'       => 'affwp_is_coupon_template',
+	        'meta_value'     => 1,
+	        'orderby'        => 'meta_value_num',
+	        'fields'         => 'ids',
+	        'posts_per_page' => 1,
+	    );
+
 		switch ( $integration ) {
 			case 'edd':
 
-					$args = array(
-				        'post_type'      => 'edd_discount',
-				        'meta_key'       => 'affwp_is_coupon_template',
-				        'meta_value'     => 1,
-				        'orderby'        => 'meta_value_num',
-				        'fields'         => 'ids',
-				        'posts_per_page' => 1,
-				    );
-
-					$query = new \WP_Query;
-					$discount = $query->query( $args );
+					$args[ 'post_type' ] = 'edd_discount';
+					$query               = new \WP_Query;
+					$discount            = $query->query( $args );
 
 				    if ( ! empty( $discount[0] ) ) {
 				        $template_id = absint( $discount[0] );
@@ -626,17 +627,9 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 
 			case 'woocommerce':
 
-					$args = array(
-				        'post_type'      => 'shop_coupon',
-				        'meta_key'       => 'affwp_is_coupon_template',
-				        'meta_value'     => 1,
-				        'orderby'        => 'meta_value_num',
-				        'fields'         => 'ids',
-				        'posts_per_page' => 1,
-				    );
-
-					$query = new \WP_Query;
-					$coupon = $query->query( $args );
+					$args[ 'post_type' ] = 'shop_coupon';
+					$query               = new \WP_Query;
+					$coupon              = $query->query( $args );
 
 				    if ( ! empty( $coupon[0] ) ) {
 				        $template_id = absint( $coupon[0] );

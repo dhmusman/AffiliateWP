@@ -36,6 +36,14 @@ abstract class Affiliate_WP_Base {
 	public $logs;
 
 	/**
+	 * Coupon template.
+	 *
+	 * @access  public
+	 * @since   2.2
+	 */
+	public $has_template;
+
+	/**
 	 * Constructor
 	 *
 	 * @access  public
@@ -46,8 +54,10 @@ abstract class Affiliate_WP_Base {
 		$this->debug = affiliate_wp()->settings->get( 'debug_mode', false );
 
 		$this->affiliate_id = affiliate_wp()->tracking->get_affiliate_id();
-		$this->init();
 
+		$this->has_template = affwp_get_coupon_template_id( $this->context );
+
+		$this->init();
 	}
 
 	/**

@@ -796,6 +796,12 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 	 */
 	public function set_coupon_template( $meta, $discount_id ) {
 
+		// Only one coupon template should exist per integration.
+		if ( $this->has_template ) {
+			affiliate_wp()->utils->log( 'A coupon template already exists for ' . $this->context );
+			return false;
+		}
+
 		if ( ! $discount_id || ! affiliate_wp()->settings->get( 'auto_generate_coupons_enabled' ) ) {
 			affiliate_wp()->utils->log( sprintf( 'Unable to set coupon template for discount %s.', $discount_id ) );
 			return false;

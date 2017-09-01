@@ -2,7 +2,7 @@
 /**
  * Core class that implements a database layer for coupons.
  *
- * @since 2.1
+ * @since 2.2
  *
  * @see \Affiliate_WP_DB
  *
@@ -17,7 +17,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 *           for accessing db class instances via affiliate_wp()->{$cache_group}->*.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 * @var    string
 	 */
 	public $cache_group = 'coupons';
@@ -26,7 +26,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Object type to query for.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 * @var    string
 	 */
 	public $query_object_type = 'AffWP\Affiliate\Coupon';
@@ -35,7 +35,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Constructor.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	*/
 	public function __construct() {
 		global $wpdb, $wp_version;
@@ -59,7 +59,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Retrieves a coupon object.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @see Affiliate_WP_DB::get_core_object()
 	 *
@@ -74,7 +74,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Retrieves table columns and date types.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	*/
 	public function get_columns() {
 		return array(
@@ -95,7 +95,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Retrieves default column values.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 */
 	public function get_column_defaults() {
 		return array(
@@ -112,7 +112,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Adds a new single coupon.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param array $args {
 	 *     Optional. Array of arguments for adding a new coupon. Default empty array.
@@ -188,7 +188,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 			/**
 			 * Fires immediately after a coupon has been successfully inserted.
 			 *
-			 * @since 2.1
+			 * @since 2.2
 			 *
 			 * @param int   $add  New coupon ID.
 			 * @param array $args Parsed arguments used to create the new coupon.
@@ -205,7 +205,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Builds an associative array of affiliate IDs to their corresponding referrals.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param array  $referrals Array of referral IDs.
 	 * @param string $status    Optional. Required referral status. Pass an empty string to disable.
@@ -235,7 +235,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * corresponding referral IDs.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param array $affiliates Associative array of affiliate IDs to their corresponding
 	 *                          referral IDs.
@@ -255,7 +255,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Retrieve coupons from the database
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param array $args {
 	 *     Optional. Arguments for querying affiliates. Default empty array.
@@ -522,7 +522,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Retrieves the number of results found for a given query.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @see Affiliate_WP_Coupons_DB::get_coupons()
 	 *
@@ -537,7 +537,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Checks if a coupon exists.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	*/
 	public function coupon_exists( $coupon_id = 0 ) {
 
@@ -556,7 +556,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Retrieves the edit URL for the given integration coupon ID.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param int    $integration_coupon_id Integration coupon ID to retrieve the edit URL for.
 	 * @param string $integration           The integration.
@@ -582,7 +582,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 		/**
 		 * Filters the coupon URL for the given integration.
 		 *
-		 * @since 2.1
+		 * @since 2.2
 		 *
 		 * @param string $url         The coupon template URL if one exists, otherwise an empty string.
 		 * @param string $integration Integration.
@@ -594,7 +594,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Gets the coupon template used as a basis for generating all automatic affiliate coupons.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param string $integration  The integration for which to retrieve the coupon template ID.
 	 * @return int   $template_id  An integration coupon ID, if a coupon template is located
@@ -645,7 +645,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 		/**
 		 * Filters the coupon template ID.
 		 *
-		 * @since 2.1
+		 * @since 2.2
 		 *
 		 * @param int    $template_id The coupon template ID if set, otherwise 0.
 		 * @param string $integration The integration to query. Required.
@@ -657,7 +657,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Retrieves an array of referral IDs stored for the coupon.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @param  AffWP\Affiliate\Coupon|int $coupon        Coupon object or ID.
 	 * @return array List of referral IDs if available, otherwise an empty array.
@@ -680,7 +680,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 *
 	 * @param  array  $args  An array of coupon arguments.
 	 * @return bool          Returns true if a coupon object was created, otherwise false.
-	 * @since  2.1
+	 * @since  2.2
 	 */
 	public function create_affwp_coupon( $args ) {
 
@@ -705,7 +705,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * For example, in EDD, `affwp_is_coupon_template` post meta is stored
 	 * in the post meta of an edd_discount post type post.
 	 *
-	 * @since  2.1
+	 * @since  2.2
 	 *
 	 * @return int|bool Returns a coupon ID if a coupon template is located, otherwise returns false.
 	 */
@@ -726,7 +726,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * @return mixed false|array $integrations  Array of currently-enabled integrations which support coupons,
 	 *                              otherwise false.
 	 * @see Affiliate_WP_Coupons_DB::get_coupon_template_id()
-	 * @since  2.1
+	 * @since  2.2
 	 */
 	public function get_supported_integrations() {
 
@@ -745,7 +745,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 		 * Returns an array of currently-enabled integrations which have coupon support.
 		 *
 		 * @param array $available  Array of currently-enabled integrations which have coupon support.
-		 * @since 2.1
+		 * @since 2.2
 		 */
 		return apply_filters( 'affwp_coupon_integrations', $available );
 	}
@@ -777,7 +777,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Determination of integrations which are currently-enabled and have coupon support
 	 * is provided by the method `get_coupon_integrations`.
 	 *
-	 * @since  2.1
+	 * @since  2.2
 	 * @return array $templates  An array of supported integrations which have coupon templates
 	 *                           presently set. If none are set, an empty array is returned.
 	 */
@@ -801,7 +801,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	 * Creates the table.
 	 *
 	 * @access public
-	 * @since  2.1
+	 * @since  2.2
 	*/
 	public function create_table() {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

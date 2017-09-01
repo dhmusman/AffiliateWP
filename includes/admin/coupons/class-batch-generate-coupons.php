@@ -84,12 +84,35 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * @since  2.2
 	 */
 	public function pre_fetch() {
-		$total_affiliates = affiliate_wp()->affiliates->count( array(
-			'status' => 'active'
-		) );
+		// $total_affiliates = affiliate_wp()->affiliates->count( array(
+		// 	'status' => 'active'
+		// ) );
 
-		$this->integrations = affiliate_wp()->settings->get( 'coupon_integrations' );
-		$this->set_total_count( $total_affiliates );
+		$affiliates_to_process = affiliate_wp()->utils->data->get( "{$this->batch_id}_affiliate_ids" );
+
+		$to_process = 0;
+
+		if ( false === $affiliates_to_process ) {
+			$all_affiliates = affiliate_wp()->affiliates->get_affiliates( array(
+				'status' => 'active',
+				'fields' => 'ids'
+			) );
+
+			$affiliates_with_coupons = affiliate_wp()->affiliates->coupons->get_coupons( array(
+				'fields'                => 'affiliate_id',
+				'integration'           => $this->integration,
+				'integration_coupon_id' => $this->integration_coupon_id
+			) );
+
+			$outstanding = array_diff( $all_affiliates, $affiliates_with_coupons );
+
+			affiliate_wp()->utils->data->write( "{$this->batch_id}_affiliate_ids", $outstanding );
+
+			$to_process = count( $outstanding );
+		}
+
+
+		$this->set_total_count( $to_process );
 	}
 
 	/**

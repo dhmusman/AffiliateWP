@@ -1453,7 +1453,7 @@ class Affiliate_WP_Settings {
 
 	}
 
-	public function check_license() {
+	public function check_license( $force = false ) {
 
 		if( ! empty( $_POST['affwp_settings'] ) ) {
 			return; // Don't fire when saving settings
@@ -1464,8 +1464,7 @@ class Affiliate_WP_Settings {
 		$request_url = 'https://affiliatewp.com';
 
 		// Run the license check a maximum of once per day
-		if( false === $status && site_url() !== $request_url ) {
-
+		if( ( false === $status || $force ) && site_url() !== $request_url ) {
 			// data to send in our API request
 			$api_params = array(
 				'edd_action'=> 'check_license',

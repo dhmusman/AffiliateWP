@@ -2,12 +2,6 @@
 
 class Affiliate_WP_Integrations {
 
-	public function __construct() {
-
-		$this->load();
-
-	}
-
 	public function get_integrations() {
 
 		return apply_filters( 'affwp_integrations', array(

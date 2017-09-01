@@ -79,6 +79,9 @@ class Export_Referrals extends Batch\Export\CSV implements Batch\With_PreFetch {
 
 		if ( null !== $data ) {
 
+			// Garbage collect any old temporary data.
+			$this->finish();
+
 			$data = affiliate_wp()->utils->process_request_data( $data, 'user_name' );
 
 			if ( ! empty( $data['user_id'] ) ) {

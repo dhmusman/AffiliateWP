@@ -777,7 +777,7 @@ function affwp_maybe_generate_coupons( $data, $row_id ) {
 
 	// Automatic coupon generation is set to trigger when an affiliate has an 'active' status.
 	if ( ! affwp_is_active_affiliate( $affiliate_id ) ) {
-		break;
+		return false;
 	}
 
 	// Get all coupons for this affiliate.

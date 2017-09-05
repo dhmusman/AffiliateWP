@@ -95,6 +95,10 @@ class Regenerate_Coupons extends Generate_Coupons implements Batch\With_PreFetch
 
 		foreach ( $affiliate_ids as $affiliate_id ) {
 
+			if ( ! affwp_is_active_affiliate( $affiliate_id ) ) {
+				break;
+			}
+
 			foreach ( $this->integrations as $integration_id => $integration ) {
 
 				$args = array(

@@ -176,6 +176,16 @@ final class Affiliate_WP {
 	public $creatives;
 
 	/**
+	 * The coupons instance variable
+	 *
+	 * @access public
+	 * @since  2.2
+	 * @var    Affiliate_WP_Coupons_DB
+	 */
+	public $coupons;
+
+
+	/**
 	 * The creative class instance variable
 	 *
 	 * @access public
@@ -476,6 +486,7 @@ final class Affiliate_WP {
 		self::$instance->register       = new Affiliate_WP_Register;
 		self::$instance->integrations   = new Affiliate_WP_Integrations;
 		self::$instance->emails         = new Affiliate_WP_Emails;
+		self::$instance->coupons        = new Affiliate_WP_Coupons_DB;
 		self::$instance->creatives      = new Affiliate_WP_Creatives_DB;
 		self::$instance->creative       = new Affiliate_WP_Creatives;
 		self::$instance->rewrites       = new Affiliate_WP_Rewrites;

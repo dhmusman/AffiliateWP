@@ -18,35 +18,17 @@
 function affwp_get_coupon( $coupon = 0 ) {
 
 	if ( is_object( $coupon ) && isset( $coupon->coupon_id ) ) {
+
 		$coupon_id = $coupon->coupon_id;
+
 	} elseif ( is_numeric( $coupon ) ) {
+
 		$coupon_id = absint( $coupon );
-	} elseif ( is_array( $coupon ) ) {
-		$integration_coupon_id = is_numeric( $coupon[ 'integration_coupon_id' ] ) ? absint( $coupon[ 'integration_coupon_id' ] )    : 0;
-		$args = array(
-			'integration_coupon_id' => $integration_coupon_id,
-			'number'                => 1,
-		);
-
-		return affiliate_wp()->affiliates->coupons->get_coupons( $args, true );
-	} elseif ( is_array( $coupon ) ) {
-		$coupon_id = is_numeric( $coupon[ 'coupon_id' ] ) ? absint( $coupon[ 'coupon_id' ] )    : 0;
-
-		if ( ( 0 === $coupon_id ) && isset( $coupon[ 'affiliate_id' ] ) && isset( $coupon[ 'integration' ] ) ) {
-			$affiliate_id = absint( $coupon[ 'affiliate_id' ] );
-			$integration  = $coupon[ 'integration' ];
-
-			$args = array(
-				'affiliate_id' => $affiliate_id,
-				'number'       => 1,
-				'integration'  => $integration
-			);
-
-			return affiliate_wp()->affiliates->coupons->get_coupons( $args, true );
-		}
 
 	} else {
+
 		return false;
+
 	}
 
 	return affiliate_wp()->affiliates->coupons->get_object( $coupon_id );

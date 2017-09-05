@@ -759,17 +759,17 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 		}
 
 		$args = array(
-				'affiliate_id'          => $affiliate_id,
-				'coupon_code'           => $meta[ 'code' ],
-				'referrals'             => array(),
-				'is_template'           => get_post_meta( $discount_id, 'affwp_is_coupon_template', true ),
-				'integration'           => $this->context,
-				'integration_coupon_id' => $discount_id,
-				'owner'                 => get_current_user_id(),
-				'expiration'            => $meta[ 'expiration' ],
-				'status'                => $meta[ 'status' ]
+			'affiliate_id'          => $affiliate_id,
+			'coupon_code'           => $meta[ 'code' ],
+			'referrals'             => array(),
+			'is_template'           => get_post_meta( $discount_id, 'affwp_is_coupon_template', true ),
+			'integration'           => $this->context,
+			'integration_coupon_id' => $discount_id,
+			'owner'                 => get_current_user_id(),
+			'expiration'            => $meta[ 'expiration' ],
+			'status'                => $meta[ 'status' ]
 
-			);
+		);
 
 		return affwp_add_coupon( $args );
 	}
@@ -823,7 +823,44 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 		}
 
 		if ( edd_get_discount( $discount_id ) ) {
-			update_post_meta( $discount_id, 'affwp_is_coupon_template', true );
+
+			update_post_meta( $discount_id, 'affwp_is_coupon_template', $meta[ 'is_template' ] );
+
+			if ( ! empty( $meta['affwp_discount_affiliate'] ) ) {
+				$affiliate_id = absint( $meta[ 'affwp_discount_affiliate' ] );
+			} elseif ( isset( $_POST['user_name'] ) ) {
+				$user = ! empty( $_POST['user_name'] ) ? get_user_by( 'login', $_POST['user_name'] ) : false;
+
+				if ( $user ) {
+					$affiliate    = affiliate_wp()->affiliates->get_by( 'user_id', $user->ID );
+					$affiliate_id = $affiliate ? absint( $affiliate->affiliate_id ) : false;
+				}
+			} else {
+				$affiliate_id = absint( get_post_meta( $discount_id, 'affwp_discount_affiliate', true ) );
+			}
+
+			if ( ! $affiliate_id ) {
+				affiliate_wp()->utils->log( 'Affiliate_WP_EDD::create_coupon: Unable to determine affiliate ID when creating affiliate coupon.' );
+				return false;
+			}
+
+			if ( true == get_post_meta( $discount_id, 'affwp_is_coupon_template', true ) ) {
+
+				$args = array(
+					'affiliate_id'          => $affiliate_id,
+					'coupon_code'           => $meta[ 'code' ],
+					'referrals'             => array(),
+					'is_template'           => true,
+					'integration'           => $this->context,
+					'integration_coupon_id' => $discount_id,
+					'owner'                 => get_current_user_id(),
+					'expiration'            => $meta[ 'expiration' ],
+					'status'                => $meta[ 'status' ]
+				);
+
+				affwp_add_coupon( $args );
+			}
+
 		} else {
 			affiliate_wp()->utils->log( sprintf( 'Could not locate EDD discount %s by $discount_id when attempting to set it as the AffiliateWP coupon template.', $discount_id ) );
 			return false;

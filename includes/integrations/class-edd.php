@@ -52,6 +52,7 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 		add_action( 'edd_post_update_discount', array( $this, 'create_coupon' ), 10, 2 );
 		add_action( 'edd_post_insert_discount', array( $this, 'set_coupon_template' ), 10, 2 );
 		add_action( 'edd_post_update_discount', array( $this, 'set_coupon_template' ), 10, 2 );
+		add_action( 'edd_post_delete_discount', array( $this, 'delete_coupon' ) );
 
 	}
 
@@ -771,6 +772,33 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 			);
 
 		return affwp_add_coupon( $args );
+	}
+
+	/**
+	 * Deletes an AffiliateWP coupon object.
+	 *
+	 * @since  2.2
+	 *
+	 * @param  int  $discount_id Discount ID.
+	 *
+	 * @return bool              True if the coupon was deleted, otherwise false.
+	 */
+	public function delete_coupon( $discount_id ) {
+		$args = array(
+			'integration_coupon_id' => $discount_id
+		);
+
+		$coupon = affwp_get_coupon( $args );
+
+		if ( ! $coupon ) {
+			return false;
+		}
+
+		if ( affiliate_wp()->affiliates->coupons->delete( $coupon->ID, 'coupon' ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

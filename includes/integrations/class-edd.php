@@ -842,22 +842,19 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 			return false;
 		}
 
-		if ( true == get_post_meta( $discount_id, 'affwp_is_coupon_template', true ) ) {
+		$args = array(
+			'affiliate_id'          => $affiliate_id,
+			'coupon_code'           => $meta[ 'code' ],
+			'referrals'             => array(),
+			'is_template'           => true,
+			'integration'           => $this->context,
+			'integration_coupon_id' => $discount_id,
+			'owner'                 => get_current_user_id(),
+			'expiration'            => $meta[ 'expiration' ],
+			'status'                => $meta[ 'status' ]
+		);
 
-			$args = array(
-				'affiliate_id'          => $affiliate_id,
-				'coupon_code'           => $meta[ 'code' ],
-				'referrals'             => array(),
-				'is_template'           => true,
-				'integration'           => $this->context,
-				'integration_coupon_id' => $discount_id,
-				'owner'                 => get_current_user_id(),
-				'expiration'            => $meta[ 'expiration' ],
-				'status'                => $meta[ 'status' ]
-			);
-
-			affwp_add_coupon( $args );
-		}
+		affwp_add_coupon( $args );
 
 	}
 

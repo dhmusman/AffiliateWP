@@ -1097,17 +1097,18 @@ function affwp_generate_integration_coupon_woocommerce( $args = array() ) {
 	if ( $wc_coupon_id ) {
 		$wc_coupon = get_post( $wc_coupon_id );
 
+		$coupon_code = get_post_meta( $wc_coupon_id, 'code', true );
 		/**
 		 * @see EDD/#5974
 		 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5974
 		 */
-		if ( empty( get_post_meta( $wc_coupon_id, 'code', true ) ) ) {
+		if ( empty( $coupon_code ) ) {
 			affiliate_wp()->utils->log( 'No coupon code generated for discount ID ' . $discount_id );
 			return false;
 		}
 
 		$coupon_args = array(
-			'coupon_code'           => get_post_meta( $wc_coupon_id, 'code', true ),
+			'coupon_code'           => $coupon_code,
 			'integration'           => 'woocommerce',
 			'status'                => ! empty( $template[ 'status' ] ) ? $template[ 'status' ] : 'active',
 			'integration_coupon_id' => $wc_coupon->ID,

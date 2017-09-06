@@ -12,22 +12,38 @@
  * @since 2.2
  *
  * @param int|AffWP\Affiliate\Coupon $coupon Coupon ID, integration coupon ID, AffiliateWP coupon object,
- *                                           or an array containing the affiliate ID and integration.
+ * @param bool $by_integration_id True to delete the coupon by the supplied integration coupon ID
+ * @param string $integration The name of the integration the supplied ID belongs too. Only used if $by_integration_id is true
  * @return AffWP\Affiliate\Coupon|false Coupon object if found, otherwise false.
  */
-function affwp_get_coupon( $coupon = 0 ) {
+function affwp_get_coupon( $coupon = 0, $by_integration_id = false, $integration = '' ) {
 
-	if ( is_object( $coupon ) && isset( $coupon->coupon_id ) ) {
+	global $wpdb;
 
-		$coupon_id = $coupon->coupon_id;
+	if( $by_integration_id ) {
 
-	} elseif ( is_numeric( $coupon ) ) {
+		if( empty( $integration ) || ! is_numeric( $coupon ) ) {
+			return false;
+		}
 
-		$coupon_id = absint( $coupon );
+		$table_name = affiliate_wp()->coupons->table_name;
+		$coupon_id  = $wpdb->get_var( $wpdb->prepare( "SELECT coupon_id FROM {$table_name} WHERE integration = '%s' AND integration_coupon_id = %d LIMIT 0, 1;", $integration, $coupon ) );
 
 	} else {
 
-		return false;
+		if ( is_object( $coupon ) && isset( $coupon->coupon_id ) ) {
+
+			$coupon_id = $coupon->coupon_id;
+
+		} elseif ( is_numeric( $coupon ) ) {
+
+			$coupon_id = absint( $coupon );
+
+		} else {
+
+			return false;
+
+		}
 
 	}
 
@@ -82,11 +98,13 @@ function affwp_add_coupon( $args = array() ) {
  *
  * @since 2.2
  *
- * @param int|\AffWP\Affiliate\Coupon $coupon_id  AffiliateWP coupon ID or object.
+ * @param int|\AffWP\Affiliate\Coupon $coupon  AffiliateWP coupon ID or object.
+ * @param bool $by_integration_id True to delete the coupon by the supplied integration coupon ID
+ * @param string $integration The name of the integration the supplied ID belongs too. Only used if $by_integration_id is true 
  * @return bool True if the coupon was successfully deleted, otherwise false.
  */
-function affwp_delete_coupon( $coupon ) {
-	if ( ! $coupon = affwp_get_coupon( $coupon ) ) {
+function affwp_delete_coupon( $coupon, $by_integration_id = false, $integration = '' ) {
+	if ( ! $coupon = affwp_get_coupon( $coupon, $by_integration_id, $integration ) ) {
 		return false;
 	}
 

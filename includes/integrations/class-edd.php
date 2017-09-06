@@ -528,8 +528,18 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 
 		global $wpdb;
 
+		if( empty( $_POST['edd-discount-nonce'] ) ) {
+			return; // bail if not on tthe discount new nor edit screen
+		}
+
+		$affiliate_id = 0;
 		$data         = affiliate_wp()->utils->process_request_data( $_POST, 'user_name' );
-		$affiliate_id = affwp_get_affiliate_id( $data['user_id'] );
+		
+		if( ! empty( $data['user_id'] ) ) {
+
+			$affiliate_id = affwp_get_affiliate_id( $data['user_id'] );
+
+		}
 
 		if( ! empty( $affiliate_id ) ) {
 
@@ -574,7 +584,7 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 		}
 
 		// Look to see if we have an existing affiliate coupon
-		$existing_coupon = affiliate_wp()->coupons->get_by( 'integration_coupon_id', $discount_id );
+		$existing_coupon = affwp_get_coupon( $discount_id, true, $this->context );
 
 		if( $existing_coupon ) {
 
@@ -745,17 +755,7 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 	 */
 	public function delete_coupon( $discount_id ) {
 
-		$coupons = affiliate_wp()->coupons->get_coupons( array( 'integration_coupon_id' => $discount_id ) );
-
-		if( $coupons ) {
-
-			foreach( $coupons as $coupon ) {
-
-				affiliate_wp()->affiliates->coupons->delete( $coupon->coupon_id, 'coupon' );
-
-			}
-
-		}
+		affwp_delete_coupon( $discount_id, true, $this->context );
 
 	}
 

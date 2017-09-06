@@ -97,9 +97,6 @@ class Generate_Payouts extends Batch\Export\CSV implements Batch\With_PreFetch {
 
 		if ( null !== $data ) {
 
-			// Garbage collect any old temporary data.
-			$this->finish();
-
 			if ( ! empty( $data['user_name'] ) && $affiliate = affwp_get_affiliate( $data['user_name'] ) ) {
 				$this->affiliate_id = $affiliate->ID;
 			}

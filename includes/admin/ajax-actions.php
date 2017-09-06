@@ -159,10 +159,16 @@ function affwp_process_batch_request() {
 
 	}
 
+	// Garbage collect any old temporary data.
+	if ( $step < 2 ) {
+		$process->finish();
+	}
+
 	$using_prefetch = ( $process instanceof \AffWP\Utils\Batch_Process\With_PreFetch );
 
 	// Handle pre-fetching data.
 	if ( $using_prefetch ) {
+
 		// Initialize any data needed to process a step.
 		$data = isset( $_REQUEST['form'] ) ? $_REQUEST['form'] : array();
 

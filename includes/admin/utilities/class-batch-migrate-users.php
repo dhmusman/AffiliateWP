@@ -58,9 +58,6 @@ class Migrate_Users extends Utils\Batch_Process implements Batch\With_PreFetch {
 	 */
 	public function init( $data = null ) {
 		if ( null !== $data && ! empty( $data['roles'] ) ) {
-			// Garbage collect any old temporary data.
-			$this->finish();
-
 			$this->roles = $data['roles'];
 		}
 	}

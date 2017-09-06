@@ -29,9 +29,6 @@ class Upgrade_Recount_Stats extends Recount_Affiliate_Stats {
 	 * @since  2.0.5
 	 */
 	public function init( $data = null ) {
-		// Garbage collect any old temporary data.
-		$this->finish();
-
 		$data['recount_type'] = 'unpaid-earnings';
 
 		// Affiliate schema update.

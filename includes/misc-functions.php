@@ -47,6 +47,7 @@ function affwp_get_currencies() {
 		'ILS' => __( 'Israeli Shekel', 'affiliate-wp' ),
 		'IRR' => __( 'Iranian Rial', 'affiliate-wp' ),
 		'JPY' => __( 'Japanese Yen', 'affiliate-wp' ),
+		'KES' => __( 'Kenyan Shilling', 'affiliate-wp' ),
 		'KZT' => __( 'Kazakhstani Tenge', 'affiliate-wp' ),
 		'KIP' => __( 'Lao Kip', 'affiliate-wp' ),
 		'MYR' => __( 'Malaysian Ringgits', 'affiliate-wp' ),

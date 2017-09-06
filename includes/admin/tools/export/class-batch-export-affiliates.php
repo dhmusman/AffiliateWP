@@ -50,9 +50,6 @@ class Export_Affiliates extends Batch\Export\CSV implements Batch\With_PreFetch 
 	 */
 	public function init( $data = null ) {
 		if ( null !== $data && isset( $data['status'] ) ) {
-			// Garbage collect any old temporary data.
-			$this->finish();
-
 			$this->status = sanitize_text_field( $data['status'] );
 
 			if ( 0 === $this->status ) {

@@ -810,8 +810,7 @@ class Affiliate_WP_Settings {
 					),
 					'betas' => array(
 						'name' => __( 'Opt into Beta Versions', 'affiliate-wp' ),
-						'desc' => __( 'Receive update notifications for beta releases. When beta versions are available, an update notification will be shown on your Plugins page.
-', 'affiliate-wp' ),
+						'desc' => __( 'Receive update notifications for beta releases. When beta versions are available, an update notification will be shown on your Plugins page.', 'affiliate-wp' ),
 						'type' => 'checkbox'
 					),
 					'uninstall_on_delete' => array(

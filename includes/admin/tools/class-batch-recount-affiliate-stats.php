@@ -80,9 +80,6 @@ class Recount_Affiliate_Stats extends Utils\Batch_Process implements Batch\With_
 	public function init( $data = null ) {
 		if ( null !== $data ) {
 
-			// Garbage collect any old temporary data.
-			$this->finish();
-
 			$this->affiliate_filter = ! empty( $data['user_name'] );
 
 			$data = affiliate_wp()->utils->process_request_data( $data, 'user_name' );

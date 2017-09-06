@@ -45,10 +45,7 @@ class Migrate_WP_Affiliate extends Utils\Batch_Process implements Batch\With_Pre
 	 *
 	 * @param null|array $data Optional. Form data. Default null.
 	 */
-	public function init( $data = null ) {
-		// Garbage collect any old temporary data.
-		$this->finish();
-	}
+	public function init( $data = null ) {}
 
 	/**
 	 * Handles pre-fetching user IDs for accounts in migration.

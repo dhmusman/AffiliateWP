@@ -947,10 +947,13 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 	$template_code = $template->code ? $template->code: '';
 
 	if ( empty( $template->code ) ) {
-		if ( ! empty( get_post_meta( $template->ID, '_edd_discount_code', true ) ) ) {
-			$template_code = get_post_meta( $template->ID, '_edd_discount_code', true );
-		} elseif ( ! empty( get_post_meta( $template->ID, '_edd_discount_name', true ) ) ) {
-			$template_code = get_post_meta( $template->ID, '_edd_discount_name', true );
+		$discount_code = get_post_meta( $template->ID, '_edd_discount_code', true );
+		$discount_name = get_post_meta( $template->ID, '_edd_discount_name', true );
+
+		if ( ! empty( $discount_code ) ) {
+			$template_code = $discount_code;
+		} elseif ( ! empty( $discount_name ) ) {
+			$template_code = $discount_name;
 		} else {
 			$template_code = get_the_title( $template->ID );
 		}

@@ -176,7 +176,8 @@ class Tests extends UnitTestCase {
 			'integration'           => '%s',
 			'owner'                 => '%d',
 			'status'                => '%s',
-			'expiration_date'       => '%s'
+			'expiration_date'       => '%s',
+			'is_template'           => '%d'
 		);
 
 		$this->assertEqualSets( $expected, $columns );

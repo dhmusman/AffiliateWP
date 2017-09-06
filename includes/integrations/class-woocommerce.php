@@ -921,7 +921,7 @@ class Affiliate_WP_WooCommerce extends Affiliate_WP_Base {
 		global $post;
 
 		// Only one coupon template should exist per integration.
-		if ( $this->has_template ) {
+		if ( affwp_get_coupon_template_id( $this->context ) ) {
 			affiliate_wp()->utils->log( 'A coupon template already exists for ' . $this->context );
 			return false;
 		}

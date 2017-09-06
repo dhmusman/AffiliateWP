@@ -437,8 +437,6 @@ class Affiliate_WP_Settings {
 			$referral_pretty_urls_desc .= '<p>' . __( 'Note: Pretty affiliate URLs may not always work as expected when using AffiliateWP in combination with WooCommerce and Polylang.', 'affiliate-wp' ) . '</p>';
 		}
 
-		$coupon_templates  = affwp_get_coupon_templates();
-
 		$settings = array(
 			/**
 			 * Filters the default "General" settings.
@@ -705,32 +703,22 @@ class Affiliate_WP_Settings {
 				array(
 					'auto_generate_coupons_enabled' => array(
 						'name' => __( 'Auto-generate coupons', 'affiliate-wp' ),
-						'desc' => __( 'If checked, a coupon will be generated automatically for an affiliate when the action below occurs.', 'affiliate-wp' ),
+						'desc' => __( 'If checked, a coupon will be generated automatically for an affiliate\'s account is activated.', 'affiliate-wp' ),
 						'type' => 'checkbox'
-					),
-					'auto_generate_coupons_action' => array(
-						'name'   => __( 'Action', 'affiliate-wp' ),
-						'desc' => __( 'When should coupons be generated for affiliates?', 'affiliate-wp' ),
-						'type' => 'select',
-						'options' => array(
-							'registered'  => __( 'Affiliate registration form is submitted', 'affiliate-wp' ),
-							'active'      => __( 'Affiliate registers and status is set to active', 'affiliate-wp' )
-						),
-						'sanitize_callback' => 'sanitize_text_field'
 					),
 					'auto_generate_coupons_templates' => array(
 						'name' => __( 'Coupon templates', 'affiliate-wp' ),
 						'desc' => __( 'Create a coupon template in your desired integration, and it will show here. Each integration can have one coupon template.', 'affiliate-wp' ),
 						'type' => 'display',
-						'std' => $coupon_templates,
+						'std' => affwp_get_coupon_templates(),
 						'sanitize_callback' => 'sanitize_text_field'
 					),
 					'coupon_integrations' => array(
 						'name' => __( 'Integrations', 'affiliate-wp' ),
-						'desc' => sprintf( __( 'Choose the integrations to enable for auto-generated coupons. For each integration enabled, a coupon will automatically be generated for all affiliates, when their affiliate account is either registered, or registered and accepted.<br />Refer to the <a href="%1$s" target="_blank">documentation</a> for help using this option.<br/ >Visit the  <a href="%2$s">Tools &rarr; Coupons screen</a> to generate coupons for existing affiliates.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/59-affiliate-coupon-tracking',
+						'desc' => sprintf( __( 'Choose the integrations to enable for auto-generated coupons. For each integration enabled, a coupon will automatically be generated for all affiliates, when their affiliate status is set to active.<br />Refer to the <a href="%1$s" target="_blank">documentation</a> for help using this option.<br/ >Visit the  <a href="%2$s">Tools &rarr; Coupons screen</a> to generate coupons for existing affiliates.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/59-affiliate-coupon-tracking',
 							affwp_admin_url( 'tools', array( 'tab' => 'coupons' ) ) ),
 						'type' => 'multicheck',
-						'options' => affiliate_wp()->affiliates->coupons->get_supported_integrations()
+						'options' => affwp_has_coupon_support_list( true )
 					)
 				)
 			),

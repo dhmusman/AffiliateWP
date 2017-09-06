@@ -143,12 +143,18 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 
 		$args['affiliate_id'] = absint( $args['affiliate_id'] );
 
-		if ( empty( $args['integration'] ) || empty( $args['affiliate_id'] ) || empty( $args['integration_coupon_id'] ) ) {
-			affiliate_wp()->utils->log( 'Unable to add new coupon object. Please ensure that the integration name, the affiliate ID, and the coupon ID from the integration are specified.' );
+		if ( empty( $args['integration'] ) ) {
+			affiliate_wp()->utils->log( 'Unable to add new coupon object. No integration was provided.' );
 			return false;
 		}
 
-		if ( ! affiliate_wp()->affiliates->affiliate_exists( $args['affiliate_id'] ) ) {
+		if ( empty( $args['integration_coupon_id'] ) ) {
+			affiliate_wp()->utils->log( 'Unable to add new coupon object. No integration coupon ID was provided.' );
+			return false;
+		}
+
+		if ( ! empty( $args['affiliate_id'] ) && ! affiliate_wp()->affiliates->affiliate_exists( $args['affiliate_id'] ) ) {
+			affiliate_wp()->utils->log( sprintf( 'Unable to add new coupon object. Affiliate ID %d was provided but that affiliate does not exist.', $args['affiliate_id'] ) );
 			return false;
 		}
 
@@ -169,6 +175,12 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 		if ( $args[ 'integration_coupon_id' ] === affwp_get_coupon_template_id( $args[ 'integration' ] ) ) {
 			$args['is_template'] = true;
 		}
+
+		if ( empty( $args['affiliate_id'] ) && empty( $args['is_template'] ) ) {
+			affiliate_wp()->utils->log( 'Unable to add new coupon object. An affiliate ID must be provided or is_template must be set to true.' );
+			return false;
+		}
+
 
 		$referrals = array();
 
@@ -720,38 +732,6 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	}
 
 	/**
-	 * Filters the `affwp_has_coupon_support_list` function by enabled integrations.
-	 * Gets an array of currently-enabled integrations which have coupon support.
-	 *
-	 * @return mixed false|array $integrations  Array of currently-enabled integrations which support coupons,
-	 *                              otherwise false.
-	 * @see Affiliate_WP_Coupons_DB::get_coupon_template_id()
-	 * @since  2.2
-	 */
-	public function get_supported_integrations() {
-
-		$available = false;
-		$enabled   = affiliate_wp()->integrations->get_enabled_integrations();
-		$supported = affwp_has_coupon_support_list();
-
-		foreach ( $enabled as $integration => $label ) {
-
-			if ( array_key_exists( $integration, $supported ) ) {
-				$available[ $integration ] = $label;
-			}
-		}
-
-		/**
-		 * Returns an array of currently-enabled integrations which have coupon support.
-		 *
-		 * @param array $available  Array of currently-enabled integrations which have coupon support.
-		 * @since 2.2
-		 */
-		return apply_filters( 'affwp_coupon_integrations', $available );
-	}
-
-
-	/**
 	 * Echoes the output of get_coupon_templates.
 	 * If no coupon templates are defined for any integrations, echoes a notice.
 	 *
@@ -784,7 +764,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	public function get_coupon_templates() {
 
 		$templates    = array();
-		$integrations = $this->get_supported_integrations();
+		$integrations = affwp_has_coupon_support_list( true );
 
 		// Ensure that each integration has a coupon template which is currently set.
 		foreach ( $integrations as $integration => $label ) {

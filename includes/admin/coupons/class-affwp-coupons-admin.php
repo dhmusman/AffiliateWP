@@ -110,7 +110,7 @@ class AffWP_Coupons_Admin {
 
 				foreach ( $integrations as $integration_id => $integration_term ) {
 
-					if ( affwp_is_active_has_coupon_support( $integration_id ) ) {
+					if ( affwp_integration_has_coupon_support( $integration_id ) ) {
 
 						$template_id = affiliate_wp()->affiliates->coupons->get_coupon_template_id( $integration_id );
 

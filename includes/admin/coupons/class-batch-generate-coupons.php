@@ -69,12 +69,12 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 			if ( ! empty( $data['integrations'] ) ) {
 				$this->integrations = ! empty( $data['integrations'] ) ? (array) $data['integrations'] : array();
 				$this->integrations = array_map( 'esc_attr', $this->integrations );
-			} else {
-				$this->integrations = affiliate_wp()->settings->get( 'coupon_integrations' );
 			}
 
 		}
 
+		// Store the integrations data for later retrieval.
+		affiliate_wp()->utils->data->write( "{$this->batch_id}_integrations", $this->integrations );
 	}
 
 	/**
@@ -84,13 +84,11 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 	 * @since  2.2
 	 */
 	public function pre_fetch() {
-		// $total_affiliates = affiliate_wp()->affiliates->count( array(
-		// 	'status' => 'active'
-		// ) );
 
-		$affiliates_to_process = affiliate_wp()->utils->data->get( "{$this->batch_id}_affiliate_ids" );
-
-		$to_process = 0;
+		$affiliates_to_process   = affiliate_wp()->utils->data->get( "{$this->batch_id}_affiliate_ids" );
+		$this->integrations      = affiliate_wp()->utils->data->get( "{$this->batch_id}_integrations", array() );
+		$affiliates_with_coupons = array();
+		$to_process              = 0;
 
 		if ( false === $affiliates_to_process ) {
 			$all_affiliates = affiliate_wp()->affiliates->get_affiliates( array(
@@ -99,9 +97,7 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 			) );
 
 			$affiliates_with_coupons = affiliate_wp()->affiliates->coupons->get_coupons( array(
-				'fields'                => 'affiliate_id',
-				'integration'           => $this->integration,
-				'integration_coupon_id' => $this->integration_coupon_id
+				'fields'                => 'affiliate_id'
 			) );
 
 			$outstanding = array_diff( $all_affiliates, $affiliates_with_coupons );
@@ -109,6 +105,8 @@ class Generate_Coupons extends Utils\Batch_Process implements Batch\With_PreFetc
 			affiliate_wp()->utils->data->write( "{$this->batch_id}_affiliate_ids", $outstanding );
 
 			$to_process = count( $outstanding );
+		} else {
+			$to_process = count( $affiliates_to_process );
 		}
 
 

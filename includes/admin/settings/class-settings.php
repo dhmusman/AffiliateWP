@@ -703,7 +703,7 @@ class Affiliate_WP_Settings {
 				array(
 					'auto_generate_coupons_enabled' => array(
 						'name' => __( 'Auto-generate coupons', 'affiliate-wp' ),
-						'desc' => __( 'If checked, a coupon will be generated automatically for an affiliate\'s account is activated.', 'affiliate-wp' ),
+						'desc' => __( 'If checked, a coupon will be generated automatically for an affiliate\'s account that is activated.', 'affiliate-wp' ),
 						'type' => 'checkbox'
 					),
 					'auto_generate_coupons_templates' => array(

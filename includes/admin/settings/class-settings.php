@@ -665,6 +665,7 @@ class Affiliate_WP_Settings {
 						'desc' => __( 'Enter the subject line for the registration email sent to admins when new affiliates register.', 'affiliate-wp' ),
 						'type' => 'text',
 						'std' => __( 'New Affiliate Registration', 'affiliate-wp' )
+
 					),
 					'registration_email' => array(
 						'name' => __( 'Registration Email Content', 'affiliate-wp' ),
@@ -910,15 +911,7 @@ class Affiliate_WP_Settings {
 		$html .= $args['desc'];
 		$html .= '</label>';
 
-		/**
-		 * Provides a means to append HTML after the core AffiliateWP setting callback markup is rendered.
-		 * Used by core tooltips, defined in Affiliate_WP_Settings::tooltip_callback.
-		 *
-		 * @param $args Parameter arguments.
-		 * @param $html The html to output for this setting.
-		 * @since 2.2
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -946,11 +939,7 @@ class Affiliate_WP_Settings {
 			$html .= '<p class="description">' . $args['desc'] . '</p>';
 		}
 
-		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -980,7 +969,7 @@ class Affiliate_WP_Settings {
 
 		$html = '<p class="description">' . $args['desc'] . '</p>';
 
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -1004,11 +993,7 @@ class Affiliate_WP_Settings {
 		$html = '<input type="text" class="' . $size . '-text" id="affwp_settings[' . $args['id'] . ']" name="affwp_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 		$html .= '<p class="description">'  . $args['desc'] . '</p>';
 
-		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -1032,11 +1017,7 @@ class Affiliate_WP_Settings {
 		$html = '<input type="url" class="' . $size . '-text" id="affwp_settings[' . $args['id'] . ']" name="affwp_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 		$html .= '<p class="description">'  . $args['desc'] . '</p>';
 
-		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -1091,11 +1072,7 @@ class Affiliate_WP_Settings {
 
 		$html .= '<br/><p class="description"> '  . $args['desc'] . '</p>';
 
-		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -1128,11 +1105,7 @@ class Affiliate_WP_Settings {
 		$html  = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $size . '-text" id="affwp_settings[' . $args['id'] . ']" name="affwp_settings[' . $args['id'] . ']" placeholder="' . esc_attr( $std ) . '" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
 
-		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -1156,11 +1129,7 @@ class Affiliate_WP_Settings {
 		$html = '<textarea class="large-text" cols="50" rows="5" id="affwp_settings_' . $args['id'] . '" name="affwp_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
 
-		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -1184,11 +1153,7 @@ class Affiliate_WP_Settings {
 		$html = '<input type="password" class="' . $size . '-text" id="affwp_settings[' . $args['id'] . ']" name="affwp_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
 
-		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -1231,11 +1196,7 @@ class Affiliate_WP_Settings {
 		$html .= '</select>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
 
-		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -1261,11 +1222,7 @@ class Affiliate_WP_Settings {
 
 		$html .= '<br/><p class="description"> '  . $args['desc'] . '</p>';
 
-		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
-		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		echo $this->after_setting_output( $html, $args );
 	}
 
 	/**
@@ -1287,11 +1244,34 @@ class Affiliate_WP_Settings {
 		$html .= '<span>&nbsp;<input type="button" class="affwp_settings_upload_button button-secondary" value="' . __( 'Upload File', 'affiliate-wp' ) . '"/></span>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
 
+		echo $this->after_setting_output( $html, $args );
+	}
+
+	/**
+	 * Renders markup after core setting output.
+	 *
+	 * @since  2.2
+	 *
+	 * @param  string $html The html to output for the specified setting.
+	 * @param  array  $args Parameter arguments.
+	 *
+	 * @return string       HTML for the setting if both parameters are provided,
+	 *                      otherwise returns an empty string.
+	 */
+	public function after_setting_output( $html, $args ) {
+		if ( ! $html || ! $args ) {
+			return;
+		}
+
 		/**
-		 * See Affiliate_WP_Settings::checkbox_callback
-		 * for affwp_after_setting_output filter documentation.
+		 * Provides a means to append HTML after the core AffiliateWP setting callback markup is rendered.
+		 * Used by core tooltips, defined in Affiliate_WP_Settings::tooltip_callback.
+		 *
+		 * @param $args Parameter arguments.
+		 * @param $html The html to output for this setting.
+		 * @since 2.2
 		 */
-		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+		return apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**

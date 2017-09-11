@@ -1310,8 +1310,7 @@ class Affiliate_WP_Settings {
 		}
 
 		if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
-			$tooltip = '<span alt="f223" class="affwp-tooltip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong>: ' . $args['tooltip_desc'] . '"></span>';
-			$html .= $tooltip;
+			$html .= '<span alt="f223" class="affwp-tooltip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong>: ' . $args['tooltip_desc'] . '"></span>';
 		}
 
 		echo $html;

@@ -76,6 +76,8 @@ function affwp_admin_scripts() {
 
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 
+	wp_enqueue_script( 'jquery-ui-tooltip' );
+
 	// Enqueue postbox for core meta boxes.
 	wp_enqueue_script( 'postbox' );
 }

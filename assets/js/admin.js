@@ -257,16 +257,49 @@ jQuery(document).ready(function($) {
 	});
 
 	/**
-	 * Enable meta box toggle states
+	 * Enables meta box toggle states.
 	 *
 	 * @since  1.9
 	 *
 	 * @param  typeof postboxes postboxes object
 	 *
-	 * @return {void}
+	 * @return void
 	 */
 	if ( typeof postboxes !== 'undefined' && /affiliate-wp/.test( pagenow ) ) {
 		postboxes.add_postbox_toggles( pagenow );
 	}
+
+	/**
+	 * Attaches an AffiliateWP tooltip to the relevant selector.
+	 *
+	 * @param  typeof selector  HTML element.
+	 * @return void
+	 * @since  2.2
+	 */
+	function affwp_attach_tooltips( selector ) {
+
+		selector.tooltip({
+			content: function() {
+				return jQuery(this).prop('title');
+			},
+			tooltipClass: 'affwp-ui-tooltip',
+			position: {
+				my: 'center top',
+				at: 'center bottom+10',
+				collision: 'flipfit'
+			},
+			hide: {
+				duration: 150
+			},
+			show: {
+				duration: 150
+			}
+		});
+	}
+
+
+	// Tooltips
+	var tooltips = $('.affwp-tooltip');
+	affwp_attach_tooltips( tooltips );
 
 } );

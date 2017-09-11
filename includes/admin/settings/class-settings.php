@@ -40,6 +40,9 @@ class Affiliate_WP_Settings {
 
 		// Filter the email settings
 		add_filter( 'affwp_settings_emails', array( $this, 'email_approval_settings' ) );
+
+		// Tooltips
+		add_filter( 'affwp_after_setting_output', array( $this, 'tooltip_callback' ), 10, 2 );
 	}
 
 	/**
@@ -182,17 +185,19 @@ class Affiliate_WP_Settings {
 					'affwp_settings_' . $tab,
 					'affwp_settings_' . $tab,
 					array(
-						'id'       => $key,
-						'desc'     => ! empty( $option['desc'] ) ? $option['desc'] : '',
-						'name'     => isset( $option['name'] ) ? $option['name'] : null,
-						'section'  => $tab,
-						'size'     => isset( $option['size'] ) ? $option['size'] : null,
-						'max'      => isset( $option['max'] ) ? $option['max'] : null,
-						'min'      => isset( $option['min'] ) ? $option['min'] : null,
-						'step'     => isset( $option['step'] ) ? $option['step'] : null,
-						'options'  => isset( $option['options'] ) ? $option['options'] : '',
-						'std'      => isset( $option['std'] ) ? $option['std'] : '',
-						'disabled' => isset( $option['disabled'] ) ? $option['disabled'] : '',
+						'id'            => $key,
+						'desc'          => ! empty( $option['desc'] ) ? $option['desc'] : '',
+						'name'          => isset( $option['name'] ) ? $option['name'] : null,
+						'section'       => $tab,
+						'size'          => isset( $option['size'] ) ? $option['size'] : null,
+						'tooltip_title' => isset( $option['tooltip_title'] ) ? $option['tooltip_title'] : '',
+						'tooltip_desc'  => isset( $option['tooltip_desc'] ) ? $option['tooltip_desc'] : '',
+						'max'           => isset( $option['max'] ) ? $option['max'] : null,
+						'min'           => isset( $option['min'] ) ? $option['min'] : null,
+						'step'          => isset( $option['step'] ) ? $option['step'] : null,
+						'options'       => isset( $option['options'] ) ? $option['options'] : '',
+						'std'           => isset( $option['std'] ) ? $option['std'] : '',
+						'disabled'      => isset( $option['disabled'] ) ? $option['disabled'] : ''
 					)
 				);
 			}
@@ -878,7 +883,11 @@ class Affiliate_WP_Settings {
 	 * @return void
 	 */
 	function header_callback( $args ) {
-		echo '<hr/>';
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', '<hr/>', $args );
 	}
 
 	/**
@@ -901,7 +910,15 @@ class Affiliate_WP_Settings {
 		$html .= $args['desc'];
 		$html .= '</label>';
 
-		echo $html;
+		/**
+		 * Provides a means to append HTML after the core AffiliateWP setting callback markup is rendered.
+		 * Used by core tooltips, defined in Affiliate_WP_Settings::tooltip_callback.
+		 *
+		 * @param $args Parameter arguments.
+		 * @param $html The html to output for this setting.
+		 * @since 2.2
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -916,15 +933,24 @@ class Affiliate_WP_Settings {
 	 */
 	function multicheck_callback( $args ) {
 
+		$html = '';
+
 		if ( ! empty( $args['options'] ) ) {
 			foreach( $args['options'] as $key => $option ) {
 				if( isset( $this->options[$args['id']][$key] ) ) { $enabled = $option; } else { $enabled = NULL; }
-				echo '<label for="affwp_settings[' . $args['id'] . '][' . $key . ']">';
-				echo '<input name="affwp_settings[' . $args['id'] . '][' . $key . ']" id="affwp_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
-				echo $option . '</label><br/>';
+				$html .= '<label for="affwp_settings[' . $args['id'] . '][' . $key . ']">';
+				$html .= '<input name="affwp_settings[' . $args['id'] . '][' . $key . ']" id="affwp_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked($option, $enabled, false) . '/>&nbsp;';
+				$html .= $option . '</label><br/>';
 			}
-			echo '<p class="description">' . $args['desc'] . '</p>';
+
+			$html .= '<p class="description">' . $args['desc'] . '</p>';
 		}
+
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -952,7 +978,9 @@ class Affiliate_WP_Settings {
 			echo $option . '</label><br/>';
 		endforeach;
 
-		echo '<p class="description">' . $args['desc'] . '</p>';
+		$html = '<p class="description">' . $args['desc'] . '</p>';
+
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -976,7 +1004,11 @@ class Affiliate_WP_Settings {
 		$html = '<input type="text" class="' . $size . '-text" id="affwp_settings[' . $args['id'] . ']" name="affwp_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 		$html .= '<p class="description">'  . $args['desc'] . '</p>';
 
-		echo $html;
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -1000,7 +1032,11 @@ class Affiliate_WP_Settings {
 		$html = '<input type="url" class="' . $size . '-text" id="affwp_settings[' . $args['id'] . ']" name="affwp_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 		$html .= '<p class="description">'  . $args['desc'] . '</p>';
 
-		echo $html;
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -1055,7 +1091,11 @@ class Affiliate_WP_Settings {
 
 		$html .= '<br/><p class="description"> '  . $args['desc'] . '</p>';
 
-		echo $html;
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -1088,7 +1128,11 @@ class Affiliate_WP_Settings {
 		$html  = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $size . '-text" id="affwp_settings[' . $args['id'] . ']" name="affwp_settings[' . $args['id'] . ']" placeholder="' . esc_attr( $std ) . '" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
 
-		echo $html;
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -1112,7 +1156,11 @@ class Affiliate_WP_Settings {
 		$html = '<textarea class="large-text" cols="50" rows="5" id="affwp_settings_' . $args['id'] . '" name="affwp_settings[' . $args['id'] . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
 
-		echo $html;
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -1136,7 +1184,11 @@ class Affiliate_WP_Settings {
 		$html = '<input type="password" class="' . $size . '-text" id="affwp_settings[' . $args['id'] . ']" name="affwp_settings[' . $args['id'] . ']" value="' . esc_attr( $value ) . '"/>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
 
-		echo $html;
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -1148,7 +1200,7 @@ class Affiliate_WP_Settings {
 	 * @param array $args Arguments passed by the setting
 	 * @return void
 	 */
-	function missing_callback($args) {
+	function missing_callback( $args ) {
 		printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'affiliate-wp' ), $args['id'] );
 	}
 
@@ -1179,7 +1231,11 @@ class Affiliate_WP_Settings {
 		$html .= '</select>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
 
-		echo $html;
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -1205,7 +1261,11 @@ class Affiliate_WP_Settings {
 
 		$html .= '<br/><p class="description"> '  . $args['desc'] . '</p>';
 
-		echo $html;
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 
 	/**
@@ -1214,7 +1274,7 @@ class Affiliate_WP_Settings {
 	 * Renders file upload fields.
 	 *
 	 * @since 1.6
-	 * @param array $args Arguements passed by the setting
+	 * @param array $args Arguments passed by the setting
 	 */
 	function upload_callback( $args ) {
 		if( isset( $this->options[ $args['id'] ] ) )
@@ -1226,6 +1286,33 @@ class Affiliate_WP_Settings {
 		$html = '<input type="text" class="' . $size . '-text" id="affwp_settings[' . $args['id'] . ']" name="affwp_settings[' . $args['id'] . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
 		$html .= '<span>&nbsp;<input type="button" class="affwp_settings_upload_button button-secondary" value="' . __( 'Upload File', 'affiliate-wp' ) . '"/></span>';
 		$html .= '<p class="description"> '  . $args['desc'] . '</p>';
+
+		/**
+		 * See Affiliate_WP_Settings::checkbox_callback
+		 * for affwp_after_setting_output filter documentation.
+		 */
+		echo apply_filters( 'affwp_after_setting_output', $html, $args );
+	}
+
+	/**
+	 * Tooltips callback
+	 * Renders tooltips used in AffiliateWP admin screens.
+	 *
+	 * @param  string  $html The html rendered for the setting.
+	 * @param  array   $args Arguments passed by the setting.
+	 * @since  2.2
+	 */
+	public function tooltip_callback( $html, $args ) {
+		if ( isset( $this->options[ $args['id'] ] ) ) {
+			$value = $this->options[ $args['id'] ];
+		} else {
+			$value = isset( $args['std'] ) ? $args['std'] : '';
+		}
+
+		if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
+			$tooltip = '<span alt="f223" class="affwp-tooltip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong>: ' . $args['tooltip_desc'] . '"></span>';
+			$html .= $tooltip;
+		}
 
 		echo $html;
 	}

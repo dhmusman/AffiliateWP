@@ -1506,6 +1506,20 @@ function affwp_get_active_affiliate_area_tab() {
 }
 
 /**
+ * Sorts tabs by priority argument present in affwp_affiliate_dashboard_tabs arrays.
+ *
+ * @since  2.1.5
+ *
+ * @param  array  $a     First array item for comparison.
+ * @param  array  $b     Second array item for comparison.
+ *
+ * @return array  $tabs  Array of affiliate dashboard tabs, sorted by priority values.
+ */
+function affwp_sort_tabs_by_priority( $a, $b ) {
+    return $a[ 'priority' ] - $b[ 'priority' ];
+}
+
+/**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
  * @return array  $tabs Affiliate dashboard tabs.
@@ -1517,44 +1531,47 @@ function affwp_affiliate_dashboard_tabs() {
 		'urls'  => array(
 			'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
 			'content'  => '',
-			'priority' => 1
+			'priority' => 0
 		),
 		'stats' => array(
 			'title'    => __( 'Statistics', 'affiliate-wp' ),
 			'content'  => '',
-			'priority' => 2
+			'priority' => 1
 		),
 		'graphs' => array(
 			'title'    => __( 'Graphs', 'affiliate-wp' ),
 			'content'  => '',
-			'priority' => 3
+			'priority' => 2
 		),
 		'referrals' => array(
 			'title'    => __( 'Referrals', 'affiliate-wp' ),
 			'content'  => '',
-			'priority' => 4
+			'priority' => 3
 		),
 		'payouts'   => array(
 			'title'    => __( 'Payouts', 'affiliate-wp' ),
 			'content'  => '',
-			'priority' => 5
+			'priority' => 4
 		),
 		'visits'    => array(
 			'title'    => __( 'Visits', 'affiliate-wp' ),
 			'content'  => '',
-			'priority' => 6
+			'priority' => 5
 		),
 		'creatives' => array(
 			'title'    => __( 'Creatives', 'affiliate-wp' ),
 			'content'  => '',
-			'priority' => 7
+			'priority' => 6
 		),
 		'settings'  => array(
 			'title'    => __( 'Settings', 'affiliate-wp' ),
 			'content'  => '',
-			'priority' => 8
+			'priority' => 7
 		)
 	);
+
+	// Sort by priority argument
+	usort( $tabs, 'affwp_sort_tabs_by_priority' );
 
 	/**
 	 * Filters the affiliate dashboard tabs.

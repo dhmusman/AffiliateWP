@@ -51,55 +51,20 @@
 		?>
 
 		<ul id="affwp-affiliate-dashboard-tabs">
-			<?php if ( affwp_affiliate_area_show_tab( 'urls' ) ) : ?>
-			<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == 'urls' ? ' active' : ''; ?>">
-				<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( 'urls' ) ); ?>"><?php _e( 'Affiliate URLs', 'affiliate-wp' ); ?></a>
-			</li>
-			<?php endif; ?>
-
-			<?php if ( affwp_affiliate_area_show_tab( 'stats' ) ) : ?>
-			<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == 'stats' ? ' active' : ''; ?>">
-				<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( 'stats' ) ); ?>"><?php _e( 'Statistics', 'affiliate-wp' ); ?></a>
-			</li>
-			<?php endif; ?>
-
-			<?php if ( affwp_affiliate_area_show_tab( 'graphs' ) ) : ?>
-			<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == 'graphs' ? ' active' : ''; ?>">
-				<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( 'graphs' ) ); ?>"><?php _e( 'Graphs', 'affiliate-wp' ); ?></a>
-			</li>
-			<?php endif; ?>
-
-			<?php if ( affwp_affiliate_area_show_tab( 'referrals' ) ) : ?>
-			<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == 'referrals' ? ' active' : ''; ?>">
-				<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( 'referrals' ) ); ?>"><?php _e( 'Referrals', 'affiliate-wp' ); ?></a>
-			</li>
-			<?php endif; ?>
-
-			<?php if ( affwp_affiliate_area_show_tab( 'payouts' ) ) : ?>
-			<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == 'payouts' ? ' active' : ''; ?>">
-				<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( 'payouts' ) ); ?>"><?php _e( 'Payouts', 'affiliate-wp' ); ?></a>
-			</li>
-			<?php endif; ?>
-
-			<?php if ( affwp_affiliate_area_show_tab( 'visits' ) ) : ?>
-			<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == 'visits' ? ' active' : ''; ?>">
-				<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( 'visits' ) ); ?>"><?php _e( 'Visits', 'affiliate-wp' ); ?></a>
-			</li>
-			<?php endif; ?>
-
-			<?php if ( affwp_affiliate_area_show_tab( 'creatives' ) ) : ?>
-			<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == 'creatives' ? ' active' : ''; ?>">
-				<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( 'creatives' ) ); ?>"><?php _e( 'Creatives', 'affiliate-wp' ); ?></a>
-			</li>
-			<?php endif; ?>
-
-			<?php if ( affwp_affiliate_area_show_tab( 'settings' ) ) : ?>
-			<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == 'settings' ? ' active' : ''; ?>">
-				<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( 'settings' ) ); ?>"><?php _e( 'Settings', 'affiliate-wp' ); ?></a>
-			</li>
-			<?php endif; ?>
-
 			<?php
+
+			$tabs = affwp_affiliate_dashboard_tabs();
+
+			foreach( $tabs as $tab => $tab_data ) {
+
+				if ( affwp_affiliate_area_show_tab( $tab ) ) : ?>
+					<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab ? ' active' : ''; ?>">
+					<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab ) ); ?>"><?php echo $tab_data[ 'title' ]; ?></a>
+				</li>
+			<?php
+				endif;
+			}
+
 			/**
 			 * Fires immediately after core Affiliate Area tabs are output,
 			 * but before the 'Log Out' tab is output (if enabled).

@@ -1506,6 +1506,79 @@ function affwp_get_active_affiliate_area_tab() {
 }
 
 /**
+ * Returns all affiliate dashboard tabs in a filterable array.
+ *
+ * @return array  $tabs Affiliate dashboard tabs.
+ * @since  2.1.5
+ */
+function affwp_affiliate_dashboard_tabs() {
+
+	$tabs = array(
+		'urls'  => array(
+			'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
+			'content'  => '',
+			'priority' => 1
+		),
+		'stats' => array(
+			'title'    => __( 'Statistics', 'affiliate-wp' ),
+			'content'  => '',
+			'priority' => 2
+		),
+		'graphs' => array(
+			'title'    => __( 'Graphs', 'affiliate-wp' ),
+			'content'  => '',
+			'priority' => 3
+		),
+		'referrals' => array(
+			'title'    => __( 'Referrals', 'affiliate-wp' ),
+			'content'  => '',
+			'priority' => 4
+		),
+		'payouts'   => array(
+			'title'    => __( 'Payouts', 'affiliate-wp' ),
+			'content'  => '',
+			'priority' => 5
+		),
+		'visits'    => array(
+			'title'    => __( 'Visits', 'affiliate-wp' ),
+			'content'  => '',
+			'priority' => 6
+		),
+		'creatives' => array(
+			'title'    => __( 'Creatives', 'affiliate-wp' ),
+			'content'  => '',
+			'priority' => 7
+		),
+		'settings'  => array(
+			'title'    => __( 'Settings', 'affiliate-wp' ),
+			'content'  => '',
+			'priority' => 8
+		)
+	);
+
+	/**
+	 * Filters the affiliate dashboard tabs.
+	 * Used to add, remove, or modify affiliate dashboard tabs.
+	 *
+	 * To add a new tab, provide an array containing the following:
+	 *
+	 *   $tabs['unique_tab_id'] => array(
+	 *      'title'    => __( 'Settings', 'affiliate-wp' ),
+	 *		'content'  => '',
+	 *		'priority' => 3
+	 *   )
+	 *
+	 *   unique_tab_id: Provide a unique tab ID
+	 *   title:         The title of the tab.
+	 *   content:       The content of the tab.
+	 *   priority:      The priority of the tab. Determines loading order.
+	 *
+	 * @param array $tabs An array containing all affiliate dashboard tabs.
+	 * @since 2.1.5
+	 */
+	return apply_filters( 'affwp_affiliate_dashboard_tabs', $tabs );
+}
+/**
  * Retrieves an array of payouts for the given affiliate.
  *
  * @since 1.9

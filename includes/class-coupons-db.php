@@ -685,34 +685,6 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	}
 
 	/**
-	 * Sets the coupon template used as a template when generating all automatic affiliate coupons.
-	 *
-	 * For auto-generated coupons, there can be only one AffiliateWP coupon template per integration.
-	 *
-	 * For each relevant integration, this is set via post meta in the coupon itself.
-	 * If `affwp_is_coupon_template` meta is true,
-	 * this template is used as the coupon template for this integration.
-	 *
-	 * The manner by which meta is set in the coupon will vary for each integration.
-	 *
-	 * For example, in EDD, `affwp_is_coupon_template` post meta is stored
-	 * in the post meta of an edd_discount post type post.
-	 *
-	 * @since  2.2
-	 *
-	 * @return int|bool Returns a coupon ID if a coupon template is located, otherwise returns false.
-	 */
-	public function __set_coupon_template() {
-
-		if ( ! method_exists( array( $this, 'set_coupon_template' ) ) ) {
-			affiliate_wp()->utils->log( 'A set_coupon_template method must be defined when extending the AffWP\Affiliate\Coupon class for an integration.' );
-			return false;
-		}
-
-		return $this->set_coupon_template();
-	}
-
-	/**
 	 * Echoes the output of get_coupon_templates.
 	 * If no coupon templates are defined for any integrations, echoes a notice.
 	 *

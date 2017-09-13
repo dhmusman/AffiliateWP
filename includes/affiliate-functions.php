@@ -1525,7 +1525,7 @@ function affwp_sort_tabs_by_priority( $a, $b ) {
  * @return array  $tabs Affiliate dashboard tabs.
  * @since  2.1.5
  */
-function affwp_affiliate_dashboard_tabs() {
+function affwp_get_affiliate_dashboard_tabs() {
 
 	$tabs = array(
 		'urls'  => array(
@@ -1570,6 +1570,7 @@ function affwp_affiliate_dashboard_tabs() {
 		)
 	);
 
+
 	// Sort by priority argument
 	usort( $tabs, 'affwp_sort_tabs_by_priority' );
 
@@ -1593,7 +1594,7 @@ function affwp_affiliate_dashboard_tabs() {
 	 * @param array $tabs An array containing all affiliate dashboard tabs.
 	 * @since 2.1.5
 	 */
-	return apply_filters( 'affwp_affiliate_dashboard_tabs', $tabs );
+	return apply_filters( 'affwp_get_affiliate_dashboard_tabs', $tabs );
 }
 /**
  * Retrieves an array of payouts for the given affiliate.

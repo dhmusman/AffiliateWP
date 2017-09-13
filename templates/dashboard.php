@@ -53,16 +53,24 @@
 		<ul id="affwp-affiliate-dashboard-tabs">
 			<?php
 
-			$tabs = affwp_affiliate_dashboard_tabs();
+			$tabs = affwp_get_affiliate_dashboard_tabs();
+
+			// If the Affiliate Area Tabs add-on is hiding this tab, unset it from the $tabs array.
+			if ( class_exists( 'AffiliateWP_Affiliate_Area_Tabs' ) ) {
+				$hidden_tabs = affiliate_wp()->settings->get( 'affiliate_area_hide_tabs' );
+
+				foreach( $hidden_tabs as $hidden_tab ) {
+					unset( $tabs[ $hidden_tab ] );
+				}
+			}
 
 			foreach( $tabs as $tab => $tab_data ) {
 
-				if ( affwp_affiliate_area_show_tab( $tab ) ) : ?>
+				if ( affwp_affiliate_area_show_tab( $tab ) ) { ?>
 					<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab ? ' active' : ''; ?>">
-					<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab ) ); ?>"><?php echo $tab_data[ 'title' ]; ?></a>
-				</li>
-			<?php
-				endif;
+						<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab ) ); ?>"><?php echo $tab_data[ 'title' ]; ?></a>
+					</li>
+			<?php }
 			}
 
 			/**

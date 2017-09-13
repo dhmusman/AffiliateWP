@@ -685,52 +685,6 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	}
 
 	/**
-	 * Echoes the output of get_coupon_templates.
-	 * If no coupon templates are defined for any integrations, echoes a notice.
-	 *
-	 * @since  2.2
-	 *
-	 * @return void
-	 */
-	public function coupon_templates() {
-		$templates = $this->get_coupon_templates();
-		$notice    = __( 'No coupon templates were found.', 'affiliate-wp' );
-
-		if ( empty( $templates ) ) {
-			affiliate_wp()->utils->log( $notice );
-		}
-
-		echo ! empty( $templates ) ? $templates : $notice;
-	}
-
-	/**
-	 * Returns a list of integrations which are currently-enabled, have coupon support,
-	 * and have a coupon template presently set.
-	 *
-	 * Determination of integrations which are currently-enabled and have coupon support
-	 * is provided by the method `get_coupon_integrations`.
-	 *
-	 * @since  2.2
-	 * @return array $templates  An array of supported integrations which have coupon templates
-	 *                           presently set. If none are set, an empty array is returned.
-	 */
-	public function get_coupon_templates() {
-
-		$templates    = array();
-		$integrations = affwp_has_coupon_support_list( true );
-
-		// Ensure that each integration has a coupon template which is currently set.
-		foreach ( $integrations as $integration => $label ) {
-
-			if ( 0 !== affwp_get_coupon_template_id( $integration ) ) {
-				$templates[ $integration ] = affwp_get_coupon_template_id( $integration );
-			}
-		}
-
-		return $templates;
-	}
-
-	/**
 	 * Creates the table.
 	 *
 	 * @access public

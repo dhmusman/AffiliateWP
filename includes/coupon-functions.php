@@ -100,7 +100,7 @@ function affwp_add_coupon( $args = array() ) {
  *
  * @param int|\AffWP\Affiliate\Coupon $coupon  AffiliateWP coupon ID or object.
  * @param bool $by_integration_id True to delete the coupon by the supplied integration coupon ID
- * @param string $integration The name of the integration the supplied ID belongs too. Only used if $by_integration_id is true 
+ * @param string $integration The name of the integration the supplied ID belongs too. Only used if $by_integration_id is true
  * @return bool True if the coupon was successfully deleted, otherwise false.
  */
 function affwp_delete_coupon( $coupon, $by_integration_id = false, $integration = '' ) {
@@ -380,21 +380,95 @@ function affwp_integration_has_coupon_support( $integration ) {
  * @since  2.2
  */
 function affwp_get_coupon_template_id( $integration ) {
-	return affiliate_wp()->affiliates->coupons->get_coupon_template_id( $integration );
+
+	$template_id = 0;
+
+	$args = array(
+		'meta_key'       => 'affwp_is_coupon_template',
+		'meta_value'     => 1,
+		'orderby'        => 'meta_value_num',
+		'fields'         => 'ids',
+		'posts_per_page' => 1,
+	);
+
+	switch ( $integration ) {
+		case 'edd':
+
+			$args[ 'post_type' ] = 'edd_discount';
+			$query               = new \WP_Query;
+			$discount            = $query->query( $args );
+
+			if ( ! empty( $discount[0] ) ) {
+				$template_id = absint( $discount[0] );
+			}
+
+			break;
+
+		case 'woocommerce':
+
+			$args[ 'post_type' ] = 'shop_coupon';
+			$query               = new \WP_Query;
+			$coupon              = $query->query( $args );
+
+			if ( ! empty( $coupon[0] ) ) {
+				$template_id = absint( $coupon[0] );
+			}
+
+			break;
+
+		default:
+			affiliate_wp()->utils->log( sprintf( 'get_coupon_template_id: Unable to determine coupon ID from %s integration.', $integration ) );
+			break;
+	}
+
+	/**
+	* Filters the coupon template ID.
+	*
+	* @since 2.2
+	*
+	* @param int    $template_id The coupon template ID if set, otherwise 0.
+	* @param string $integration The integration to query. Required.
+	*/
+	return apply_filters( 'affwp_get_coupon_template_id', $template_id, $integration );
 }
 
 /**
  * Retrieves the coupon template URL for the given integration coupon ID and integration.
  *
  * @param int     $integration_coupon_id The integration coupon ID.
- * @param string  $integration           Integration.
+ * @param string  $integration_id        Integration.
  * @return string                        The template edit URL for the integration coupon ID,
  *                                       otherwise an empty string.
  *
  * @since 2.2
  */
 function affwp_get_coupon_edit_url( $integration_coupon_id, $integration_id ) {
-	return affiliate_wp()->affiliates->coupons->get_coupon_edit_url( $integration_coupon_id, $integration_id );
+
+	$integration_coupon_id = affwp_get_coupon_template_id( $integration_id );
+
+	$url = '';
+
+	switch ( $integration ) {
+		case 'edd':
+			$url = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' ) . $integration_coupon_id;
+			break;
+		case 'woocommerce':
+			$url = get_edit_post_link( $integration_coupon_id, '' );
+			break;
+
+		default :
+			break;
+	}
+
+	/**
+	 * Filters the coupon URL for the given integration.
+	 *
+	 * @since 2.2
+	 *
+	 * @param string $url         The coupon template URL if one exists, otherwise an empty string.
+	 * @param string $integration Integration.
+	 */
+	return apply_filters( 'affwp_coupon_edit_url', $url, $integration );
 }
 
 /**

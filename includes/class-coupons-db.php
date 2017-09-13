@@ -685,25 +685,6 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 	}
 
 	/**
-	 * Creates an AffiliateWP coupon object when a coupon is created in the integration.
-	 *
-	 * This method is required in extensions of this class,
-	 * and should be hooked onto the action which fires in the integration at the time of coupon creation.
-	 *
-	 * @param  array  $args  An array of coupon arguments.
-	 * @return bool          Returns true if a coupon object was created, otherwise false.
-	 * @since  2.2
-	 */
-	public function create_affwp_coupon( $args ) {
-
-		if ( ! $args ) {
-			return false;
-		}
-
-		return affiliate_wp()->affiliates->coupons->add( $args );
-	}
-
-	/**
 	 * Sets the coupon template used as a template when generating all automatic affiliate coupons.
 	 *
 	 * For auto-generated coupons, there can be only one AffiliateWP coupon template per integration.

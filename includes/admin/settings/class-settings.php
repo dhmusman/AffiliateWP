@@ -456,10 +456,12 @@ class Affiliate_WP_Settings {
 						'type' => 'header'
 					),
 					'license_key' => array(
-						'name' => __( 'License Key', 'affiliate-wp' ),
-						'desc' => sprintf( __( 'Please enter your license key. An active license key is needed for automatic plugin updates and <a href="%s" target="_blank">support</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/support/' ),
-						'type' => 'license',
-						'sanitize_callback' => 'sanitize_text_field'
+						'name'              => __( 'License Key', 'affiliate-wp' ),
+						'desc'              => sprintf( __( 'Please enter your license key. An active license key is needed for automatic plugin updates and <a href="%s" target="_blank">support</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/support/' ),
+						'type'              => 'license',
+						'sanitize_callback' => 'sanitize_text_field',
+						'tooltip_title'     => __( 'Can\'t find your License Key?', 'affiliate-wp' ),
+						'tooltip_desc'      => sprintf( __( 'Your AffiliateWP License Key can be found in your emailed purchase receipt, and by logging in to <a href="%s" target="_blank">your affiliatewp.com account</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/account/' ),
 					),
 					'pages' => array(
 						'name' => '<strong>' . __( 'Pages', 'affiliate-wp' ) . '</strong>',
@@ -467,18 +469,22 @@ class Affiliate_WP_Settings {
 						'type' => 'header'
 					),
 					'affiliates_page' => array(
-						'name' => __( 'Affiliate Area', 'affiliate-wp' ),
-						'desc' => __( 'This is the page where affiliates will manage their affiliate account.', 'affiliate-wp' ),
-						'type' => 'select',
-						'options' => affwp_get_pages(),
-						'sanitize_callback' => 'absint'
+						'name'              => __( 'Affiliate Area', 'affiliate-wp' ),
+						'desc'              => __( 'This is the page where affiliates will manage their affiliate account.', 'affiliate-wp' ),
+						'type'              => 'select',
+						'options'           => affwp_get_pages(),
+						'sanitize_callback' => 'absint',
+						'tooltip_title'     => 'Setting up the Affiliate Area',
+						'tooltip_desc'      => sprintf( __( 'Learn more about setting up the AffiliateWP affiliate dashboard area by reading <a href="%s" target="_blank">our set-up guides and documentation</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/category/1421-affiliate-area' )
 					),
 					'terms_of_use' => array(
-						'name' => __( 'Terms of Use', 'affiliate-wp' ),
-						'desc' => __( 'Select the page that shows the terms of use for Affiliate Registration', 'affiliate-wp' ),
-						'type' => 'select',
-						'options' => affwp_get_pages(),
-						'sanitize_callback' => 'absint'
+						'name'              => __( 'Terms of Use', 'affiliate-wp' ),
+						'desc'              => __( 'Select the page that shows the terms of use for Affiliate Registration', 'affiliate-wp' ),
+						'type'              => 'select',
+						'options'           => affwp_get_pages(),
+						'sanitize_callback' => 'absint',
+						'tooltip_title'     => 'Effectively Communicating with your Affiliates',
+						'tooltip_desc'      => sprintf( __( 'Learn more about effectively communicating with your affiliates by reading <a href="%s" target="_blank">our blog post on the topic</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/how-to-effectively-communicate-with-your-affiliates/' )
 					),
 					'referrals' => array(
 						'name' => '<strong>' . __( 'Referral Settings', 'affiliate-wp' ) . '</strong>',
@@ -888,7 +894,7 @@ class Affiliate_WP_Settings {
 		 * See Affiliate_WP_Settings::checkbox_callback
 		 * for affwp_after_setting_output filter documentation.
 		 */
-		echo apply_filters( 'affwp_after_setting_output', '<hr/>', $args );
+		echo $this->after_setting_output( '<hr/>', $args );
 	}
 
 	/**
@@ -1271,6 +1277,7 @@ class Affiliate_WP_Settings {
 		 * @param $html The html to output for this setting.
 		 * @since 2.2
 		 */
+
 		return apply_filters( 'affwp_after_setting_output', $html, $args );
 	}
 

@@ -474,8 +474,8 @@ class Affiliate_WP_Settings {
 						'type'              => 'select',
 						'options'           => affwp_get_pages(),
 						'sanitize_callback' => 'absint',
-						'tooltip_title'     => 'Setting up the Affiliate Area',
-						'tooltip_desc'      => sprintf( __( 'Learn more about setting up the AffiliateWP affiliate dashboard area by reading <a href="%s" target="_blank">our set-up guides and documentation</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/category/1421-affiliate-area' )
+						'tooltip_title'     => __( 'Setting up the Affiliate Area', 'affiliate-wp' ),
+						'tooltip_desc'      => sprintf( __( 'Place the affiliate area shortcode, <code>[affiliate_area]</code>, on the page where you would like the affiliate area to appear. Learn more about setting up the AffiliateWP affiliate dashboard area by reading <a href="%s" target="_blank">our set-up guides and documentation</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/category/1421-affiliate-area' )
 					),
 					'terms_of_use' => array(
 						'name'              => __( 'Terms of Use', 'affiliate-wp' ),
@@ -483,7 +483,7 @@ class Affiliate_WP_Settings {
 						'type'              => 'select',
 						'options'           => affwp_get_pages(),
 						'sanitize_callback' => 'absint',
-						'tooltip_title'     => 'Effectively Communicating with your Affiliates',
+						'tooltip_title'     => __( 'Setting a Terms of Use agreement', 'affiliate-wp' ),
 						'tooltip_desc'      => sprintf( __( 'Learn more about effectively communicating with your affiliates by reading <a href="%s" target="_blank">our blog post on the topic</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/how-to-effectively-communicate-with-your-affiliates/' )
 					),
 					'referrals' => array(

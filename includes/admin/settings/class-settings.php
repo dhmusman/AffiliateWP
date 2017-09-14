@@ -1290,10 +1290,13 @@ class Affiliate_WP_Settings {
 		}
 
 		if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
-			$html .= '<span alt="f223" class="affwp-tooltip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong>: ' . $args['tooltip_desc'] . '"></span>';
+			// Check if tooltip exists in html already.
+			if (strpos( $html, 'affwp-tooltip' ) == false ) {
+				$html .= '<span alt="f223" class="affwp-tooltip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong>: ' . $args['tooltip_desc'] . '"></span>';
+			}
 		}
 
-		echo $html;
+		return $html;
 	}
 
 	/**

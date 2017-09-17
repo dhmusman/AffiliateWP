@@ -475,7 +475,7 @@ class Affiliate_WP_Settings {
 						'options'           => affwp_get_pages(),
 						'sanitize_callback' => 'absint',
 						'tooltip_title'     => __( 'Setting up the Affiliate Area', 'affiliate-wp' ),
-						'tooltip_desc'      => sprintf( __( 'Place the affiliate area shortcode, <code>[affiliate_area]</code>, on the page where you would like the affiliate area to appear. Learn more about setting up the AffiliateWP affiliate dashboard area by reading <a href="%s" target="_blank">our set-up guides and documentation</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/category/1421-affiliate-area' )
+						'tooltip_desc'      => sprintf( __( 'Place the affiliate area shortcode, %1$s, on the page where you would like the affiliate area to appear. Learn more about setting up the AffiliateWP affiliate dashboard area by reading our %2$s set-up guides and documentation.', 'affiliate-wp' ), '<code>[affiliate_area]</code>', '<a href="http://docs.affiliatewp.com/category/1421-affiliate-area" target="_blank">GUIDES</a>' )
 					),
 					'terms_of_use' => array(
 						'name'              => __( 'Terms of Use', 'affiliate-wp' ),

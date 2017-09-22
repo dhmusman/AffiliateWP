@@ -102,8 +102,6 @@ class AffWP_Coupons_Admin {
 			<tbody>
 				<?php
 
-				$coupons = affwp_get_affiliate_coupons( $affiliate_id );
-
 				affiliate_wp()->utils->log( 'Coupons for affiliate ID: ' . $affiliate_id . ' ' . print_r( $coupons, true ) );
 
 				$integrations = affiliate_wp()->integrations->get_enabled_integrations();

@@ -306,7 +306,7 @@ class Affiliate_WP_Coupons_DB extends Affiliate_WP_DB {
 			'offset'                => 0,
 			'coupon_id'             => 0,
 			'integration_coupon_id' => 0,
-			'coupon_code'           => 0,
+			'coupon_code'           => '',
 			'affiliate_id'          => 0,
 			'referrals'             => 0,
 			'integration'           => '',

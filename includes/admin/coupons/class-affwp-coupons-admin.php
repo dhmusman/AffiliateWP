@@ -125,36 +125,34 @@ class AffWP_Coupons_Admin {
 
 							foreach ( $coupons as $coupon ) {
 
-								$coupon = is_array( $coupon ) ? $coupon : (array) $coupon;
-
 								$coupon_referrals = affiliate_wp()->referrals->get_referrals( array(
 										'number'       => -1,
 										'affiliate_id' => $affiliate_id,
-										'coupon_id'    => $coupon['coupon_id']
+										'coupon_id'    => $coupon->coupon_id
 
 									)
 								);
 
 								$referrals_url = affwp_admin_url( 'referrals' );
-								$referrals_url = $coupon['coupon_id'] ? add_query_arg( 'coupon_id', $coupon['coupon_id'], $referrals_url ) : $referrals_url;
+								$referrals_url = add_query_arg( 'coupon_id', $coupon->coupon_id, $referrals_url );
 
 								?>
 								<tr>
 									<td>
-										<?php echo $coupon['integration']; ?>
+										<?php echo $coupon->integration; ?>
 									</td>
 									<td>
-										<?php echo $coupon['coupon_code']; ?>
+										<?php echo $coupon->coupon_code; ?>
 									</td>
 									<td>
-										<?php echo $coupon['integration_coupon_id']; ?>
+										<?php echo $coupon->integration_coupon_id; ?>
 									</td>
 									<td>
 										<?php echo ! empty( $coupon_referrals ) ? count( $coupon_referrals ) . ' <a href="' . esc_url( $referrals_url ) . '">' . __( 'View', 'affiliate-wp' ) . '</a>' : __( 'No referrals were found.', 'affiliate-wp' ); ?>
 									</td>
 									<td>
 										<?php
-										$coupon_edit_url = affwp_get_coupon_edit_url( $coupon[ 'integration_coupon_id' ], $coupon[ 'integration' ] );
+										$coupon_edit_url = affwp_get_coupon_edit_url( $coupon->integration_coupon_id, $coupon->integration );
 										if ( $coupon_edit_url ) {
 											echo '<a href="' . esc_url( $coupon_edit_url ) . '">' . __( 'View/Edit', 'affiliate-wp' ) . '</a>';
 										} else {

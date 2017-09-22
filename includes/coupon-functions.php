@@ -578,13 +578,12 @@ function affwp_get_coupon_templates() {
 				if ( ! $template_id ) {
 					continue;
 				} else {
-					$template_url = affiliate_wp()->affiliates->coupons->get_coupon_edit_url( $template_id, $integration_id );
 
 					$integrations_output[] = sprintf( '<li data-integration="%1$s">%2$s: %3$s</li>',
 						esc_html( $integration_id ),
 						esc_html( $integration_term ),
 						sprintf( '<a href="%1$s">View coupon (ID %2$s)</a>',
-						esc_url( $template_url ),
+						esc_url( affwp_get_coupon_edit_url( $template_id, $integration_id ) ),
 						esc_html( $template_id )
 						)
 					);

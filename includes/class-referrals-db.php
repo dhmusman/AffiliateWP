@@ -367,18 +367,30 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		// Specific referrals
 		if( ! empty( $args['referral_id'] ) ) {
 
+			if( empty( $where ) ) {
+				$where .= " WHERE";
+			} else {
+				$where .= " AND";
+			}
+
 			if( is_array( $args['referral_id'] ) ) {
 				$referral_ids = implode( ',', array_map( 'intval', $args['referral_id'] ) );
 			} else {
 				$referral_ids = intval( $args['referral_id'] );
 			}
 
-			$where .= "WHERE `referral_id` IN( {$referral_ids} ) ";
+			$where .= " `referral_id` IN( {$referral_ids} ) ";
 
 		}
 
 		// Referrals for specific affiliates
 		if( ! empty( $args['affiliate_id'] ) ) {
+
+			if( empty( $where ) ) {
+				$where .= " WHERE";
+			} else {
+				$where .= " AND";
+			}
 
 			if( is_array( $args['affiliate_id'] ) ) {
 				$affiliate_ids = implode( ',', array_map( 'intval', $args['affiliate_id'] ) );
@@ -386,12 +398,18 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 				$affiliate_ids = intval( $args['affiliate_id'] );
 			}
 
-			$where .= "WHERE `affiliate_id` IN( {$affiliate_ids} ) ";
+			$where .= " `affiliate_id` IN( {$affiliate_ids} ) ";
 
 		}
 
 		// Referrals for specific payouts
 		if( ! empty( $args['payout_id'] ) ) {
+
+			if( empty( $where ) ) {
+				$where .= " WHERE";
+			} else {
+				$where .= " AND";
+			}
 
 			if( is_array( $args['payout_id'] ) ) {
 				$payout_ids = implode( ',', array_map( 'intval', $args['payout_id'] ) );
@@ -399,12 +417,18 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 				$payout_ids = intval( $args['payout_id'] );
 			}
 
-			$where .= "WHERE `payout_id` IN( {$payout_ids} ) ";
+			$where .= " `payout_id` IN( {$payout_ids} ) ";
 
 		}
 
 		// Referrals for specific coupon IDs
 		if( ! empty( $args['coupon_id'] ) ) {
+
+			if( empty( $where ) ) {
+				$where .= " WHERE";
+			} else {
+				$where .= " AND";
+			}
 
 			if( is_array( $args['coupon_id'] ) ) {
 				$coupon_ids = implode( ',', array_map( 'intval', $args['coupon_id'] ) );
@@ -412,7 +436,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 				$coupon_ids = intval( $args['coupon_id'] );
 			}
 
-			$where .= "WHERE `coupon_id` IN( {$coupon_ids} ) ";
+			$where .= " `coupon_id` IN( {$coupon_ids} ) ";
 
 		}
 

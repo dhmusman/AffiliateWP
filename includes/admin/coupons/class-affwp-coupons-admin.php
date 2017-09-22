@@ -110,9 +110,9 @@ class AffWP_Coupons_Admin {
 
 					if ( affwp_integration_has_coupon_support( $integration_id ) ) {
 
-						$template_id = affiliate_wp()->affiliates->coupons->get_coupon_template_id( $integration_id );
+						$template_id = affwp_get_coupon_template_id( $integration_id );
 
-						$template_url = affiliate_wp()->affiliates->coupons->get_coupon_edit_url( $template_id, $integration_id );
+						$template_url = affwp_get_coupon_edit_url( $template_id, $integration_id );
 
 						$args = array(
 							'affiliate_id' => $affiliate_id,

@@ -885,12 +885,6 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	 */
 	do_action( 'affwp_post_generate_integration_coupon', $integration_data );
 
-	// Update post meta to specify the affiliate ID.
-
-	if ( get_post( $integration_coupon_id ) ) {
-		update_post_meta( $integration_coupon_id, 'affwp_discount_affiliate', $args[ 'affiliate_id' ] );
-	}
-
 	// Build coupon arguments.
 	$affwp_coupon_args = array(
 		'affiliate_id'          => $args[ 'affiliate_id' ],
@@ -982,6 +976,11 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 	$discount_id = edd_store_discount( $discount_args, null );
 
 	if ( $discount_id ) {
+
+
+		// Update post meta to specify the affiliate ID.
+		update_post_meta( $discount_id, 'affwp_discount_affiliate', $args[ 'affiliate_id' ] );
+
 		$discount = edd_get_discount( $discount_id );
 
 		/**
@@ -1084,15 +1083,17 @@ function affwp_generate_integration_coupon_woocommerce( $args = array() ) {
 	$wc_coupon_id = wp_insert_post( $coupon_args );
 
 	if ( $wc_coupon_id ) {
+
+		// Update post meta to specify the affiliate ID.
+		update_post_meta( $wc_coupon_id, 'affwp_discount_affiliate', $args[ 'affiliate_id' ] );
+
+
 		$wc_coupon = get_post( $wc_coupon_id );
 
 		$coupon_code = get_post_meta( $wc_coupon_id, 'code', true );
-		/**
-		 * @see EDD/#5974
-		 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5974
-		 */
+
 		if ( empty( $coupon_code ) ) {
-			affiliate_wp()->utils->log( 'No coupon code generated for discount ID ' . $discount_id );
+			affiliate_wp()->utils->log( 'No coupon code generated for discount ID ' . $wc_coupon );
 			return false;
 		}
 

@@ -885,19 +885,6 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	 */
 	do_action( 'affwp_post_generate_integration_coupon', $integration_data );
 
-	$integration_coupon_id = false;
-
-	// intval will return a 1 for non-empty arrays.
-	if ( ! is_array( $integration_data ) && is_int( $integration_data ) ) {
-		$integration_coupon_id = absint( $integration_data );
-	} elseif ( isset( $integration_data[ 'ID' ] ) ) {
-		$integration_coupon_id = absint( $integration_data[ 'ID' ] );
-	} else {
-		// The integration coupon ID is required to generate an internal AffiliateWP coupon object.
-		affiliate_wp()->utils->log( 'affwp_generate_integration_coupon: Could not determine the ID of the integration coupon.' );
-		return false;
-	}
-
 	// Update post meta to specify the affiliate ID.
 
 	if ( get_post( $integration_coupon_id ) ) {
@@ -908,7 +895,7 @@ function affwp_generate_integration_coupon( $args = array() ) {
 	$affwp_coupon_args = array(
 		'affiliate_id'          => $args[ 'affiliate_id' ],
 		'coupon_code'           => $integration_data[ 'coupon_code' ],
-		'integration_coupon_id' => $integration_coupon_id,
+		'integration_coupon_id' => $integration_data['integration_coupon_id'],
 		'integration'           => $args[ 'integration' ],
 		'status'                => $integration_data[ 'status' ] ? $integration_data[ 'status' ]: 'active',
 	);

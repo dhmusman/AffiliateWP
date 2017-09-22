@@ -779,31 +779,6 @@ function affwp_generate_coupon_code( $affiliate_id = 0, $integration = '', $base
 	);
 }
 
-/**
- * Checks whether the affiliate already has an existing coupon for the given integration.
- *
- * @since  2.2
- *
- * @param  integer $affiliate_id  Affiliate ID.
- * @param  string  $integration   Integtation to query.
- *
- * @return bool                   True if the coupon exists, otherwise false.
- */
-function affwp_coupon_exists( $affiliate_id = 0, $integration = '' ) {
-
-	if ( ! $affiliate_id || empty( $integration ) ) {
-		affiliate_wp()->utils->log( 'affwp_coupon_exists: The affiliate ID and integration must be specified.' );
-		return false;
-	}
-
-	$args = array(
-		'affiliate_id' => $affiliate_id,
-		'number'       => 1,
-		'integration'  => $integration
-	);
-
-	return affwp_get_coupon( $args );
-}
 
 /**
  * May generate one or more coupons for an affiliate, if the following conditions are met:

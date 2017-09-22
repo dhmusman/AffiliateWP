@@ -606,52 +606,6 @@ function affwp_get_coupon_templates() {
 
 }
 
-/**
- * Gets the coupon-creation admin url for the specified integration.
- * Can output wither a raw admin url, or a formatted html anchor containing the link.
- *
- * The affiliate ID is used optionally in cases where data may be passed to the integration.
- *
- * @param  string  $integration   The integration.
- * @param  int     $affiliate_id  Affiliate ID.
- * @param  bool    $html          Whether or not to provide an html anchor tag in the return.
- *                                Specify true to output an anchor tag. Default is false.
- *
- * @return string|false         The coupon creation admin url, otherwise false.
- * @since  2.2
- */
-function affwp_get_coupon_create_url( $integration, $affiliate_id = 0, $html = false ) {
-
-	$url = false;
-
-	if ( empty( $integration ) ) {
-		return false;
-	}
-
-	if ( affwp_integration_has_coupon_support( $integration ) ) {
-
-		$user_name = affwp_get_affiliate_username( $affiliate_id );
-
-		switch ( $integration ) {
-			case 'edd':
-				$url = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=add_discount&user_name=' . $user_name);
-				break;
-
-			default:
-				break;
-		}
-
-	} else {
-		affiliate_wp()->utils->log( sprintf( 'affwp_get_coupon_create_url: The %s integration does not presently have AffiliateWP coupon support.', $integration ) );
-		return false;
-	}
-
-	if ( $html ) {
-		return '<a class="affwp-inline-link" href="' . esc_url( $url ) . '">' . esc_html__( 'Create Coupon', 'affiliate-wp' ) . '</a>';
-	}
-
-	return $url;
-}
 
 /**
  * Generates a unique coupon code string, used when generating an integration coupon.

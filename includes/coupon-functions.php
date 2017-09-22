@@ -448,7 +448,7 @@ function affwp_get_coupon_edit_url( $integration_coupon_id, $integration_id ) {
 
 	$url = '';
 
-	switch ( $integration ) {
+	switch ( $integration_id ) {
 		case 'edd':
 			$url = admin_url( 'edit.php?post_type=download&page=edd-discounts&edd-action=edit_discount&discount=' ) . $integration_coupon_id;
 			break;
@@ -468,7 +468,7 @@ function affwp_get_coupon_edit_url( $integration_coupon_id, $integration_id ) {
 	 * @param string $url         The coupon template URL if one exists, otherwise an empty string.
 	 * @param string $integration Integration.
 	 */
-	return apply_filters( 'affwp_coupon_edit_url', $url, $integration );
+	return apply_filters( 'affwp_coupon_edit_url', $url, $integration_id );
 }
 
 /**

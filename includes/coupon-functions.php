@@ -887,14 +887,14 @@ function affwp_generate_integration_coupon( $args = array() ) {
 
 	// Build coupon arguments.
 	$affwp_coupon_args = array(
-		'affiliate_id'          => $args[ 'affiliate_id' ],
+		'affiliate_id'          => $integration_data[ 'affiliate_id' ],
 		'coupon_code'           => $integration_data[ 'coupon_code' ],
-		'integration_coupon_id' => $integration_data['integration_coupon_id'],
-		'integration'           => $args[ 'integration' ],
+		'integration_coupon_id' => $integration_data[ 'integration_coupon_id' ],
+		'integration'           => $integration_data[ 'integration' ],
 		'status'                => $integration_data[ 'status' ] ? $integration_data[ 'status' ]: 'active',
 	);
 
-	return $affwp_coupon_args;
+	return affwp_add_coupon( $affwp_coupon_args );
 }
 
 /**
@@ -970,7 +970,6 @@ function affwp_generate_integration_coupon_edd( $args = array() ) {
 		'excluded_products' => isset( $template->excluded_products ) ? $template->excluded_products : array(),
 		'is_not_global'     => isset( $template->not_global )        ? $template->not_global        : false,
 		'is_single_use'     => isset( $template->use_once )          ? $template->use_once          : false,
-		'affwp_discount_affiliate' => $args[ 'affiliate_id' ]
 	);
 
 	$discount_id = edd_store_discount( $discount_args, null );

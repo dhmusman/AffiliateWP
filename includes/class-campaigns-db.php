@@ -276,34 +276,94 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 	}
 
 	/**
-	 * Ensure insert method cannot be called
+	 * Add a new campaign
 	 *
-	 * @since  1.7
-	 */
-	public function insert( $data, $type = '' ) {
-		_doing_it_wrong( 'insert', 'The AffiliateWP Campaigns table is a read-only VIEW. Data cannot be inserted.', '1.7' );
+	 * @since 2.1.6
+	 * @access public
+	 *
+	 * @param array $args {
+	 *     Optional. Array of arguments for adding a new campaign. Default empty array.
+	 *
+	 *     @type string $status          Affiliate status. Default 'active'.
+	 *     @type string $date_registered Date the affiliate was registered. Default is the current time.
+	 *     @type string $rate            Affiliate-specific referral rate.
+	 *     @type string $rate_type       Rate type. Accepts 'percentage' or 'flat'.
+	 *     @type string $payment_email   Affiliate payment email.
+	 *     @type int    $earnings        Affiliate earnings. Default 0.
+	 *     @type int    $referrals       Number of affiliate referrals.
+	 *     @type int    $visits          Number of visits.
+	 *     @type int    $user_id         User ID used to correspond to the affiliate.
+	 *     @type string $website_url     The affiliate's website URL.
+	 * }
+	 * @return int|false Affiliate ID of the campaign if successfully added, otherwise false.
+	*/
+	public function add( $data = array() ) {
+
+		$defaults = array(
+			'affiliate_id'    => 0,
+			'campaign'        => '',
+			'visits'          => 0,
+			'unique_visits'   => 0,
+			'referrals'       => 0,
+			'conversion_rate' => 0,
+		);
+
+		$args = wp_parse_args( $data, $defaults );
+
+		$add = $this->insert( $args, 'campaign' );
+
+		if ( $add ) {
+
+			/**
+			 * Fires immediately after a campaign has been added to the database.
+			 *
+			 * @param int   $add  The new campaign's associated Affiliate ID.
+			 * @param array $args The arguments passed to the insert method.
+			 * @since 2.1.6
+			 */
+			do_action( 'affwp_insert_campaign', $add, $args );
+
+			return $add;
+		}
+
+		return false;
+
 	}
 
-	/**
-	 * Ensure update method cannot be called
-	 *
-	 * @since  1.7
-	 */
-	public function update( $row_id, $data = array(), $where = '', $type = '' ) {
-		_doing_it_wrong( 'update', 'The AffiliateWP Campaigns table is a read-only VIEW. Data cannot be updated.', '1.7' );
-	}
+	// /**
+	// @TODO Remove
+	//  * Ensure insert method cannot be called
+	//  *
+	//  * @since  1.7
+	//  */
+	// public function insert( $data, $type = '' ) {
+	// 	_doing_it_wrong( 'insert', 'The AffiliateWP Campaigns table is a read-only VIEW. Data cannot be inserted.', '1.7' );
+	// }
 
-	/**
-	 * Ensure delete method cannot be called
-	 *
-	 * @since  1.7
-	 */
-	public function delete( $row_id = 0, $type = '' ) {
-		_doing_it_wrong( 'delete', 'The AffiliateWP Campaigns table is a read-only VIEW. Data cannot be deleted.', '1.7' );
-	}
+	// /**
+	// 	@TODO Remove
+	//  * Ensure update method cannot be called
+	//  *
+	//  * @since  1.7
+	//  */
+	// public function update( $row_id, $data = array(), $where = '', $type = '' ) {
+	// 	_doing_it_wrong( 'update', 'The AffiliateWP Campaigns table is a read-only VIEW. Data cannot be updated.', '1.7' );
+	// }
+
+	// /**
+	// 	@TODO Remove
+	//  * Ensure delete method cannot be called
+	//  *
+	//  * @since  1.7
+	//  */
+	// public function delete( $row_id = 0, $type = '' ) {
+	// 	_doing_it_wrong( 'delete', 'The AffiliateWP Campaigns table is a read-only VIEW. Data cannot be deleted.', '1.7' );
+	// }
 
 	/**
 	 * Create the view
+	 *
+	 * @TODO remove
 	 *
 	 * @since  1.7
 	 */

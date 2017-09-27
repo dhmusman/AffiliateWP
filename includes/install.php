@@ -58,7 +58,8 @@ function affiliate_wp_install() {
 	$affiliate_wp_install->rewrites->flush_rewrites();
 
 	$completed_upgrades = array(
-		'upgrade_v20_recount_unpaid_earnings'
+		'upgrade_v20_recount_unpaid_earnings',
+		'upgrade_v216_remove_views'
 	);
 
 	// Set past upgrade routines complete for all sites.

@@ -432,6 +432,21 @@ class Affiliate_WP_Admin_Notices {
 				</form>
 			</div>
 		<?php endif;
+
+		if ( true === version_compare( AFFILIATEWP_VERSION, '2.1.6', '<' ) || false === affwp_has_upgrade_completed( 'upgrade_v216_remove_views' ) ) :
+
+			// Enqueue admin JS for the batch processor.
+			affwp_enqueue_admin_js();
+			?>
+			<div class="notice notice-info is-dismissible">
+				<p><?php _e( 'Your database needs to be upgraded following the latest AffiliateWP update.', 'affiliate-wp-' ); ?></p>
+				<form method="post" class="affwp-batch-form" data-batch_id="upgrade-remove-views" data-nonce="<?php echo esc_attr( wp_create_nonce( 'upgrade-remove-views_step_nonce' ) ); ?>">
+					<p>
+						<?php submit_button( __( 'Upgrade Database', 'affiliate-wp' ), 'secondary', 'upgrade_v216_remove_views', false ); ?>
+					</p>
+				</form>
+			</div>
+		<?php endif;
 	}
 
 	/**

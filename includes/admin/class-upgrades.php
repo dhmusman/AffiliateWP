@@ -147,6 +147,10 @@ class Affiliate_WP_Upgrades {
 			$this->v2131_upgrade();
 		}
 
+		if ( version_compare( $this->version, '2.1.6', '<' ) ) {
+			$this->v216_upgrade();
+		}
+
 		// Inconsistency between current and saved version.
 		if ( version_compare( $this->version, AFFILIATEWP_VERSION, '<>' ) ) {
 			$this->upgraded = true;
@@ -176,6 +180,16 @@ class Affiliate_WP_Upgrades {
 				'id'    => 'recount-affiliate-stats-upgrade',
 				'class' => 'AffWP\Utils\Batch_Process\Upgrade_Recount_Stats',
 				'file'  => AFFILIATEWP_PLUGIN_DIR . 'includes/admin/tools/upgrades/class-batch-upgrade-recount-affiliate-stats.php'
+			)
+		) );
+
+		$this->add_routine( 'upgrade_v216_remove_views', array(
+			'version' => '2.1.6',
+			'compare' => '<',
+			'batch_process' => array(
+				'id'    => 'upgrade-remove-views',
+				'class' => 'AffWP\Utils\Batch_Process\Upgrade_Remove_Views',
+				'file'  => AFFILIATEWP_PLUGIN_DIR . 'includes/admin/tools/upgrades/class-batch-upgrade-remove-views.php'
 			)
 		) );
 
@@ -333,7 +347,7 @@ class Affiliate_WP_Upgrades {
 
 		@affiliate_wp()->referrals->create_table();
 		@affiliate_wp()->visits->create_table();
-		@affiliate_wp()->campaigns->create_view();
+		@affiliate_wp()->campaigns->create_table();
 
 		$this->v17_upgrade_referral_rates();
 
@@ -677,6 +691,31 @@ class Affiliate_WP_Upgrades {
 		// Refresh capabilities missed in 2.1 update (export_visit_data).
 		@affiliate_wp()->capabilities->add_caps();
 		@affiliate_wp()->utils->log( 'Upgrade: Core capabilities have been upgraded for 2.1.3.1.' );
+
+		$this->upgraded = true;
+	}
+
+	/**
+	 * Performs database upgrades for version 2.1.6.
+	 *
+	 * @access private
+	 * @since  2.1.6
+	 */
+	private function v216_upgrade() {
+		// Check if views are supported in MySQL, bail if not.
+		@affiliate_wp()->campaigns->create_table();
+		@affiliate_wp()->utils->log( 'Upgrade: Core capabilities have been upgraded for 2.1.3.1.' );
+
+		// Grab campaigns, if any exist.
+
+		// Generate campaign objects for the campaigns table.
+
+		affiliate_wp()->campaigns->add( array(
+				'' => '',
+				'' => '',
+				'' => ''
+			)
+		);
 
 		$this->upgraded = true;
 	}

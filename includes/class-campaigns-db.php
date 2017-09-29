@@ -19,7 +19,7 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 	 *
 	 * This is a read-only VIEW of the visits table
 	 *
-	 * @param  int  $affiliate_id The ID of the affiliate to retrieve campaigns for
+	 * @param  int  $affiliate_id The ID of the affiliate for which to retrieve campaigns.
 	 * @since  1.7
 	 */
 	public function __construct() {
@@ -31,14 +31,14 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 		} else {
 			$this->table_name  = $wpdb->prefix . 'affiliate_wp_campaigns';
 		}
-		$this->primary_key = 'affiliate_id';
+		$this->primary_key = 'campaign_id';
 		$this->version     = '1.0';
 	}
 
 	/**
 	 * Retrieve campaigns and associated stats
 	 *
-	 * @param  int  $affiliate_id The ID of the affiliate to retrieve campaigns for
+	 * @param  int  $affiliate_id The ID of the affiliate for which to retrieve campaigns.
 	 * @since  1.7
 	 *
 	 * @param array $args {
@@ -46,6 +46,7 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 	 *
 	 *     @type int          $number           Number of campaigns to query for. Default 20.
 	 *     @type int          $offset           Number of campaigns to offset the query for. Default 0.
+	 *     @type int|array    $campaign_id      Campaign ID or array of IDs. Default 0.
 	 *     @type int|array    $affiliate_id     Affiliate ID or array of IDs. Default 0.
 	 *     @type string|array $campaign         Campaign or array of campaigns. Default empty.
 	 *     @type string       $campaign_compare Comparison operator to use when querying for visits by campaign.
@@ -84,6 +85,7 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 		$defaults = array(
 			'number'           => 20,
 			'offset'           => 0,
+			'campaign_id'      => 0,
 			'affiliate_id'     => 0,
 			'campaign'         => '',
 			'campaign_compare' => '=',
@@ -101,6 +103,21 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 		}
 
 		$where = $join = '';
+
+		// Specific campaign ID(s).
+		if( ! empty( $args['campaign_id'] ) ) {
+
+			$where .= empty( $where ) ? "WHERE " : "AND ";
+
+			if( is_array( $args['campaign_id'] ) ) {
+				$campaign_ids = implode( ',', array_map( 'intval', $args['campaign_id'] ) );
+			} else {
+				$campaign_ids = intval( $args['campaign_id'] );
+			}
+
+			$where .= "`campaign_id` IN( {$campaign_ids} ) ";
+
+		}
 
 		// Specific affiliate(s).
 		if( ! empty( $args['affiliate_id'] ) ) {
@@ -136,7 +153,7 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 			}
 		}
 
-		// visits for specific campaign
+		// Visits for specific campaign.
 		if( ! empty( $args['campaign'] )
 		    || ( empty( $args['campaign'] ) && '=' !== $campaign_compare )
 		) {
@@ -330,67 +347,64 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 
 	}
 
-	// /**
-	// @TODO Remove
-	//  * Ensure insert method cannot be called
-	//  *
-	//  * @since  1.7
-	//  */
-	// public function insert( $data, $type = '' ) {
-	// 	_doing_it_wrong( 'insert', 'The AffiliateWP Campaigns table is a read-only VIEW. Data cannot be inserted.', '1.7' );
-	// }
-
-	// /**
-	// 	@TODO Remove
-	//  * Ensure update method cannot be called
-	//  *
-	//  * @since  1.7
-	//  */
-	// public function update( $row_id, $data = array(), $where = '', $type = '' ) {
-	// 	_doing_it_wrong( 'update', 'The AffiliateWP Campaigns table is a read-only VIEW. Data cannot be updated.', '1.7' );
-	// }
-
-	// /**
-	// 	@TODO Remove
-	//  * Ensure delete method cannot be called
-	//  *
-	//  * @since  1.7
-	//  */
-	// public function delete( $row_id = 0, $type = '' ) {
-	// 	_doing_it_wrong( 'delete', 'The AffiliateWP Campaigns table is a read-only VIEW. Data cannot be deleted.', '1.7' );
-	// }
-
 	/**
-	 * Create the view
+	 * Creates the table.
 	 *
-	 * @TODO remove
-	 *
-	 * @since  1.7
-	 */
-	public function create_view() {
-
+	 * @access public
+	 * @since  2.1.6
+	*/
+	public function create_table() {
 		global $wpdb;
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-		if( defined( 'AFFILIATE_WP_NETWORK_WIDE' ) && AFFILIATE_WP_NETWORK_WIDE ) {
-			// Allows a single visits table for the whole network
-			$visits_db  = 'affiliate_wp_visits';
-		} else {
-			$visits_db  = $wpdb->prefix . 'affiliate_wp_visits';
-		}
+		$sql = "CREATE TABLE " . $this->table_name . " (
+		campaign_id bigint(20) NOT NULL AUTO_INCREMENT,
+		affiliate_id bigint(20) NOT NULL,
+		campaign varchar(30) NOT NULL,
+		visits mediumtext NOT NULL,
+		unique_visits mediumtext NOT NULL,
+		referrals mediumtext NOT NULL,
+		conversion_rate mediumtext NOT NULL,
+		PRIMARY KEY (campaign_id),
+		KEY affiliate_id (affiliate_id),
+		KEY campaign (campaign),
+		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
-		$sql = "CREATE OR REPLACE VIEW $this->table_name AS
-				SELECT affiliate_id,
-					campaign,
-					COUNT(url) as visits,
-					COUNT(DISTINCT url) as unique_visits,
-					SUM(IF(referral_id<>0,1,0)) as referrals,
-					ROUND((SUM(IF(referral_id<>0,1,0))/COUNT(url)) * 100, 2) as conversion_rate
-				FROM $visits_db GROUP BY affiliate_id, campaign;";
-
-		$wpdb->query( $sql );
+		dbDelta( $sql );
 
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
+
+	// /**
+	//  * Create the view
+	//  *
+	//  * @since  1.7
+	//  */
+	// public function create_view() {
+
+	// 	global $wpdb;
+
+	// 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+	// 	if( defined( 'AFFILIATE_WP_NETWORK_WIDE' ) && AFFILIATE_WP_NETWORK_WIDE ) {
+	// 		// Allows a single visits table for the whole network
+	// 		$visits_db  = 'affiliate_wp_visits';
+	// 	} else {
+	// 		$visits_db  = $wpdb->prefix . 'affiliate_wp_visits';
+	// 	}
+
+	// 	$sql = "CREATE OR REPLACE VIEW $this->table_name AS
+	// 			SELECT affiliate_id,
+	// 				campaign,
+	// 				COUNT(url) as visits,
+	// 				COUNT(DISTINCT url) as unique_visits,
+	// 				SUM(IF(referral_id<>0,1,0)) as referrals,
+	// 				ROUND((SUM(IF(referral_id<>0,1,0))/COUNT(url)) * 100, 2) as conversion_rate
+	// 			FROM $visits_db GROUP BY affiliate_id, campaign;";
+
+	// 	$wpdb->query( $sql );
+
+	// 	update_option( $this->table_name . '_db_version', $this->version );
+	// }
 }

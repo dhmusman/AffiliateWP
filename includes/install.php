@@ -21,7 +21,7 @@ function affiliate_wp_install() {
 	$affiliate_wp_install->affiliate_meta->create_table();
 	$affiliate_wp_install->referrals->create_table();
 	$affiliate_wp_install->visits->create_table();
-	$affiliate_wp_install->campaigns->create_view();
+	$affiliate_wp_install->campaigns->create_table();
 	$affiliate_wp_install->creatives->create_table();
 	$affiliate_wp_install->affiliates->payouts->create_table();
 	$affiliate_wp_install->REST->consumers->create_table();

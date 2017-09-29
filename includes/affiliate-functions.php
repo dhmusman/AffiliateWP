@@ -1102,11 +1102,34 @@ function affwp_add_affiliate( $data = array() ) {
 
 	$data = affiliate_wp()->utils->process_request_data( $data, 'user_name' );
 
-	if ( empty( $data['user_id'] ) ) {
-		return false;
+	// If a user email is passed, then attempt to also create a new user.
+	if ( ! empty( $data['user_email'] ) ) {
+
+		if ( ! empty( $data['user_name'] ) ) {
+			$username = sanitize_text_field(( $data['user_name'] ) );
+		} else {
+			$username = sanitize_user( $data['user_email'] );
+		}
+
+		$user_id = wp_insert_user( array(
+			'user_email' => sanitize_text_field( $data['user_email'] ),
+			'user_login' => $username,
+			'user_pass'  => wp_generate_password( 24 ),
+		) );
+
+		if ( is_wp_error( $user_id ) ) {
+			return false;
+		}
+
+		$data['user_id'] = $user_id;
+
 	}
 
-	$user_id = absint( $data['user_id'] );
+	if ( empty( $data['user_id'] ) ) {
+		return false;
+	} else {
+		$user_id = absint( $data['user_id'] );
+	}
 
 	$args = array(
 		'user_id'         => $user_id,

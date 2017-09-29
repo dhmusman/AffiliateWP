@@ -314,17 +314,4 @@ class Generate_Payouts extends Batch\Export\CSV implements Batch\With_PreFetch {
 		return $message;
 	}
 
-	/**
-	 * Defines logic to execute once batch processing is complete.
-	 *
-	 * @access public
-	 * @since  2.0
-	 * @abstract
-	 */
-	public function finish() {
-		$this->delete_counts();
-
-		affiliate_wp()->utils->data->delete( "{$this->batch_id}_compiled_data" );
-	}
-
 }

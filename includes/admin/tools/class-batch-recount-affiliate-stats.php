@@ -344,9 +344,7 @@ class Recount_Affiliate_Stats extends Utils\Batch_Process implements Batch\With_
 	 */
 	public function finish() {
 		// Clean up.
-		affiliate_wp()->utils->data->delete( "{$this->batch_id}_affiliate_totals" );
-
-		$this->delete_counts();
+		parent::finish();
 
 		// Invalidate the affiliates cache.
 		wp_cache_set( 'last_changed', microtime(), 'affiliates' );

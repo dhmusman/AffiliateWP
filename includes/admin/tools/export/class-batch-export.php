@@ -274,7 +274,7 @@ class Export extends \Affiliate_WP_Export {
 	 * @abstract
 	 */
 	public function finish() {
-		$this->delete_counts();
+		affiliate_wp()->utils->data->delete_by_match( "^{$this->batch_id}[0-9a-z\_]+" );
 	}
 
 	/**

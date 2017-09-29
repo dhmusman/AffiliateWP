@@ -627,6 +627,31 @@ class Affiliate_WP_Settings {
 						'desc' => __( 'Disable all email notifications.', 'affiliate-wp' ),
 						'type' => 'checkbox'
 					),
+					'disable_application_accepted_emails' => array(
+						'name' => __( 'Disable Application Accepted Emails', 'affiliate-wp' ),
+						'desc' => __( 'Disable email notifications sent to affiliates when their affiliate application is accepted.', 'affiliate-wp' ),
+						'type' => 'checkbox'
+					),
+					'disable_application_pending_emails' => array(
+						'name' => __( 'Disable Application Pending Emails', 'affiliate-wp' ),
+						'desc' => __( 'Disable email notifications sent to affiliates when their affiliate application is pending.', 'affiliate-wp' ),
+						'type' => 'checkbox'
+					),
+					'disable_application_rejected_emails' => array(
+						'name' => __( 'Disable Application Rejected Emails', 'affiliate-wp' ),
+						'desc' => __( 'Disable email notifications sent to affiliates when their affiliate application is rejected.', 'affiliate-wp' ),
+						'type' => 'checkbox'
+					),
+					'disable_new_referral_emails' => array(
+						'name' => __( 'Disable New Referral Emails', 'affiliate-wp' ),
+						'desc' => __( 'Disable email notifications sent to affiliates when they receive a new referral.', 'affiliate-wp' ),
+						'type' => 'checkbox'
+					),
+					'registration_notifications' => array(
+						'name' => __( 'Notify Admin', 'affiliate-wp' ),
+						'desc' => __( 'Notify site admin of new affiliate registrations.', 'affiliate-wp' ),
+						'type' => 'checkbox'
+					),
 					'email_logo' => array(
 						'name' => __( 'Logo', 'affiliate-wp' ),
 						'desc' => __( 'Upload or choose a logo to be displayed at the top of emails.', 'affiliate-wp' ),
@@ -649,11 +674,6 @@ class Affiliate_WP_Settings {
 						'desc' => __( 'The email address to send emails from. This will act as the "from" and "reply-to" address.', 'affiliate-wp' ),
 						'type' => 'text',
 						'std' => get_bloginfo( 'admin_email' )
-					),
-					'registration_notifications' => array(
-						'name' => __( 'Notify Admin', 'affiliate-wp' ),
-						'desc' => __( 'Notify site admin of new affiliate registrations.', 'affiliate-wp' ),
-						'type' => 'checkbox'
 					),
 					'registration_subject' => array(
 						'name' => __( 'Registration Email Subject', 'affiliate-wp' ),
@@ -769,8 +789,7 @@ class Affiliate_WP_Settings {
 					),
 					'betas' => array(
 						'name' => __( 'Opt into Beta Versions', 'affiliate-wp' ),
-						'desc' => __( 'Receive update notifications for beta releases. When beta versions are available, an update notification will be shown on your Plugins page.
-', 'affiliate-wp' ),
+						'desc' => __( 'Receive update notifications for beta releases. When beta versions are available, an update notification will be shown on your Plugins page.', 'affiliate-wp' ),
 						'type' => 'checkbox'
 					),
 					'uninstall_on_delete' => array(
@@ -1394,7 +1413,7 @@ class Affiliate_WP_Settings {
 
 	}
 
-	public function check_license() {
+	public function check_license( $force = false ) {
 
 		if( ! empty( $_POST['affwp_settings'] ) ) {
 			return; // Don't fire when saving settings
@@ -1405,8 +1424,7 @@ class Affiliate_WP_Settings {
 		$request_url = 'https://affiliatewp.com';
 
 		// Run the license check a maximum of once per day
-		if( false === $status && site_url() !== $request_url ) {
-
+		if( ( false === $status || $force ) && site_url() !== $request_url ) {
 			// data to send in our API request
 			$api_params = array(
 				'edd_action'=> 'check_license',

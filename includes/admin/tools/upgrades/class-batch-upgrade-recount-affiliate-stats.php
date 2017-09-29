@@ -31,6 +31,13 @@ class Upgrade_Recount_Stats extends Recount_Affiliate_Stats {
 	public function init( $data = null ) {
 		$data['recount_type'] = 'unpaid-earnings';
 
+		// Affiliate schema update.
+		affiliate_wp()->affiliates->create_table();
+		affiliate_wp()->utils->log( 'Upgrade: The unpaid_earnings column has been added to the affiliates table.' );
+
+		wp_cache_set( 'last_changed', microtime(), 'affiliates' );
+		affiliate_wp()->utils->log( 'Upgrade: The Affiliates cache has been invalidated following the 2.0 upgrade.' );
+
 		parent::init( $data );
 	}
 

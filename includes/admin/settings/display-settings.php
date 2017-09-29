@@ -69,3 +69,29 @@ function affwp_get_settings_tabs() {
 	 */
 	return apply_filters( 'affwp_settings_tabs', $tabs );
 }
+
+/**
+ * Forces a license key check anytime the General settings tab is loaded
+ *
+ * @since 2.1.4
+ *
+ * @return void
+ */
+function affwp_check_license_before_settings_load() {
+
+	if( empty( $_GET['page'] ) || 'affiliate-wp-settings' !== $_GET['page'] ) {
+		return;
+	}
+
+	if( empty( $_GET['tab'] ) ) {
+		return;
+	}
+
+	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], affwp_get_settings_tabs() ) ? $_GET[ 'tab' ] : 'general';
+
+	if( 'general' === $active_tab && affiliate_wp()->settings->get_license_key() ) {
+		affiliate_wp()->settings->check_license( true );
+	}
+
+}
+add_action( 'admin_init', 'affwp_check_license_before_settings_load', 0 );

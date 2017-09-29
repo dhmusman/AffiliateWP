@@ -280,6 +280,15 @@ class Tests extends UnitTestCase {
 	}
 
 	/**
+	 * @covers ::affwp_abs_number_round()
+	 */
+	public function test_abs_number_round_with_non_thousands_number_should_not_take_thousands_separators_into_account() {
+		// Referrals: 27, Visits 1313.
+		$rate = floatval( 27 / 1313 );
+		$this->assertEquals( '2.06', affwp_abs_number_round( $rate * 100 ) );
+	}
+
+	/**
 	 * @covers ::affwp_get_logout_url
 	 */
 	public function test_affwp_get_logout_url() {
@@ -545,6 +554,41 @@ class Tests extends UnitTestCase {
 		affiliate_wp()->settings->set( array(
 			'required_registration_fields' => $original_required_fields
 		) );
+	}
+
+	/**
+	 * @covers ::affwp_maybe_unserialize()
+	 */
+	public function test_maybe_unserialize_with_non_serialized_string_should_return_original() {
+		$result = affwp_maybe_unserialize( 'foo' );
+
+		$this->assertSame( 'foo', $result );
+	}
+
+	/**
+	 * @covers ::affwp_maybe_unserialize()
+	 */
+	public function test_maybe_unserialize_with_serialized_stdClass_object_should_return_that_object() {
+		$object = new \stdClass();
+		$object->is_stdClass = true;
+
+		$serialized_object = maybe_serialize( $object );
+
+		$result = affwp_maybe_unserialize( $serialized_object );
+
+		$this->assertEquals( $object, $result );
+	}
+
+	/**
+	 * @covers ::affwp_maybe_unserialize()
+	 */
+	public function test_maybe_unserialize_with_serialized_non_stdClass_object_should_return_empty_string() {
+		$affiliate = $this->factory->affiliate->create_and_get();
+		$serialized_affiliate = maybe_serialize( $affiliate );
+
+		$result = affwp_maybe_unserialize( $serialized_affiliate );
+
+		$this->assertSame( '', $result );
 	}
 
 }

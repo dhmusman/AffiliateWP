@@ -47,6 +47,7 @@ function affwp_get_currencies() {
 		'ILS' => __( 'Israeli Shekel', 'affiliate-wp' ),
 		'IRR' => __( 'Iranian Rial', 'affiliate-wp' ),
 		'JPY' => __( 'Japanese Yen', 'affiliate-wp' ),
+		'KES' => __( 'Kenyan Shilling', 'affiliate-wp' ),
 		'KZT' => __( 'Kazakhstani Tenge', 'affiliate-wp' ),
 		'KIP' => __( 'Lao Kip', 'affiliate-wp' ),
 		'MYR' => __( 'Malaysian Ringgits', 'affiliate-wp' ),
@@ -322,6 +323,8 @@ function affwp_currency_filter( $amount ) {
 				break;
 			case "IRR" :
 				$formatted = $amount . '&#65020;';
+			case "RUB" :
+				$formatted = $amount . '&#8381;';
 				break;
 			default :
 			    $formatted = $amount . ' ' . $currency;
@@ -544,7 +547,7 @@ function affwp_abs_number_round( $val, $precision = 2 ) {
 	$comma_thousands_sep        = preg_match( '/\d{1,3}(?:,\d{3})+/', $val );
 
 	// Convert period and space thousand separators.
-	if ( $period_space_thousands_sep ) {
+	if ( $period_space_thousands_sep  && 0 === preg_match( '/\d{4,}$/', $val ) ) {
 		$val = str_replace( ' ', '', $val );
 
 		if ( ! $comma_decimal_sep ) {
@@ -1214,3 +1217,29 @@ function affwp_required_field_attr( $field ) {
 
 	return $required;
 }
+
+/**
+ * Helper to unserialize values based on an object whitelist.
+ *
+ * @since 2.1.4.2
+ *
+ * @param string $original  Maybe unserialized original, if is needed.
+ * @return mixed Unserialized data can be any type.
+ */
+function affwp_maybe_unserialize( $original ) {
+	$value = $original;
+
+	if ( is_serialized( $original ) ) {
+
+		preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $original, $matches );
+
+		if ( ! empty( $matches ) ) {
+			$value = '';
+		} else {
+			$value = maybe_unserialize( $original );
+		}
+	}
+
+	return $value;
+}
+

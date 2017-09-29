@@ -76,18 +76,80 @@ jQuery(document).ready(function($) {
 		var	$this    = $( this ),
 			$action  = 'affwp_search_users',
 			$search  = $this.val(),
-			$status  = $this.data( 'affwp-status');
+			$status  = $this.data( 'affwp-status'),
+			$form    = $this.closest( 'form' );
 
 		$this.autocomplete( {
 			source: ajaxurl + '?action=' + $action + '&term=' + $search + '&status=' + $status,
 			delay: 500,
 			minLength: 2,
 			position: { offset: '0, -1' },
+			search: function() {
+				if ( $this.hasClass( 'affwp-enable-on-complete' ) ) {
+					$('div.notice').remove();
+					$('.affwp-user-email-wrap, .affwp-user-pass-wrap').hide();
+					$form.find('input, select').prop('disabled', true);
+				}
+			},
 			open: function() {
 				$this.addClass( 'open' );
 			},
 			close: function() {
 				$this.removeClass( 'open' );
+			},
+			response: function( event, ui ) {
+				if( ui.content.length === 0 && $this.hasClass( 'affwp-enable-on-complete' ) ) {
+					// This triggers when no results are found
+					$( '<div class="notice notice-error affwp-new-affiliate-error"><p>' + affwp_vars.no_user_found + '</p></div>' ).insertAfter( $this );
+
+					$form.find( 'input, select' ).prop( 'disabled', false );
+
+					$( '.affwp-user-email-wrap, .affwp-user-pass-wrap' ).show();
+					$( '.affwp-user-email' ).prop( 'required' );
+					$( '.search-description' ).hide();
+				}
+			},
+			select: function() {
+
+				if( $this.hasClass( 'affwp-enable-on-complete' ) ) {
+
+					$.ajax({
+						type: 'POST',
+						url: ajaxurl,
+						data: {
+							action: 'affwp_check_user_login',
+							user: $this.val()
+						},
+						dataType: "json",
+						success: function( response ) {
+
+							console.log( response );
+
+							if( response.success ) {
+
+								if ( false === response.data.affiliate ) {
+
+									$form.find( 'input, select' ).prop( 'disabled', false );
+
+								} else {
+
+									var viewLink = '<a href="' + response.data.url + '">' + affwp_vars.view_affiliate + '</a>';
+
+									$( '<div class="notice notice-info affwp-new-affiliate-error"><p>' + affwp_vars.existing_affiliate + ' ' + viewLink + '</p></div>' ).insertAfter( $this );
+
+									$this.prop( 'disabled', false );
+
+								}
+							}
+
+						}
+
+					}).fail( function( response ) {
+						if ( window.console && window.console.log ) {
+							console.log( response );
+						}
+					});
+				}
 			}
 		} );
 	} );

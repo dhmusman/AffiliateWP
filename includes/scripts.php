@@ -132,6 +132,9 @@ function affwp_enqueue_admin_js() {
 		'currency_sign'           => affwp_currency_filter(''),
 		'currency_pos'            => affiliate_wp()->settings->get( 'currency_position', 'before' ),
 		'confirm_delete_referral' => __( 'Are you sure you want to delete this referral?', 'affiliate-wp' ),
+		'no_user_found'           => __( 'The user you entered does not exist. Enter an email below to create a new user and affiliate at the same time.', 'affiliate-wp' ),
+		'existing_affiliate'      => __( 'An affiliate already exists for this username.', 'affiliate-wp' ),
+		'view_affiliate'          => __( 'View Affiliate', 'affiliate-wp' ),
 	) );
 }
 

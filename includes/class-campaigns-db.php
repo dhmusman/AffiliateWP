@@ -15,6 +15,15 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 	public $cache_group = 'campaigns';
 
 	/**
+	 * Object type to query for.
+	 *
+	 * @since  2.1.6
+	 * @access public
+	 * @var    string
+	 */
+	public $query_object_type = 'AffWP\Campaign';
+
+	/**
 	 * Setup our table name, primary key, and version
 	 *
 	 * This is a read-only VIEW of the visits table
@@ -32,7 +41,56 @@ class Affiliate_WP_Campaigns_DB extends Affiliate_WP_DB {
 			$this->table_name  = $wpdb->prefix . 'affiliate_wp_campaigns';
 		}
 		$this->primary_key = 'campaign_id';
-		$this->version     = '1.0';
+		$this->version     = '1.1';
+
+		// REST endpoints.
+		if ( version_compare( $wp_version, '4.4', '>=' ) ) {
+			$this->REST = new \AffWP\Campaign\REST\v1\Endpoints;
+		}
+	}
+
+	/**
+	 * Retrieves a campaign object.
+	 *
+	 * @access public
+	 * @param  int|object|AffWP\Campaign $campaign Campaign ID or object.
+	 * @return AffWP\Campaign|null                Campaign object, null otherwise.
+	 * @see    Affiliate_WP_DB::get_core_object()
+	 * @since  2.1.6
+	 */
+	public function get_object( $referral ) {
+		return $this->get_core_object( $referral, $this->query_object_type );
+	}
+
+	/**
+	 * Get columns and formats
+	 *
+	 * @access  public
+	 * @since   2.1.6
+	*/
+	public function get_columns() {
+		return array(
+			'affiliate_id'    => '%d',
+			'campaign_id'     => '%d',
+			'campaign'        => '%s',
+			'visits'          => '%s',
+			'unique_visits'   => '%s',
+			'referrals'       => '%s',
+			'conversion_rate' => '%d'
+		);
+	}
+
+	/**
+	 * Get default column values
+	 *
+	 * @access  public
+	 * @since   2.1.6
+	*/
+	public function get_column_defaults() {
+		return array(
+			'campaign_id' => 0,
+			'date'         => date( 'Y-m-d H:i:s' )
+		);
 	}
 
 	/**

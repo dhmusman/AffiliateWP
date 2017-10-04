@@ -55,15 +55,6 @@
 
 			$tabs = affwp_get_affiliate_dashboard_tabs();
 
-			// If the Affiliate Area Tabs add-on is hiding this tab, unset it from the $tabs array.
-			if ( class_exists( 'AffiliateWP_Affiliate_Area_Tabs' ) ) {
-				$hidden_tabs = affiliate_wp()->settings->get( 'affiliate_area_hide_tabs' );
-
-				foreach( $hidden_tabs as $hidden_tab ) {
-					unset( $tabs[ $hidden_tab ] );
-				}
-			}
-
 			foreach( $tabs as $tab => $tab_data ) {
 
 				if ( affwp_affiliate_area_show_tab( $tab ) ) { ?>

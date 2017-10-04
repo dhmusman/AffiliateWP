@@ -62,16 +62,29 @@ class Tab extends Reports\Tab {
 				),
 			) );
 
-			$total_unpaid_earnings = affwp_get_affiliate_unpaid_earnings( $this->affiliate_id );
+			$total_unpaid_earnings = 0;
+
+			$referrals = affiliate_wp()->referrals->get_referrals( array(
+				'number'       => -1,
+				'status'       => 'unpaid',
+				'affiliate_id' => $affiliate_id,
+				'date'         => $this->date_query ? $this->date_query : ''
+			) );
+
+			foreach ( $referrals as $referral ) {
+				$total_unpaid_earnings += $referral->amount;
+			}
+
 
 			$this->register_tile( 'affiliate_unpaid_earnings', array(
 				'label'           => __( 'Total Unpaid Earnings', 'affiliate-wp' ),
 				'type'            => $total_unpaid_earnings ? 'amount' : '',
 				'context'         => 'secondary',
 				'data'            => $total_unpaid_earnings ? $total_unpaid_earnings : __( 'None', 'affiliate-wp' ),
-				'comparison_data' => sprintf( __( 'Affiliate: <a href="%1$s">%2$s</a>', 'affiliate-wp' ),
+				'comparison_data' => sprintf( __( 'Affiliate: <a href="%1$s">%2$s</a> | %3$s', 'affiliate-wp' ),
 					esc_url( $affiliate_link ),
-					$affiliate_name
+					$affiliate_name,
+					$this->get_date_comparison_label()
 				),
 			) );
 

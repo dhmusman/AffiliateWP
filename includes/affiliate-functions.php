@@ -1525,72 +1525,75 @@ function affwp_sort_tabs_by_priority( $a, $b ) {
  * @return array  $tabs Affiliate dashboard tabs.
  * @since  2.1.6
  */
-function affwp_get_affiliate_dashboard_tabs() {
+function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
 
 	$tabs = array(
 		'urls'  => array(
+			'id'       => 'urls',
 			'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
 			'content'  => '',
 			'priority' => 0
 		),
 		'stats' => array(
+			'id'       => 'stats',
 			'title'    => __( 'Statistics', 'affiliate-wp' ),
 			'content'  => '',
 			'priority' => 1
 		),
 		'graphs' => array(
+			'id'       => 'graphs',
 			'title'    => __( 'Graphs', 'affiliate-wp' ),
 			'content'  => '',
 			'priority' => 2
 		),
 		'referrals' => array(
+			'id'       => 'referrals',
 			'title'    => __( 'Referrals', 'affiliate-wp' ),
 			'content'  => '',
 			'priority' => 3
 		),
 		'payouts'   => array(
+			'id'       => 'payouts',
 			'title'    => __( 'Payouts', 'affiliate-wp' ),
 			'content'  => '',
 			'priority' => 4
 		),
 		'visits'    => array(
+			'id'       => 'visits',
 			'title'    => __( 'Visits', 'affiliate-wp' ),
 			'content'  => '',
 			'priority' => 5
 		),
 		'creatives' => array(
+			'id'       => 'creatives',
 			'title'    => __( 'Creatives', 'affiliate-wp' ),
 			'content'  => '',
 			'priority' => 6
 		),
 		'settings'  => array(
+			'id'       => 'settings',
 			'title'    => __( 'Settings', 'affiliate-wp' ),
 			'content'  => '',
 			'priority' => 7
 		)
 	);
 
-
 	// Sort by priority argument
 	usort( $tabs, 'affwp_sort_tabs_by_priority' );
 
-
-	/**
-	 * Removes an Affiliate Dashboard Tab.
-	 *
-	 * @param $remove An affiliate dashboard tab key (string), or an array of keys.
-	 * @since 2.1.6
-	 */
-	$remove = apply_filters( 'affwp_remove_affiliate_dashboard_tab', '' );
-
+	// Remove the Affiliate Dashoard Tab, if the provided string matches a core tab.
 	if ( ! empty( $remove ) ) {
 
 		if ( is_array( $remove ) ) {
 			foreach( $remove as $key ) {
-				unset( $tabs[ $key ] );
+				if ( array_key_exists( $key, $tabs ) ) {
+					unset( $tabs[ $key ] );
+				}
 			}
 		} else {
-			unset( $tabs[ $remove ] );
+			if ( array_key_exists( $remove, $tabs ) ) {
+				unset( $tabs[ $remove ] );
+			}
 		}
 	}
 

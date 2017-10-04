@@ -1578,11 +1578,10 @@ function affwp_get_affiliate_dashboard_tabs() {
 	/**
 	 * Removes an Affiliate Dashboard Tab.
 	 *
-	 * @param $remove An affiliate dashboard tab key, or an array of keys.
+	 * @param $remove An affiliate dashboard tab key (string), or an array of keys.
 	 * @since 2.1.6
 	 */
-	$remove = '';
-	$tabs   = apply_filters( 'affwp_remove_affiliate_dashboard_tab', $remove );
+	$remove = apply_filters( 'affwp_remove_affiliate_dashboard_tab', '' );
 
 	if ( ! empty( $remove ) ) {
 

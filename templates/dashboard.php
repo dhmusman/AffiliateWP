@@ -55,13 +55,15 @@
 
 			$tabs = affwp_get_affiliate_dashboard_tabs();
 
-			foreach( $tabs as $tab => $tab_data ) {
+			if ( $tabs ) {
+				foreach( $tabs as $tab => $tab_data ) {
 
-				if ( affwp_affiliate_area_show_tab( $tab ) ) { ?>
-					<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab ? ' active' : ''; ?>">
-						<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab ) ); ?>"><?php echo $tab_data[ 'title' ]; ?></a>
-					</li>
-			<?php }
+					if ( affwp_affiliate_area_show_tab( $tab ) ) { ?>
+						<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab ? ' active' : ''; ?>">
+							<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab ) ); ?>"><?php echo $tab_data[ 'title' ]; ?></a>
+						</li>
+				<?php }
+				}
 			}
 
 			/**

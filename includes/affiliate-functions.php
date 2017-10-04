@@ -1508,7 +1508,7 @@ function affwp_get_active_affiliate_area_tab() {
 /**
  * Sorts tabs by priority argument present in affwp_affiliate_dashboard_tabs arrays.
  *
- * @since  2.1.5
+ * @since  2.1.6
  *
  * @param  array  $a     First array item for comparison.
  * @param  array  $b     Second array item for comparison.
@@ -1520,10 +1520,32 @@ function affwp_sort_tabs_by_priority( $a, $b ) {
 }
 
 /**
+ * Removes an AffiliateWP affiliate dashbaord tab.
+ *
+ * @param  string  $id   Dashboard tab ID (array key). Required.
+ * @param  string  $tabs Dashboard tabs.
+ * @return array   $tabs Modified dashboard tabs.
+ * @see    affwp_get_affiliate_dashboard_tabs
+ * @since  2.1.6
+ */
+function affwp_remove_affiliate_dashboard_tab( $tabs, $id ) {
+
+	if ( empty( $id ) ) {
+		return;
+	}
+
+	unset( $tabs[ $id ] );
+
+	return $tabs;
+}
+
+add_filter( 'affwp_get_affiliate_dashboard_tabs', 'affwp_remove_affiliate_dashboard_tab' );
+
+/**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
  * @return array  $tabs Affiliate dashboard tabs.
- * @since  2.1.5
+ * @since  2.1.6
  */
 function affwp_get_affiliate_dashboard_tabs() {
 
@@ -1574,6 +1596,26 @@ function affwp_get_affiliate_dashboard_tabs() {
 	// Sort by priority argument
 	usort( $tabs, 'affwp_sort_tabs_by_priority' );
 
+
+	/**
+	 * Removes an Affiliate Dashboard Tab.
+	 *
+	 * @param $remove An affiliate dashboard tab key, or an array of keys.
+	 */
+	$remove = '';
+	$tabs   = apply_filters( 'affwp_remove_affiliate_dashboard_tab', $remove );
+
+	if ( ! empty( $remove ) ) {
+
+		if ( is_array( $remove ) ) {
+			foreach( $remove as $key ) {
+				unset( $tabs[ $key ] );
+			}
+		} else {
+			unset( $tabs[ $remove ] );
+		}
+	}
+
 	/**
 	 * Filters the affiliate dashboard tabs.
 	 * Used to add, remove, or modify affiliate dashboard tabs.
@@ -1592,7 +1634,7 @@ function affwp_get_affiliate_dashboard_tabs() {
 	 *   priority:      The priority of the tab. Determines loading order.
 	 *
 	 * @param array $tabs An array containing all affiliate dashboard tabs.
-	 * @since 2.1.5
+	 * @since 2.1.6
 	 */
 	return apply_filters( 'affwp_get_affiliate_dashboard_tabs', $tabs );
 }

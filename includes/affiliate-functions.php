@@ -1520,28 +1520,6 @@ function affwp_sort_tabs_by_priority( $a, $b ) {
 }
 
 /**
- * Removes an AffiliateWP affiliate dashbaord tab.
- *
- * @param  string  $id   Dashboard tab ID (array key). Required.
- * @param  string  $tabs Dashboard tabs.
- * @return array   $tabs Modified dashboard tabs.
- * @see    affwp_get_affiliate_dashboard_tabs
- * @since  2.1.6
- */
-function affwp_remove_affiliate_dashboard_tab( $tabs, $id ) {
-
-	if ( empty( $id ) ) {
-		return;
-	}
-
-	unset( $tabs[ $id ] );
-
-	return $tabs;
-}
-
-add_filter( 'affwp_get_affiliate_dashboard_tabs', 'affwp_remove_affiliate_dashboard_tab' );
-
-/**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
  * @return array  $tabs Affiliate dashboard tabs.
@@ -1601,6 +1579,7 @@ function affwp_get_affiliate_dashboard_tabs() {
 	 * Removes an Affiliate Dashboard Tab.
 	 *
 	 * @param $remove An affiliate dashboard tab key, or an array of keys.
+	 * @since 2.1.6
 	 */
 	$remove = '';
 	$tabs   = apply_filters( 'affwp_remove_affiliate_dashboard_tab', $remove );

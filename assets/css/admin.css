@@ -332,6 +332,10 @@ table.affiliates #unpaid {
 	z-index: 9999 !important;
 }
 
+.affwp-ui-tooltip a {
+	color: #fff;
+}
+
 /* WooCommerce Admin Tweaks */
 .affwp-woo-coupon-field .affwp-ajax-search-wrap {
 	position: relative;

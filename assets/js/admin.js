@@ -289,10 +289,10 @@ jQuery(document).ready(function($) {
 				collision: 'flipfit'
 			},
 			hide: {
-				duration: 150
+				duration: 1500
 			},
 			show: {
-				duration: 150
+				duration: 100
 			}
 		});
 	}

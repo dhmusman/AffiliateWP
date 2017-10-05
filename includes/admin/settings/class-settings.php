@@ -457,11 +457,11 @@ class Affiliate_WP_Settings {
 					),
 					'license_key' => array(
 						'name'              => __( 'License Key', 'affiliate-wp' ),
-						'desc'              => sprintf( __( 'Please enter your license key. An active license key is needed for automatic plugin updates and <a href="%s" target="_blank">support</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/support/' ),
+						'desc'              => sprintf( __( 'Please enter your license key. An active license key is needed for automatic plugin updates and <a href="%1$s" target="_blank">support</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/support/' ),
 						'type'              => 'license',
 						'sanitize_callback' => 'sanitize_text_field',
 						'tooltip_title'     => __( 'Can\'t find your License Key?', 'affiliate-wp' ),
-						'tooltip_desc'      => sprintf( __( 'Your AffiliateWP License Key can be found in your emailed purchase receipt, and by logging in to <a href="%s" target="_blank">your affiliatewp.com account</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/account/' ),
+						'tooltip_desc'      => sprintf( __( 'Your AffiliateWP License Key can be found in your emailed purchase receipt, and by logging in to <a href="%1$s" target="_blank">your affiliatewp.com account</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/account/' )
 					),
 					'pages' => array(
 						'name' => '<strong>' . __( 'Pages', 'affiliate-wp' ) . '</strong>',
@@ -475,7 +475,7 @@ class Affiliate_WP_Settings {
 						'options'           => affwp_get_pages(),
 						'sanitize_callback' => 'absint',
 						'tooltip_title'     => __( 'Setting up the Affiliate Area', 'affiliate-wp' ),
-						'tooltip_desc'      => sprintf( __( 'Place the affiliate area shortcode, %1$s, on the page where you would like the affiliate area to appear. Learn more about setting up the AffiliateWP affiliate dashboard area by reading our %2$s set-up guides and documentation.', 'affiliate-wp' ), '<code>[affiliate_area]</code>', '<a href="http://docs.affiliatewp.com/category/1421-affiliate-area" target="_blank">GUIDES</a>' )
+						'tooltip_desc'      => sprintf( __( 'Place the affiliate area shortcode, %1$s, on the page where you would like the affiliate area to appear. Learn more about setting up the AffiliateWP affiliate dashboard area by reading our <a href="%2$s" target="_blank">set-up guides and documentation</a>.', 'affiliate-wp' ), '<code>[affiliate_area]</code>', 'http://docs.affiliatewp.com/category/1421-affiliate-area' )
 					),
 					'terms_of_use' => array(
 						'name'              => __( 'Terms of Use', 'affiliate-wp' ),
@@ -483,8 +483,8 @@ class Affiliate_WP_Settings {
 						'type'              => 'select',
 						'options'           => affwp_get_pages(),
 						'sanitize_callback' => 'absint',
-						'tooltip_title'     => __( 'Setting a Terms of Use agreement', 'affiliate-wp' ),
-						'tooltip_desc'      => sprintf( __( 'Learn more about effectively communicating with your affiliates by reading <a href="%s" target="_blank">our blog post on the topic</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/how-to-effectively-communicate-with-your-affiliates/' )
+						'tooltip_title'     => __( 'Setting a Terms of Use Agreement', 'affiliate-wp' ),
+						'tooltip_desc'      => sprintf( __( 'Learn more about effectively communicating with your affiliates by reading <a href="%1$s" target="_blank">our blog post on the topic</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/how-to-effectively-communicate-with-your-affiliates/' )
 					),
 					'referrals' => array(
 						'name' => '<strong>' . __( 'Referral Settings', 'affiliate-wp' ) . '</strong>',
@@ -492,10 +492,12 @@ class Affiliate_WP_Settings {
 						'type' => 'header'
 					),
 					'referral_var' => array(
-						'name' => __( 'Referral Variable', 'affiliate-wp' ),
-						'desc' => sprintf( __( 'The URL variable for referral URLs. For example: <strong>%s</strong>.', 'affiliate-wp' ), esc_url( add_query_arg( affiliate_wp()->tracking->get_referral_var(), '1', home_url( '/' ) ) ) ),
-						'type' => 'text',
-						'std' => 'ref'
+						'name'          => __( 'Referral Variable', 'affiliate-wp' ),
+						'desc'          => sprintf( __( 'The URL variable for referral URLs. For example: <strong>%1$s</strong>.', 'affiliate-wp' ), esc_url( add_query_arg( affiliate_wp()->tracking->get_referral_var(), '1', home_url( '/' ) ) ) ),
+						'type'          => 'text',
+						'std'           => 'ref',
+						'tooltip_title' => __( 'Referral Variable', 'affiliate-wp' ),
+						'tooltip_desc'  => sprintf( __( '<a href="%1$s" target="_blank">Learn more about setting the referral variable</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/58-setting-the-referral-url-variable' )
 					),
 					'referral_format' => array(
 						'name' => __( 'Default Referral Format', 'affiliate-wp' ),
@@ -520,9 +522,11 @@ class Affiliate_WP_Settings {
 						'type' => 'checkbox'
 					),
 					'referral_credit_last' => array(
-						'name' => __( 'Credit Last Referrer', 'affiliate-wp' ),
-						'desc' => __( 'Credit the last affiliate who referred the customer.', 'affiliate-wp' ),
-						'type' => 'checkbox'
+						'name'          => __( 'Credit Last Referrer', 'affiliate-wp' ),
+						'desc'          => __( 'Credit the last affiliate who referred the customer.', 'affiliate-wp' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Credit Last Referrer', 'affiliate-wp' ),
+						'tooltip_desc'  => sprintf( __( 'This setting, when checkd, will cause the most recently-used affiliate link to be credited for a referral, instead of the oldest being used. <a href="%1$s" target="_blank">Learn more about this setting here</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/1051-credit-last-referrer' )
 					),
 					'referral_rate_type' => array(
 						'name' => __( 'Referral Rate Type', 'affiliate-wp' ),
@@ -536,12 +540,15 @@ class Affiliate_WP_Settings {
 						'type' => 'number',
 						'size' => 'small',
 						'step' => '0.01',
-						'std' => '20'
+						'std'  => '20'
 					),
 					'exclude_shipping' => array(
-						'name' => __( 'Exclude Shipping', 'affiliate-wp' ),
-						'desc' => __( 'Exclude shipping costs from referral calculations.', 'affiliate-wp' ),
-						'type' => 'checkbox'
+						'name'          => __( 'Exclude Shipping', 'affiliate-wp' ),
+						'desc'          => __( 'Exclude shipping costs from referral calculations.', 'affiliate-wp' ),
+						'type'          => 'checkbox',
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Credit Last Referrer', 'affiliate-wp' ),
+						'tooltip_desc'  => __( 'This setting allows you to exclude shipping costs from referral calculations, so the order total that AffiliateWP calculates the referral amount from does not include the shipping cost that is charged to customers.', 'affiliate-wp' )
 					),
 					'exclude_tax' => array(
 						'name' => __( 'Exclude Tax', 'affiliate-wp' ),
@@ -553,7 +560,9 @@ class Affiliate_WP_Settings {
 						'desc' => __( 'Enter how many days the referral tracking cookie should be valid for.', 'affiliate-wp' ),
 						'type' => 'number',
 						'size' => 'small',
-						'std' => '1'
+						'std' => '1',
+						'tooltip_title' => __( 'Cookie Expiration', 'affiliate-wp' ),
+						'tooltip_desc'  => sprintf( __( '<a href="%1$s" target="_blank">Learn more about how AffiliateWP tracks with cookies here</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/1107-how-does-affiliatewp-track-visits-with-cookies' )
 					),
 					'currency_settings' => array(
 						'name' => '<strong>' . __( 'Currency Settings', 'affiliate-wp' ) . '</strong>',
@@ -594,14 +603,17 @@ class Affiliate_WP_Settings {
 						'type' => 'header'
 					),
 					'affiliate_area_forms' => array(
-						'name' => __( 'Affiliate Area Forms', 'affiliate-wp' ),
-						'desc' => sprintf( __( 'Select which form(s) to show on the Affiliate Area page. The affiliate registration form will only show if <a href="%s">Allow Affiliate Registration</a> is enabled.', 'affiliate-wp' ), admin_url( 'admin.php?page=affiliate-wp-settings&tab=misc' ) ),
-						'type' => 'select',
-						'options' => array(
+						'name'          => __( 'Affiliate Area Forms', 'affiliate-wp' ),
+						'desc'          => sprintf( __( 'Select which form(s) to show on the Affiliate Area page. The affiliate registration form will only show if <a href="%s">Allow Affiliate Registration</a> is enabled.', 'affiliate-wp' ), admin_url( 'admin.php?page=affiliate-wp-settings&tab=misc' ) ),
+						'type'          => 'select',
+						'tooltip_title' => __( 'Affiliate Area', 'affiliate-wp' ),
+						'tooltip_desc'  => sprintf( __( '<a href="%1$s" target="_blank">Learn more about creating the affiliate area here</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/54-creating-the-affiliate-area' ),
+						'options'       => array(
 							'both'         => __( 'Affiliate Registration Form and Affiliate Login Form', 'affiliate-wp' ),
 							'registration' => __( 'Affiliate Registration Form Only', 'affiliate-wp' ),
 							'login'        => __( 'Affiliate Login Form Only', 'affiliate-wp' ),
-							'none'         => __( 'None', 'affiliate-wp' )
+							'none'         => __( 'None', 'affiliate-wp' ),
+
 
 						)
 					),
@@ -620,7 +632,9 @@ class Affiliate_WP_Settings {
 						'name' => __( 'Integrations', 'affiliate-wp' ),
 						'desc' => sprintf( __( 'Choose the integrations to enable. If you are not using any of these, you may use the <strong>[affiliate_conversion_script]</strong> shortcode to track and create referrals. Refer to the <a href="%s" target="_blank">documentation</a> for help using this.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/66-generic-referral-tracking-script' ),
 						'type' => 'multicheck',
-						'options' => affiliate_wp()->integrations->get_integrations()
+						'options' => affiliate_wp()->integrations->get_integrations(),
+						'tooltip_title' => __( 'Supported Integrations', 'affiliate-wp' ),
+						'tooltip_desc'  => sprintf( __( 'AffiliateWP integrates beautifully with popular eCommerce, membership, form, and invoice plugins for WordPress. <a href="%1$s" target="_blank">See all of them here</a>.', 'affiliate-wp' ), 'https://affiliatewp.com/integrations/' )
 					)
 				)
 			),
@@ -636,7 +650,9 @@ class Affiliate_WP_Settings {
 					'disable_all_emails' => array(
 						'name' => __( 'Disable All Emails', 'affiliate-wp' ),
 						'desc' => __( 'Disable all email notifications.', 'affiliate-wp' ),
-						'type' => 'checkbox'
+						'type' => 'checkbox',
+						'tooltip_title' => __( 'Disabling All Emails', 'affiliate-wp' ),
+						'tooltip_desc'  => __( 'Enabling this setting will disable both admin and affiliate emails sent by AffiliateWP.', 'affiliate-wp')
 					),
 					'disable_application_accepted_emails' => array(
 						'name' => __( 'Disable Application Accepted Emails', 'affiliate-wp' ),
@@ -697,7 +713,9 @@ class Affiliate_WP_Settings {
 						'name' => __( 'Registration Email Content', 'affiliate-wp' ),
 						'desc' => __( 'Enter the email to send when a new affiliate registers. HTML is accepted. Available template tags:', 'affiliate-wp' ) . '<br />' . $emails_tags_list,
 						'type' => 'rich_editor',
-						'std' => sprintf( __( 'A new affiliate has registered on your site, %s', 'affiliate-wp' ), home_url() ) . "\n\n" . __( 'Name: ', 'affiliate-wp' ) . "{name}\n\n{website}\n\n{promo_method}"
+						'std' => sprintf( __( 'A new affiliate has registered on your site, %s', 'affiliate-wp' ), home_url() ) . "\n\n" . __( 'Name: ', 'affiliate-wp' ) . "{name}\n\n{website}\n\n{promo_method}",
+						'tooltip_title' => __( 'What are Template Tags?', 'affiliate-wp' ),
+						'tooltip_desc'  => __( 'Template tags are placeholders that will automatically be filled with the correct value for each affiliate when the email is sent. When writing the email content, use template tags as you would any other word.', 'affiliate-wp' )
 					),
 					'accepted_subject' => array(
 						'name' => __( 'Application Accepted Email Subject', 'affiliate-wp' ),
@@ -742,12 +760,16 @@ class Affiliate_WP_Settings {
 					'require_approval' => array(
 						'name' => __( 'Require Approval', 'affiliate-wp' ),
 						'desc' => __( 'Require that Pending affiliate accounts must be approved before they can begin earning referrals.', 'affiliate-wp' ),
-						'type' => 'checkbox'
+						'type' => 'checkbox',
+						'tooltip_title' => __( 'Require Approval', 'affiliate-wp' ),
+						'tooltip_desc'  => __( 'If enabled, no affiliates will earn referrals until an admin manually approves their account.', 'affiliate-wp' )
 					),
 					'auto_register' => array(
 						'name' => __( 'Auto Register New Users', 'affiliate-wp' ),
 						'desc' => __( 'Automatically register new users as affiliates.', 'affiliate-wp' ),
-						'type' => 'checkbox'
+						'type' => 'checkbox',
+						'tooltip_title' => __( 'Auto Register New Users', 'affiliate-wp' ),
+						'tooltip_desc'  => __( 'Check this option if you would like an affiliate account to be created for every user that registers on this site.', 'affiliate-wp' )
 					),
 					'logout_link' => array(
 						'name' => __( 'Logout Link', 'affiliate-wp' ),
@@ -760,9 +782,11 @@ class Affiliate_WP_Settings {
 						'type' => 'url'
 					),
 					'recaptcha_enabled' => array(
-						'name' => __( 'Enable reCAPTCHA', 'affiliate-wp' ),
-						'desc' => __( 'Prevent bots from registering affiliate accounts using Google reCAPTCHA.', 'affiliate-wp' ),
-						'type' => 'checkbox'
+						'name'          => __( 'Enable reCAPTCHA', 'affiliate-wp' ),
+						'desc'          => __( 'Prevent bots from registering affiliate accounts using Google reCAPTCHA.', 'affiliate-wp' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Google reCAPTCHA', 'affiliate-wp' ),
+						'tooltip_desc'  => sprintf( __( '<a href="%s" target="_blank">You can register for a Google reCAPTCHA account here.</a>.', 'affiliate-wp' ), 'https://www.google.com/recaptcha/intro/' )
 					),
 					'recaptcha_site_key' => array(
 						'name' => __( 'reCAPTCHA Site Key', 'affiliate-wp' ),
@@ -780,9 +804,11 @@ class Affiliate_WP_Settings {
 						'type' => 'checkbox'
 					),
 					'tracking_fallback' => array(
-						'name' => __( 'Use Fallback Referral Tracking Method', 'affiliate-wp' ),
-						'desc' => __( 'The method used to track referral links can fail on sites that have jQuery errors. Enable Fallback Tracking if referrals are not being tracked properly.', 'affiliate-wp' ),
-						'type' => 'checkbox'
+						'name'          => __( 'Use Fallback Referral Tracking Method', 'affiliate-wp' ),
+						'desc'          => __( 'The method used to track referral links can fail on sites that have jQuery errors. Enable Fallback Tracking if referrals are not being tracked properly.', 'affiliate-wp' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Fallback Tracking', 'affiliate-wp' ),
+						'tooltip_desc'  => sprintf( __( 'Seeing JavaScript errors on your site? Are you using a plugin which is not a supported AffiliateWP integration? <a href="%1$s" target="_blank">Learn more about the Fallback Referral Tracking Method.</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/66-generic-referral-tracking-script' )
 					),
 					'ignore_zero_referrals' => array(
 						'name' => __( 'Ignore Referrals with Zero Amount', 'affiliate-wp' ),
@@ -790,9 +816,11 @@ class Affiliate_WP_Settings {
 						'type' => 'checkbox'
 					),
 					'debug_mode' => array(
-						'name' => __( 'Enable Debug Mode', 'affiliate-wp' ),
-						'desc' => __( 'Enable debug mode. This will turn on error logging for the referral process to help identify issues.', 'affiliate-wp' ),
-						'type' => 'checkbox'
+						'name'          => __( 'Enable Debug Mode', 'affiliate-wp' ),
+						'desc'          => __( 'Enable debug mode. This will turn on error logging for the referral process to help identify issues.', 'affiliate-wp' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Debug Mode', 'affiliate-wp' ),
+						'tooltip_desc'  => sprintf( __( '<a href="%1$s" target="_blank">View the AffiliateWP debug file here</a>.', 'affiliate-wp' ), affwp_admin_url( 'tools', array( 'tab' => 'debug' ) ) )
 					),
 					'referral_url_blacklist' => array(
 						'name' => __( 'Referral URL Blacklist', 'affiliate-wp' ),
@@ -1319,7 +1347,7 @@ class Affiliate_WP_Settings {
 		if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
 			// Check if tooltip exists in html already.
 			if (strpos( $html, 'affwp-tooltip' ) == false ) {
-				$html .= '<span alt="f223" class="affwp-tooltip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong>: ' . $args['tooltip_desc'] . '"></span>';
+				$html .= '<span alt="f223" class="affwp-tooltip dashicons dashicons-editor-help" title="<strong>' . esc_html( $args['tooltip_title'] ) . '</strong>: ' . esc_html( $args['tooltip_desc'] ) . '"></span>';
 			}
 		}
 

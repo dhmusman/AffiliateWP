@@ -67,7 +67,7 @@ class Tab extends Reports\Tab {
 			$referrals = affiliate_wp()->referrals->get_referrals( array(
 				'number'       => -1,
 				'status'       => 'unpaid',
-				'affiliate_id' => $affiliate_id,
+				'affiliate_id' => $this->affiliate_id,
 				'date'         => $this->date_query ? $this->date_query : ''
 			) );
 

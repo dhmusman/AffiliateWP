@@ -1508,78 +1508,99 @@ function affwp_get_active_affiliate_area_tab() {
 /**
  * Sorts tabs by priority argument present in affwp_affiliate_dashboard_tabs arrays.
  *
- * @since  2.1.6
+ * @since  2.1.7
  *
  * @param  array  $a     First array item for comparison.
  * @param  array  $b     Second array item for comparison.
  *
  * @return array  $tabs  Array of affiliate dashboard tabs, sorted by priority values.
  */
-function affwp_sort_tabs_by_priority( $a, $b ) {
-    return $a[ 'priority' ] - $b[ 'priority' ];
+function affwp_sort_tabs_by_priority( $tabs ) {
+    asort( $tabs );
+
+    return $tabs;
 }
 
 /**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
  * @return array  $tabs Affiliate dashboard tabs.
- * @since  2.1.6
+ * @since  2.1.7
  */
 function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
 
-	$tabs = array(
-		'urls'  => array(
-			'id'       => 'urls',
-			'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
-			'content'  => '',
-			'priority' => 0
-		),
-		'stats' => array(
-			'id'       => 'stats',
-			'title'    => __( 'Statistics', 'affiliate-wp' ),
-			'content'  => '',
-			'priority' => 1
-		),
-		'graphs' => array(
-			'id'       => 'graphs',
-			'title'    => __( 'Graphs', 'affiliate-wp' ),
-			'content'  => '',
-			'priority' => 2
-		),
-		'referrals' => array(
-			'id'       => 'referrals',
-			'title'    => __( 'Referrals', 'affiliate-wp' ),
-			'content'  => '',
-			'priority' => 3
-		),
-		'payouts'   => array(
-			'id'       => 'payouts',
-			'title'    => __( 'Payouts', 'affiliate-wp' ),
-			'content'  => '',
-			'priority' => 4
-		),
-		'visits'    => array(
-			'id'       => 'visits',
-			'title'    => __( 'Visits', 'affiliate-wp' ),
-			'content'  => '',
-			'priority' => 5
-		),
-		'creatives' => array(
-			'id'       => 'creatives',
-			'title'    => __( 'Creatives', 'affiliate-wp' ),
-			'content'  => '',
-			'priority' => 6
-		),
-		'settings'  => array(
-			'id'       => 'settings',
-			'title'    => __( 'Settings', 'affiliate-wp' ),
-			'content'  => '',
-			'priority' => 7
+	/**
+	 * Filters the affiliate dashboard tabs.
+	 * Used to add, remove, or modify affiliate dashboard tabs.
+	 *
+	 * To add a new tab, provide an array containing the following:
+	 *
+	 *   $tabs['unique_tab_id'] = array(
+	 *      'title'    => __( 'Settings', 'affiliate-wp' ),
+	 *		'content'  => '',
+	 *		'priority' => 3
+	 *   )
+	 *
+	 *   unique_tab_id: Provide a unique tab ID
+	 *   title:         The title of the tab.
+	 *   content:       The content of the tab.
+	 *   priority:      The priority of the tab. Determines loading order.
+	 *
+	 * @param array $tabs An array containing all affiliate dashboard tabs.
+	 * @since 2.1.7
+	 */
+	$tabs = apply_filters( 'affwp_get_affiliate_dashboard_tabs',
+		array(
+			'urls'  => array(
+				'id'       => 'urls',
+				'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
+				'content'  => '',
+				'priority' => 0
+			),
+			'stats' => array(
+				'id'       => 'stats',
+				'title'    => __( 'Statistics', 'affiliate-wp' ),
+				'content'  => '',
+				'priority' => 1
+			),
+			'graphs' => array(
+				'id'       => 'graphs',
+				'title'    => __( 'Graphs', 'affiliate-wp' ),
+				'content'  => '',
+				'priority' => 2
+			),
+			'referrals' => array(
+				'id'       => 'referrals',
+				'title'    => __( 'Referrals', 'affiliate-wp' ),
+				'content'  => '',
+				'priority' => 3
+			),
+			'payouts'   => array(
+				'id'       => 'payouts',
+				'title'    => __( 'Payouts', 'affiliate-wp' ),
+				'content'  => '',
+				'priority' => 4
+			),
+			'visits'    => array(
+				'id'       => 'visits',
+				'title'    => __( 'Visits', 'affiliate-wp' ),
+				'content'  => '',
+				'priority' => 5
+			),
+			'creatives' => array(
+				'id'       => 'creatives',
+				'title'    => __( 'Creatives', 'affiliate-wp' ),
+				'content'  => '',
+				'priority' => 6
+			),
+			'settings'  => array(
+				'id'       => 'settings',
+				'title'    => __( 'Settings', 'affiliate-wp' ),
+				'content'  => '',
+				'priority' => 7
+			)
 		)
 	);
-
-	// Sort by priority argument
-	usort( $tabs, 'affwp_sort_tabs_by_priority' );
 
 	// Remove the Affiliate Dashoard Tab, if the provided string matches a core tab.
 	if ( ! empty( $remove ) ) {
@@ -1597,27 +1618,8 @@ function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
 		}
 	}
 
-	/**
-	 * Filters the affiliate dashboard tabs.
-	 * Used to add, remove, or modify affiliate dashboard tabs.
-	 *
-	 * To add a new tab, provide an array containing the following:
-	 *
-	 *   $tabs['unique_tab_id'] => array(
-	 *      'title'    => __( 'Settings', 'affiliate-wp' ),
-	 *		'content'  => '',
-	 *		'priority' => 3
-	 *   )
-	 *
-	 *   unique_tab_id: Provide a unique tab ID
-	 *   title:         The title of the tab.
-	 *   content:       The content of the tab.
-	 *   priority:      The priority of the tab. Determines loading order.
-	 *
-	 * @param array $tabs An array containing all affiliate dashboard tabs.
-	 * @since 2.1.6
-	 */
-	return apply_filters( 'affwp_get_affiliate_dashboard_tabs', $tabs );
+	// Sort by priority argument.
+	return affwp_sort_tabs_by_priority( $tabs );
 }
 /**
  * Retrieves an array of payouts for the given affiliate.

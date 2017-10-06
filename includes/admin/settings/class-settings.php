@@ -475,7 +475,7 @@ class Affiliate_WP_Settings {
 						'options'           => affwp_get_pages(),
 						'sanitize_callback' => 'absint',
 						'tooltip_title'     => __( 'Setting up the Affiliate Area', 'affiliate-wp' ),
-						'tooltip_desc'      => sprintf( __( 'Place the affiliate area shortcode, %1$s, on the page where you would like the affiliate area to appear. Learn more about setting up the AffiliateWP affiliate dashboard area by reading our <a href="%2$s" target="_blank">set-up guides and documentation</a>.', 'affiliate-wp' ), '<code>[affiliate_area]</code>', 'http://docs.affiliatewp.com/category/1421-affiliate-area' )
+						'tooltip_desc'      => sprintf( __( 'Place the affiliate area shortcode on the page where you would like the affiliate area to appear: %1$s Learn more about setting up the AffiliateWP affiliate dashboard area by reading our <a href="%2$s" target="_blank">set-up guides and documentation</a>.', 'affiliate-wp' ), '<pre><code>[affiliate_area]</code></pre>', 'http://docs.affiliatewp.com/category/1421-affiliate-area' )
 					),
 					'terms_of_use' => array(
 						'name'              => __( 'Terms of Use', 'affiliate-wp' ),
@@ -805,7 +805,7 @@ class Affiliate_WP_Settings {
 					),
 					'tracking_fallback' => array(
 						'name'          => __( 'Use Fallback Referral Tracking Method', 'affiliate-wp' ),
-						'desc'          => __( 'The method used to track referral links can fail on sites that have jQuery errors. Enable Fallback Tracking if referrals are not being tracked properly.', 'affiliate-wp' ),
+						'desc'          => __( 'The method used to track referral links can fail on sites that have jQuery errors. <br /> Enable Fallback Tracking if referrals are not being tracked properly.', 'affiliate-wp' ),
 						'type'          => 'checkbox',
 						'tooltip_title' => __( 'Fallback Tracking', 'affiliate-wp' ),
 						'tooltip_desc'  => sprintf( __( 'Seeing JavaScript errors on your site? Are you using a plugin which is not a supported AffiliateWP integration? <a href="%1$s" target="_blank">Learn more about the Fallback Referral Tracking Method.</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/66-generic-referral-tracking-script' )

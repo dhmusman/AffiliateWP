@@ -318,6 +318,7 @@ table.affiliates #unpaid {
 /* Tooltips */
 .affwp-tooltip {
 	cursor: help;
+	display: inline-block;
 }
 .affwp-ui-tooltip {
 	background: #333 !important;

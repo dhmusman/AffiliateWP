@@ -1447,9 +1447,7 @@ function affwp_get_affiliate_area_page_url( $tab = '' ) {
 
 	$affiliate_area_page_url = get_permalink( $affiliate_area_page_id );
 
-	if ( ! empty( $tab )
-		&& in_array( $tab, array( 'urls', 'stats', 'graphs', 'referrals', 'payouts', 'visits', 'creatives', 'settings' ) )
-	) {
+	if ( ! empty( $tab ) && in_array( $tab, array_keys( affwp_get_affiliate_dashboard_tabs() ) ) ) {
 		$affiliate_area_page_url = add_query_arg( array( 'tab' => $tab ), $affiliate_area_page_url );
 	}
 
@@ -1516,11 +1514,36 @@ function affwp_get_active_affiliate_area_tab() {
  * @return array  $tabs  Array of affiliate dashboard tabs, sorted by priority values.
  */
 function affwp_sort_tabs_by_priority( $tabs ) {
-    asort( $tabs );
+	$sorted = array();
 
-    return $tabs;
+	foreach ( $tabs as $key => $tab ) {
+
+		if ( empty( $tab[ 'priority' ] ) || ! is_int( $tab[ 'priority' ] ) ) {
+			$count = count( $tabs );
+
+			$tab[ 'priority' ] = $count + 1;
+		}
+
+	    $sorted[ $key ] = $tab[ 'priority' ];
+	}
+
+	array_multisort( $sorted, SORT_ASC, $tabs );
+
+	return $tabs;
 }
 
+function testing_tabs( $tabs ) {
+
+	$tabs['spork'] = array(
+		'id'       => 'spork',
+		'title'    => __( 'Spork!', 'affiliate-wp' ),
+		'content'  => 'Here is the spork content',
+		'priority' => 1
+	);
+
+	return $tabs;
+}
+add_filter('affwp_get_affiliate_dashboard_tabs' ,'testing_tabs' );
 /**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
@@ -1555,7 +1578,7 @@ function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
 				'id'       => 'urls',
 				'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 0
+				'priority' => -1
 			),
 			'stats' => array(
 				'id'       => 'stats',
@@ -1602,19 +1625,19 @@ function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
 		)
 	);
 
-	// Remove the Affiliate Dashoard Tab, if the provided string matches a core tab.
+	// Removes an Affiliate Dashboard Tab, if the provided string matches an existing tab.
 	if ( ! empty( $remove ) ) {
 
 		if ( is_array( $remove ) ) {
 			foreach( $remove as $key ) {
 				if ( array_key_exists( $key, $tabs ) ) {
 					unset( $tabs[ $key ] );
+				} else {
+					unset( $tabs[ $key[ 'id' ] ] );
 				}
 			}
-		} else {
-			if ( array_key_exists( $remove, $tabs ) ) {
-				unset( $tabs[ $remove ] );
-			}
+		} elseif ( array_key_exists( $remove, $tabs ) ) {
+			unset( $tabs[ $remove ] );
 		}
 	}
 

@@ -58,9 +58,9 @@
 			if ( $tabs ) {
 				foreach( $tabs as $tab => $tab_data ) {
 
-					if ( affwp_affiliate_area_show_tab( $tab ) ) { ?>
-						<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab ? ' active' : ''; ?>">
-							<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab ) ); ?>"><?php echo $tab_data[ 'title' ]; ?></a>
+					if ( affwp_affiliate_area_show_tab( $tab_data['id'] ) ) { ?>
+						<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab_data[ 'id' ] ? ' active' : ''; ?>">
+							<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab_data[ 'id' ] ) ); ?>"><?php echo $tab_data[ 'title' ]; ?></a>
 						</li>
 				<?php }
 				}
@@ -87,9 +87,17 @@
 		</ul>
 
 		<?php
-		if ( ! empty( $active_tab ) && affwp_affiliate_area_show_tab( $active_tab ) ) :
-			affiliate_wp()->templates->get_template_part( 'dashboard-tab', $active_tab );
-		endif;
+		if ( ! empty( $active_tab ) && affwp_affiliate_area_show_tab( $active_tab ) ) {
+
+			if ( affiliate_wp()->templates->get_template_part( 'dashboard-tab', $active_tab, false ) ) {
+				affiliate_wp()->templates->get_template_part( 'dashboard-tab', $active_tab );
+			} else {
+				if ( ! empty( $tabs[ $active_tab ][ 'content' ] ) ) {
+					echo $tabs[ $active_tab ][ 'content' ];
+					error_log($tabs[ $active_tab ][ 'content' ] );
+				}
+			}
+		}
 		?>
 
 		<?php

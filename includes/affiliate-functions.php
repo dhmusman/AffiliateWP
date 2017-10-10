@@ -1480,10 +1480,12 @@ function affwp_get_active_affiliate_area_tab() {
 	 *
 	 * @param array $tabs Array of tabs.
 	 */
-	$tabs = apply_filters( 'affwp_affiliate_area_tabs', array(
-		'urls', 'stats', 'graphs', 'referrals',
-		'payouts', 'visits', 'creatives', 'settings'
-	) );
+	$tabs_data = affwp_get_affiliate_dashboard_tabs();
+	$tabs      = apply_filters( 'affwp_affiliate_area_tabs', array_keys( $tabs_data ) );
+
+	if ( ! empty( $tab ) && in_array( $tab, array_keys( affwp_get_affiliate_dashboard_tabs() ) ) ) {
+		$affiliate_area_page_url = add_query_arg( array( 'tab' => $tab ), $affiliate_area_page_url );
+	}
 
 	// If the tab can't be shown, remove it from play.
 	foreach ( $tabs as $index => $tab ) {
@@ -1492,12 +1494,28 @@ function affwp_get_active_affiliate_area_tab() {
 		}
 	}
 
-	if ( $active_tab && in_array( $active_tab, $tabs ) ) {
-		$active_tab = $active_tab;
-	} elseif ( ! empty( $tabs ) ) {
-		$active_tab = reset( $tabs );
-	} else {
-		$active_tab = '';
+	$priority = array();
+
+	foreach ( $tabs_data as $tab_key => $tab_data ) {
+		$priority[ $tab_key ] = $tab_data[ 'priority' ];
+	}
+
+	$lowest = min( $priority );
+
+	foreach ( $tabs_data as $tab_key => $tab_data ) {
+		if ( $lowest == $tab_data[ 'priority' ] ) {
+			$active_tab = $tab_key;
+		}
+	}
+
+	if ( empty( $active_tab ) ) {
+		if ( $active_tab && in_array( $active_tab, $tabs ) ) {
+			$active_tab = $active_tab;
+		} elseif ( ! empty( $tabs ) ) {
+			$active_tab = reset( $tabs );
+		} else {
+			$active_tab = '';
+		}
 	}
 
 	return $active_tab;
@@ -1506,12 +1524,9 @@ function affwp_get_active_affiliate_area_tab() {
 /**
  * Sorts tabs by priority argument present in affwp_affiliate_dashboard_tabs arrays.
  *
- * @since  2.1.7
- *
- * @param  array  $a     First array item for comparison.
- * @param  array  $b     Second array item for comparison.
- *
+ * @param  param  $tabs  Tab data.
  * @return array  $tabs  Array of affiliate dashboard tabs, sorted by priority values.
+ * @since  2.1.7
  */
 function affwp_sort_tabs_by_priority( $tabs ) {
 	$sorted = array();
@@ -1532,18 +1547,6 @@ function affwp_sort_tabs_by_priority( $tabs ) {
 	return $tabs;
 }
 
-function testing_tabs( $tabs ) {
-
-	$tabs['spork'] = array(
-		'id'       => 'spork',
-		'title'    => __( 'Spork!', 'affiliate-wp' ),
-		'content'  => 'Here is the spork content',
-		'priority' => 1
-	);
-
-	return $tabs;
-}
-add_filter('affwp_get_affiliate_dashboard_tabs' ,'testing_tabs' );
 /**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
@@ -1558,16 +1561,17 @@ function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
 	 *
 	 * To add a new tab, provide an array containing the following:
 	 *
-	 *   $tabs['unique_tab_id'] = array(
+	 *   $tabs['id'] = array(
+	 *      'id'       => 'unique_tab_id',
 	 *      'title'    => __( 'Settings', 'affiliate-wp' ),
 	 *		'content'  => '',
 	 *		'priority' => 3
 	 *   )
 	 *
-	 *   unique_tab_id: Provide a unique tab ID
-	 *   title:         The title of the tab.
-	 *   content:       The content of the tab.
-	 *   priority:      The priority of the tab. Determines loading order.
+	 *   id:       Provide a unique tab ID.
+	 *   title:    The title of the tab.
+	 *   content:  The content of the tab.
+	 *   priority: The priority of the tab. Determines loading order.
 	 *
 	 * @param array $tabs An array containing all affiliate dashboard tabs.
 	 * @since 2.1.7
@@ -1578,49 +1582,49 @@ function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
 				'id'       => 'urls',
 				'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => -1
+				'priority' => 10
 			),
 			'stats' => array(
 				'id'       => 'stats',
 				'title'    => __( 'Statistics', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 1
+				'priority' => 20
 			),
 			'graphs' => array(
 				'id'       => 'graphs',
 				'title'    => __( 'Graphs', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 2
+				'priority' => 30
 			),
 			'referrals' => array(
 				'id'       => 'referrals',
 				'title'    => __( 'Referrals', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 3
+				'priority' => 40
 			),
 			'payouts'   => array(
 				'id'       => 'payouts',
 				'title'    => __( 'Payouts', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 4
+				'priority' => 50
 			),
 			'visits'    => array(
 				'id'       => 'visits',
 				'title'    => __( 'Visits', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 5
+				'priority' => 60
 			),
 			'creatives' => array(
 				'id'       => 'creatives',
 				'title'    => __( 'Creatives', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 6
+				'priority' => 70
 			),
 			'settings'  => array(
 				'id'       => 'settings',
 				'title'    => __( 'Settings', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 7
+				'priority' => 80
 			)
 		)
 	);

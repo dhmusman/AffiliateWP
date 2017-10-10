@@ -22,7 +22,7 @@
 		/**
 		 * Fires at the top of the affiliate dashboard.
 		 *
-		 * @since 0.2
+		 * @since 1.0
 		 * @since 1.8.2 Added the `$active_tab` parameter.
 		 *
 		 * @param int|false $affiliate_id ID for the current affiliate.
@@ -41,7 +41,7 @@
 		/**
 		 * Fires inside the affiliate dashboard above the tabbed interface.
 		 *
-		 * @since 0.2
+		 * @since 1.0
 		 * @since 1.8.2 Added the `$active_tab` parameter.
 		 *
 		 * @param int|false $affiliate_id ID for the current affiliate.
@@ -70,7 +70,7 @@
 			 * Fires immediately after core Affiliate Area tabs are output,
 			 * but before the 'Log Out' tab is output (if enabled).
 			 *
-			 * @since 0.2
+			 * @since 1.0
 			 *
 			 * @param int    $affiliate_id ID of the current affiliate.
 			 * @param string $active_tab   Slug of the active tab.
@@ -94,7 +94,6 @@
 			} else {
 				if ( ! empty( $tabs[ $active_tab ][ 'content' ] ) ) {
 					echo $tabs[ $active_tab ][ 'content' ];
-					error_log($tabs[ $active_tab ][ 'content' ] );
 				}
 			}
 		}
@@ -104,7 +103,7 @@
 		/**
 		 * Fires at the bottom of the affiliate dashboard.
 		 *
-		 * @since 0.2
+		 * @since 1.0
 		 * @since 1.8.2 Added the `$active_tab` parameter.
 		 *
 		 * @param int|false $affiliate_id ID for the current affiliate.

@@ -1535,13 +1535,6 @@ function affwp_sort_tabs_by_priority( $tabs ) {
 	$sorted = array();
 
 	foreach ( $tabs as $key => $tab ) {
-
-		if ( empty( $tab[ 'priority' ] ) || ! is_int( $tab[ 'priority' ] ) ) {
-			$count = count( $tabs );
-
-			$tab[ 'priority' ] = $count + 1;
-		}
-
 	    $sorted[ $key ] = $tab[ 'priority' ];
 	}
 
@@ -1556,7 +1549,7 @@ function affwp_sort_tabs_by_priority( $tabs ) {
  * @return array  $tabs Affiliate dashboard tabs.
  * @since  2.1.7
  */
-function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
+function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 
 	/**
 	 * Filters the affiliate dashboard tabs.
@@ -1585,7 +1578,7 @@ function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
 				'id'       => 'urls',
 				'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 10
+				'priority' => 14
 			),
 			'stats' => array(
 				'id'       => 'stats',
@@ -1632,19 +1625,34 @@ function affwp_get_affiliate_dashboard_tabs( $remove = '' ) {
 		)
 	);
 
-	// Removes an Affiliate Dashboard Tab, if the provided string matches an existing tab.
-	if ( ! empty( $remove ) ) {
+	foreach ( $tabs as $key => $tab ) {
+		if ( empty( $tab[ 'priority' ] ) || ! is_int( $tab[ 'priority' ] ) ) {
+			$count = count( $tabs );
 
-		if ( is_array( $remove ) ) {
-			foreach( $remove as $key ) {
+			// Go to the end of the line if you haven't specified a priority.
+			$tab[ 'priority' ] = $count + 10;
+		} else {
+			// Ensure that the priority is an integer divisible by ten.
+			if ( $tab[ 'priority' ] % 10 !== 0 ) {
+				// Round to the nearest 10 if necessary.
+				$tab[ 'priority' ] = ( (int) ( $tab[ 'priority' ]/10 ) ) * 10;
+			}
+		}
+	}
+
+	// Excludes an Affiliate Dashboard Tab, if the provided string matches an existing tab.
+	if ( ! empty( $exclude ) ) {
+
+		if ( is_array( $exclude ) ) {
+			foreach( $exclude as $key ) {
 				if ( array_key_exists( $key, $tabs ) ) {
 					unset( $tabs[ $key ] );
 				} else {
 					unset( $tabs[ $key[ 'id' ] ] );
 				}
 			}
-		} elseif ( array_key_exists( $remove, $tabs ) ) {
-			unset( $tabs[ $remove ] );
+		} elseif ( array_key_exists( $exclude, $tabs ) ) {
+			unset( $tabs[ $exclude ] );
 		}
 	}
 

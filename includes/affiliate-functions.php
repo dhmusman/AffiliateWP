@@ -1631,12 +1631,6 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 
 			// Go to the end of the line if you haven't specified a priority.
 			$tab[ 'priority' ] = $count + 10;
-		} else {
-			// Ensure that the priority is an integer divisible by ten.
-			if ( $tab[ 'priority' ] % 10 !== 0 ) {
-				// Round to the nearest 10 if necessary.
-				$tab[ 'priority' ] = ( (int) ( $tab[ 'priority' ]/10 ) ) * 10;
-			}
 		}
 	}
 

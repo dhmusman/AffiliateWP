@@ -1472,20 +1472,14 @@ function affwp_get_affiliate_area_page_url( $tab = '' ) {
  */
 function affwp_get_active_affiliate_area_tab() {
 	$active_tab = ! empty( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
-
+	$tabs_data  = affwp_get_affiliate_dashboard_tabs();
 	/**
-	 * Filters the Affiliate Area tabs list.
+	 * Filters the Affiliate Area tabs array.
 	 *
+	 * @param array $tabs Array of tab keys.
 	 * @since 1.8.1
-	 *
-	 * @param array $tabs Array of tabs.
 	 */
-	$tabs_data = affwp_get_affiliate_dashboard_tabs();
-	$tabs      = apply_filters( 'affwp_affiliate_area_tabs', array_keys( $tabs_data ) );
-
-	if ( ! empty( $tab ) && in_array( $tab, array_keys( affwp_get_affiliate_dashboard_tabs() ) ) ) {
-		$affiliate_area_page_url = add_query_arg( array( 'tab' => $tab ), $affiliate_area_page_url );
-	}
+	$tabs       = apply_filters( 'affwp_affiliate_area_tabs', array_keys( $tabs_data ) );
 
 	// If the tab can't be shown, remove it from play.
 	foreach ( $tabs as $index => $tab ) {
@@ -1494,31 +1488,40 @@ function affwp_get_active_affiliate_area_tab() {
 		}
 	}
 
-	$priority = array();
-
-	foreach ( $tabs_data as $tab_key => $tab_data ) {
-		$priority[ $tab_key ] = $tab_data[ 'priority' ];
-	}
-
-	$lowest = min( $priority );
-
-	foreach ( $tabs_data as $tab_key => $tab_data ) {
-		if ( $lowest == $tab_data[ 'priority' ] ) {
-			$active_tab = $tab_key;
-		}
-	}
-
+	// If no tab has been set from the URL, determine it from the priority of all tabs.
 	if ( empty( $active_tab ) ) {
-		if ( $active_tab && in_array( $active_tab, $tabs ) ) {
-			$active_tab = $active_tab;
-		} elseif ( ! empty( $tabs ) ) {
-			$active_tab = reset( $tabs );
-		} else {
-			$active_tab = '';
+		$priority = array();
+
+		foreach ( $tabs_data as $tab_key => $tab_data ) {
+			$priority[ $tab_key ] = $tab_data[ 'priority' ];
+		}
+
+		$lowest = min( $priority );
+
+		foreach ( $tabs_data as $tab_key => $tab_data ) {
+			if ( $lowest == $tab_data[ 'priority' ] ) {
+				$active_tab = $tab_key;
+			}
 		}
 	}
 
-	return $active_tab;
+	// Prior to the return of the `affwp_affiliate_area_active_tab` filter below,
+	// a tab may only show if it's registered with `affwp_get_affiliate_dashboard_tabs`.
+	if ( ! empty( $active_tab ) && in_array( $active_tab, $tabs ) ) {
+		$active_tab = $active_tab;
+	} elseif ( ! empty( $tabs ) ) {
+		$active_tab = reset( $tabs );
+	} else {
+		$active_tab = '';
+	}
+
+	/**
+	 * Sets the currently-active tab in the affiliate dashboard area.
+	 *
+	 * @param string $active_tab The currently-active tab.
+	 * @since 2.1.7
+	 */
+	return apply_filters( 'affwp_affiliate_area_active_tab', $active_tab );
 }
 
 /**

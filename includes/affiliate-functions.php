@@ -1539,8 +1539,24 @@ function affwp_sort_tabs_by_priority( $tabs ) {
 	}
 
 	array_multisort( $sorted, SORT_ASC, $tabs );
-
 	return $tabs;
+}
+
+/**
+ * Gets the lowest priority affiliate dashbaord tab and returns the ID.
+ *
+ * @return string $tab Lowest-priority dashboard tab.
+ * @since  2.1.7
+ */
+function affwp_get_lowest_priority_tab() {
+	// No need to run this if an active tab is already defined.
+	if ( ! empty( affwp_get_active_affiliate_area_tab() ) ) {
+		return affwp_get_active_affiliate_area_tab();
+	}
+
+	$tabs = affwp_sort_tabs_by_priority( affwp_get_affiliate_dashboard_tabs() );
+	reset( $tabs );
+	return key( $tabs );
 }
 
 /**
@@ -1558,7 +1574,6 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 	 * To add a new tab, provide an array containing the following:
 	 *
 	 *   $tabs['id'] = array(
-	 *      'id'       => 'unique_tab_id',
 	 *      'title'    => __( 'Settings', 'affiliate-wp' ),
 	 *		'content'  => '',
 	 *		'priority' => 3
@@ -1575,49 +1590,41 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 	$tabs = apply_filters( 'affwp_get_affiliate_dashboard_tabs',
 		array(
 			'urls'  => array(
-				'id'       => 'urls',
 				'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
 				'content'  => '',
 				'priority' => 10
 			),
 			'stats' => array(
-				'id'       => 'stats',
 				'title'    => __( 'Statistics', 'affiliate-wp' ),
 				'content'  => '',
 				'priority' => 20
 			),
 			'graphs' => array(
-				'id'       => 'graphs',
 				'title'    => __( 'Graphs', 'affiliate-wp' ),
 				'content'  => '',
 				'priority' => 30
 			),
 			'referrals' => array(
-				'id'       => 'referrals',
 				'title'    => __( 'Referrals', 'affiliate-wp' ),
 				'content'  => '',
 				'priority' => 40
 			),
 			'payouts'   => array(
-				'id'       => 'payouts',
 				'title'    => __( 'Payouts', 'affiliate-wp' ),
 				'content'  => '',
 				'priority' => 50
 			),
 			'visits'    => array(
-				'id'       => 'visits',
 				'title'    => __( 'Visits', 'affiliate-wp' ),
 				'content'  => '',
 				'priority' => 60
 			),
 			'creatives' => array(
-				'id'       => 'creatives',
 				'title'    => __( 'Creatives', 'affiliate-wp' ),
 				'content'  => '',
 				'priority' => 70
 			),
 			'settings'  => array(
-				'id'       => 'settings',
 				'title'    => __( 'Settings', 'affiliate-wp' ),
 				'content'  => '',
 				'priority' => 80
@@ -1636,13 +1643,10 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 
 	// Excludes an Affiliate Dashboard Tab, if the provided string matches an existing tab.
 	if ( ! empty( $exclude ) ) {
-
 		if ( is_array( $exclude ) ) {
 			foreach( $exclude as $key ) {
 				if ( array_key_exists( $key, $tabs ) ) {
 					unset( $tabs[ $key ] );
-				} else {
-					unset( $tabs[ $key[ 'id' ] ] );
 				}
 			}
 		} elseif ( array_key_exists( $exclude, $tabs ) ) {

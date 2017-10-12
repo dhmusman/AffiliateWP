@@ -58,9 +58,9 @@
 			if ( $tabs ) {
 				foreach( $tabs as $tab => $tab_data ) {
 
-					if ( affwp_affiliate_area_show_tab( $tab_data['id'] ) ) { ?>
-						<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab_data[ 'id' ] ? ' active' : ''; ?>">
-							<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab_data[ 'id' ] ) ); ?>"><?php echo $tab_data[ 'title' ]; ?></a>
+					if ( affwp_affiliate_area_show_tab( $tab ) ) { ?>
+						<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab ? ' active' : ''; ?>">
+							<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab ) ); ?>"><?php echo $tab_data[ 'title' ]; ?></a>
 						</li>
 				<?php }
 				}

@@ -1578,7 +1578,7 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 				'id'       => 'urls',
 				'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 14
+				'priority' => 10
 			),
 			'stats' => array(
 				'id'       => 'stats',

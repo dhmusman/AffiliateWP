@@ -1629,10 +1629,8 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 
 	foreach ( $tabs as $key => $tab ) {
 		if ( empty( $tab[ 'priority' ] ) || ! is_int( $tab[ 'priority' ] ) ) {
-			$count = count( $tabs );
-
 			// Go to the end of the line if you haven't specified a priority.
-			$tab[ 'priority' ] = $count + 10;
+			$tab[ 'priority' ] = count( $tabs ) + 10;
 		}
 	}
 
@@ -1642,16 +1640,31 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 			foreach( $exclude as $key ) {
 				if ( array_key_exists( $key, $tabs ) ) {
 					unset( $tabs[ $key ] );
+					add_filter( 'affwp_affiliate_area_show_tab', false, $tabs[ $key ] );
 				}
 			}
 		} elseif ( array_key_exists( $exclude, $tabs ) ) {
 			unset( $tabs[ $exclude ] );
+			add_filter( 'affwp_affiliate_area_show_tab', false, $tabs[ $exclude ] );
 		}
 	}
 
 	// Sort by priority argument.
 	return affwp_sort_tabs_by_priority( $tabs );
 }
+
+add_action( 'affwp_after_get_affiliate_dashboard_tabs', 'affwp_affiliate_area_show_tab' );
+
+/**
+ * Show a tab in the Affiliate Area
+ *
+ * @since  1.8
+ * @return boolean
+ */
+function affwp_affiliate_area_show_tab( $tab = '' ) {
+	return apply_filters( 'affwp_affiliate_area_show_tab', true, $tab );
+}
+
 /**
  * Retrieves an array of payouts for the given affiliate.
  *

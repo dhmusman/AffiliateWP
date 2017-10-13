@@ -97,9 +97,7 @@
 				}
 			}
 		}
-		?>
 
-		<?php
 		/**
 		 * Fires at the bottom of the affiliate dashboard.
 		 *

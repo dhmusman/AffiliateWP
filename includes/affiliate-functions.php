@@ -1549,11 +1549,6 @@ function affwp_sort_tabs_by_priority( $tabs ) {
  * @since  2.1.7
  */
 function affwp_get_lowest_priority_tab() {
-	// No need to run this if an active tab is already defined.
-	if ( ! empty( affwp_get_active_affiliate_area_tab() ) ) {
-		return affwp_get_active_affiliate_area_tab();
-	}
-
 	$tabs = affwp_sort_tabs_by_priority( affwp_get_affiliate_dashboard_tabs() );
 	reset( $tabs );
 	return key( $tabs );

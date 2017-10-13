@@ -497,7 +497,7 @@ class Affiliate_WP_Settings {
 						'type'          => 'text',
 						'std'           => 'ref',
 						'tooltip_title' => __( 'Referral Variable', 'affiliate-wp' ),
-						'tooltip_desc'  => sprintf( __( '<a href="%1$s" target="_blank">Learn more about setting the referral variable</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/58-setting-the-referral-url-variable' )
+						'tooltip_desc'  => sprintf( __( 'The referral variable is a unique number (or letters) which allows AffiliateWP to correctly identify which affiliate has referred a visitor. Each affiliate automatically has their own unique referral variable. <a href="%1$s" target="_blank">Learn how AffiliateWP tracks referrals</a>, or <a href="%2$s" target="_blank">learn more about setting the referral variable</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/1107-how-does-affiliatewp-track-visits-with-cookies', 'http://docs.affiliatewp.com/article/58-setting-the-referral-url-variable' )
 					),
 					'referral_format' => array(
 						'name' => __( 'Default Referral Format', 'affiliate-wp' ),
@@ -517,9 +517,11 @@ class Affiliate_WP_Settings {
 						'std' => 'id'
 					),
 					'referral_pretty_urls' => array(
-						'name' => __( 'Pretty Affiliate URLs', 'affiliate-wp' ),
-						'desc' => $referral_pretty_urls_desc,
-						'type' => 'checkbox'
+						'name'          => __( 'Pretty Affiliate URLs', 'affiliate-wp' ),
+						'desc'          => $referral_pretty_urls_desc,
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Pretty URLs', 'affiliate-wp' ),
+						'tooltip_desc'  => sprintf( __( 'By default, AffiliateWP tracks a unique referral variable to track affiliate visits and referrals by using something called a query string, which is just a question mark followed by some special instructions, which are then carried out by the website. But with Pretty Affiliate URLs, your affiliates can share URLs which are easier for visitors to read, and may look more attractive. <a href="%1$s" target="_blank">Learn more about Pretty Affiliate URLs here</a>.', 'affiliate-wp' ), 'http://docs.affiliatewp.com/article/1121-showing-pretty-urls-to-your-affiliates' )
 					),
 					'referral_credit_last' => array(
 						'name'          => __( 'Credit Last Referrer', 'affiliate-wp' ),

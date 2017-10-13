@@ -1571,7 +1571,7 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 	 *   $tabs['id'] = array(
 	 *      'title'    => __( 'Settings', 'affiliate-wp' ),
 	 *		'content'  => '',
-	 *		'priority' => 3
+	 *		'priority' => 10
 	 *   )
 	 *
 	 *   id:       Provide a unique tab ID.
@@ -1652,8 +1652,6 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 	// Sort by priority argument.
 	return affwp_sort_tabs_by_priority( $tabs );
 }
-
-add_action( 'affwp_after_get_affiliate_dashboard_tabs', 'affwp_affiliate_area_show_tab' );
 
 /**
  * Show a tab in the Affiliate Area

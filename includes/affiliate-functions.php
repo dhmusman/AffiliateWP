@@ -1555,12 +1555,19 @@ function affwp_get_lowest_priority_tab() {
 }
 
 /**
+ * /**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
- * @return array  $tabs Affiliate dashboard tabs.
+ * @param  boolean $all     Whether to return all tabs, or only those which are visible.
+ *                          Default is true, which returns all tabs. Optional.
+ *
+ * @param  string  $exclude A dashboard tab ID, or array of IDs. If provided, these tabs will be excluded
+ *                          from the return value. Optional.
+ *
+ * @return array  $tabs     Affiliate dashboard tabs.
  * @since  2.1.7
  */
-function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
+function affwp_get_affiliate_dashboard_tabs( $all = true, $exclude = '' ) {
 
 	/**
 	 * Filters the affiliate dashboard tabs.
@@ -1574,10 +1581,11 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 	 *		'priority' => 10
 	 *   )
 	 *
-	 *   id:       Provide a unique tab ID.
-	 *   title:    The title of the tab.
-	 *   content:  The content of the tab.
-	 *   priority: The priority of the tab. Determines loading order.
+	 *   id:       string   Provide a unique tab ID.
+	 *   title     string   The title of the tab.
+	 *   content   string   The content of the tab.
+	 *   priority  integer  The priority of the tab. Determines loading order.
+	 *   visible   boolean  Whether the tab is visible in the dashboard area. Default is true. Optional.
 	 *
 	 * @param array $tabs An array containing all affiliate dashboard tabs.
 	 * @since 2.1.7
@@ -1587,42 +1595,50 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 			'urls'  => array(
 				'title'    =>__( 'Affiliate URLs', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 10
+				'priority' => 10,
+				'visible'  => true
 			),
 			'stats' => array(
 				'title'    => __( 'Statistics', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 20
+				'priority' => 20,
+				'visible'  => true
 			),
 			'graphs' => array(
 				'title'    => __( 'Graphs', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 30
+				'priority' => 30,
+				'visible'  => true
 			),
 			'referrals' => array(
 				'title'    => __( 'Referrals', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 40
+				'priority' => 40,
+				'visible'  => true
 			),
 			'payouts'   => array(
 				'title'    => __( 'Payouts', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 50
+				'priority' => 50,
+				'visible'  => true
 			),
 			'visits'    => array(
 				'title'    => __( 'Visits', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 60
+				'priority' => 60,
+				'visible'  => true
 			),
 			'creatives' => array(
 				'title'    => __( 'Creatives', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 70
+				'priority' => 70,
+				'visible'  => true
 			),
 			'settings'  => array(
 				'title'    => __( 'Settings', 'affiliate-wp' ),
 				'content'  => '',
-				'priority' => 80
+				'priority' => 80,
+				'visible'  => true
 			)
 		)
 	);
@@ -1632,7 +1648,19 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 			// Go to the end of the line if you haven't specified a priority.
 			$tab[ 'priority' ] = count( $tabs ) + 10;
 		}
+
+		// If `visible` is not defined, set the tab to be visible. Also ensures tab is visible if
+		// set via `affwp_affiliate_area_show_tab`.
+		if ( ! isset( $tab[ 'visible' ] ) || true === affwp_affiliate_area_show_tab( $key ) ) {
+			$tab[ 'visible' ] = true;
+		} elseif ( $all === $tab[ 'visible' ] ) {
+			// Remove the tab if non-visible tabs should be excluded via $all.
+			unset( $tabs[ $key ] );
+		} else {
+			add_filter( 'affwp_affiliate_area_show_tab', $tab[ 'visible' ], $key );
+		}
 	}
+
 
 	// Excludes an Affiliate Dashboard Tab, if the provided string matches an existing tab.
 	if ( ! empty( $exclude ) ) {
@@ -1640,12 +1668,12 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 			foreach( $exclude as $key ) {
 				if ( array_key_exists( $key, $tabs ) ) {
 					unset( $tabs[ $key ] );
-					add_filter( 'affwp_affiliate_area_show_tab', false, $tabs[ $key ] );
+					add_filter( 'affwp_affiliate_area_show_tab', false, $key );
 				}
 			}
 		} elseif ( array_key_exists( $exclude, $tabs ) ) {
 			unset( $tabs[ $exclude ] );
-			add_filter( 'affwp_affiliate_area_show_tab', false, $tabs[ $exclude ] );
+			add_filter( 'affwp_affiliate_area_show_tab', false, $exclude );
 		}
 	}
 
@@ -1654,12 +1682,21 @@ function affwp_get_affiliate_dashboard_tabs( $exclude = '' ) {
 }
 
 /**
- * Show a tab in the Affiliate Area
+ * Shows or hides a tab in the Affiliate Area.
  *
+ * @param  string $tab Affiliate Area Dashboard tab.
+ * @see    affwp_get_affiliate_dashboard_tabs
  * @since  1.8
  * @return boolean
  */
 function affwp_affiliate_area_show_tab( $tab = '' ) {
+	/**
+	 * Determines visibility of the specified tab in the affiliate dashboard area.
+	 *
+	 * @param boolean $visible Whether the tab should be shown. Default is true.
+	 * @param string  $tab     The tab ID.
+	 * @since 1.8
+	 */
 	return apply_filters( 'affwp_affiliate_area_show_tab', true, $tab );
 }
 

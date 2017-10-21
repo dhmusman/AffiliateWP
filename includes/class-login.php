@@ -72,6 +72,22 @@ class Affiliate_WP_Login {
 		/**
 		 * Filters whether to perform the password check on affiliate login.
 		 *
+		 * @since 2.1.7
+		 *
+		 * @param bool     $check Whether to check the captcha or not.
+		 * @param \WP_User $user  The WordPress user who is being checked.
+		 */
+		if ( true === apply_filters( 'affwp_login_check_captcha', true, $user ) ) {
+
+			if ( affwp_is_recaptcha_enabled() && false === verify_recaptcha_response( $data ) ) {
+				$this->add_error( 'recaptcha_required', __( 'Please verify that you are not a robot', 'affiliate-wp' ) );
+			}
+
+		}
+
+		/**
+		 * Filters whether to perform the password check on affiliate login.
+		 *
 		 * @since 2.0.6
 		 *
 		 * @param bool     $check Whether to check the password or not.

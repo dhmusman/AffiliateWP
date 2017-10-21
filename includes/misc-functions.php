@@ -510,6 +510,35 @@ function affwp_is_recaptcha_enabled() {
 }
 
 /**
+ * Verifies a reCAPTCHA response using a remote request to the Google API.
+ *
+ * @since 2.1.7
+ *
+ * @param array $data `$_REQUEST` data to check.
+ * @return bool True if the response is valid, otherwise false.
+ */
+function verify_recaptcha_response( $data ) {
+	if ( ! affwp_is_recaptcha_enabled() || empty( $data['g-recaptcha-response'] ) || empty( $data['g-recaptcha-remoteip'] ) ) {
+		return false;
+	}
+
+	$verify = wp_safe_remote_post(
+		'https://www.google.com/recaptcha/api/siteverify',
+		array(
+			'body' => array(
+				'secret'   => affiliate_wp()->settings->get( 'recaptcha_secret_key', '' ),
+				'response' => $data['g-recaptcha-response'],
+				'remoteip' => $data['g-recaptcha-remoteip']
+			)
+		)
+	);
+
+	$verify = json_decode( wp_remote_retrieve_body( $verify ) );
+
+	return ( ! empty( $verify->success ) && true === $verify->success );
+}
+
+/**
  * Sanitize values to an absolute number, rounded to the required decimal place
  *
  * Allows zero values, but ignores truly empty values.

@@ -138,7 +138,7 @@ class Affiliate_WP_Register {
 			$this->add_error( 'empty_tos', __( 'Please agree to our terms of use', 'affiliate-wp' ) );
 		}
 
-		if ( affwp_is_recaptcha_enabled() && ! $this->recaptcha_response_is_valid( $data ) ) {
+		if ( affwp_is_recaptcha_enabled() && false === verify_recaptcha_response( $data ) ) {
 			$this->add_error( 'recaptcha_required', __( 'Please verify that you are not a robot', 'affiliate-wp' ) );
 		}
 
@@ -167,35 +167,6 @@ class Affiliate_WP_Register {
 
 		}
 
-	}
-
-	/**
-	 * Verify reCAPTCHA response is valid using a POST request to the Google API
-	 *
-	 * @access private
-	 * @since  1.7
-	 * @param  array   $data
-	 * @return boolean
-	 */
-	private function recaptcha_response_is_valid( $data ) {
-		if ( ! affwp_is_recaptcha_enabled() || empty( $data['g-recaptcha-response'] ) || empty( $data['g-recaptcha-remoteip'] ) ) {
-			return false;
-		}
-
-		$verify = wp_safe_remote_post(
-			'https://www.google.com/recaptcha/api/siteverify',
-			array(
-				'body' => array(
-					'secret'   => affiliate_wp()->settings->get( 'recaptcha_secret_key' ),
-					'response' => $data['g-recaptcha-response'],
-					'remoteip' => $data['g-recaptcha-remoteip']
-				)
-			)
-		);
-
-		$verify = json_decode( wp_remote_retrieve_body( $verify ) );
-
-		return ( ! empty( $verify->success ) && true === $verify->success );
 	}
 
 	/**
@@ -594,6 +565,21 @@ class Affiliate_WP_Register {
 
 		<?php endif;
 
+	}
+
+	/**
+	 * Verifies a reCAPTCHA response using a remote request to the Google API.
+	 *
+	 * @since 1.7
+	 * @deprecated 2.1.7
+	 *
+	 * @param array $data `$_REQUEST` data to check.
+	 * @return bool True if the response is valid, otherwise false.
+	 */
+	private function recaptcha_response_is_valid( $data ) {
+		_deprecated_function( __METHOD__, '2.1.7', 'verify_recaptcha_response()' );
+
+		return verify_recaptcha_response( $data );
 	}
 
 }

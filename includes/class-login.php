@@ -70,7 +70,7 @@ class Affiliate_WP_Login {
 		}
 
 		/**
-		 * Filters whether to perform the password check on affiliate login.
+		 * Filters whether to perform the captcha check on affiliate login.
 		 *
 		 * @since 2.1.7
 		 *

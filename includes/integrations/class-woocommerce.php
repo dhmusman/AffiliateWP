@@ -43,7 +43,7 @@ class Affiliate_WP_WooCommerce extends Affiliate_WP_Base {
 
 		// Per product referral rates
 		add_filter( 'woocommerce_product_data_tabs', array( $this, 'product_tab' ) );
-		add_action( 'woocommerce_product_data_panels', array( $this, 'product_settings' ), 100 );
+		add_action( 'woocommerce_product_data_panels', array( $this, 'product_settings' ) );
 		add_action( 'woocommerce_product_after_variable_attributes', array( $this, 'variation_settings' ), 100, 3 );
 		add_action( 'save_post', array( $this, 'save_meta' ) );
 		add_action( 'woocommerce_ajax_save_product_variations', array( $this, 'save_variation_data' ) );

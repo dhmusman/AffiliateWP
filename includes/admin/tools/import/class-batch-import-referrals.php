@@ -193,7 +193,7 @@ class Import_Referrals extends Batch\Import\CSV implements Batch\With_PreFetch {
 			if ( $user_id ) {
 				// Check for an existing affiliate for this user.
 				if ( $affiliate = affiliate_wp()->affiliates->get_by( 'user_id', $user_id ) ) {
-					$affiliate_id = $affiliate->ID;
+					$affiliate_id = $affiliate->affiliate_id;
 				} else {
 					$args['user_id'] = $user_id;
 

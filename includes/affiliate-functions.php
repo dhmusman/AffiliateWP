@@ -1653,8 +1653,6 @@ function affwp_get_affiliate_dashboard_tabs( $all = true, $exclude = '' ) {
 		// set via `affwp_affiliate_area_show_tab`.
 		if ( ! isset( $tab[ 'visible' ] ) || true === affwp_affiliate_area_show_tab( $key ) ) {
 			$tab[ 'visible' ] = true;
-		} else {
-			add_filter( 'affwp_affiliate_area_show_tab', $tab[ 'visible' ], $key );
 		}
 	}
 

@@ -1575,6 +1575,8 @@ function affwp_get_lowest_priority_tab() {
  */
 function affwp_get_affiliate_dashboard_tabs( $all = true, $exclude = '' ) {
 
+	$visible_tabs = array();
+
 	/**
 	 * Filters the affiliate dashboard tabs.
 	 * Used to add, remove, or modify affiliate dashboard tabs.
@@ -1660,6 +1662,10 @@ function affwp_get_affiliate_dashboard_tabs( $all = true, $exclude = '' ) {
 		if ( ! isset( $tab[ 'visible' ] ) || true === affwp_affiliate_area_show_tab( $key ) ) {
 			$tab[ 'visible' ] = true;
 		}
+
+		if ( false === $tab[ 'visible' ] ) {
+			$visible_tabs[ $key ] = $tab;
+		}
 	}
 
 	/**
@@ -1683,8 +1689,10 @@ function affwp_get_affiliate_dashboard_tabs( $all = true, $exclude = '' ) {
 		}
 	}
 
-	// Sort by priority argument.
-	return affwp_sort_tabs_by_priority( $tabs );
+	// If the $all parameter is true, return all tabs. If false, return the $visible_tabs array,
+	// which contains only tabs which are visible.
+	// Sort each by priority argument.
+	return $all ? affwp_sort_tabs_by_priority( $tabs ) : affwp_sort_tabs_by_priority( $visible_tabs );
 }
 
 /**

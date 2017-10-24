@@ -1496,10 +1496,15 @@ function affwp_get_active_affiliate_area_tab() {
 			$priority[ $tab_key ] = $tab_data[ 'priority' ];
 		}
 
-		$lowest = min( $priority );
+		// Gets the lowest priority.
+		$lowest    = min( $priority );
+
+		// Account for tabs which may have priority values identical to another.
+		// In this case, the first array item with that priority value is used.
+		$first_key = key( $priority );
 
 		foreach ( $tabs_data as $tab_key => $tab_data ) {
-			if ( $lowest == $tab_data[ 'priority' ] ) {
+			if ( $lowest === $tab_data[ 'priority' ] && $tab_key === $first_key ) {
 				$active_tab = $tab_key;
 			}
 		}
@@ -1539,6 +1544,7 @@ function affwp_sort_tabs_by_priority( $tabs ) {
 	}
 
 	array_multisort( $sorted, SORT_ASC, $tabs );
+
 	return $tabs;
 }
 

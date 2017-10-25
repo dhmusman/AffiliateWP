@@ -1564,16 +1564,11 @@ function affwp_get_lowest_priority_tab() {
  * /**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
- * @param  boolean $all     Whether to return all tabs, or only those which have the visible
- *                          parameter set to true. Default is true, which returns all tabs. Optional.
- *
- * @param  string  $exclude A dashboard tab ID, or array of IDs. If provided, these tabs will be excluded
- *                          from the return value. Optional.
- *
- * @return array  $tabs     Affiliate dashboard tabs.
+ * @param  boolean $all   Whether to return all tabs, or only those which have the visible
+ * @return array   $tabs  Affiliate dashboard tabs.
  * @since  2.1.7
  */
-function affwp_get_affiliate_dashboard_tabs( $all = true, $exclude = '' ) {
+function affwp_get_affiliate_dashboard_tabs( $all = true ) {
 
 	$visible_tabs = array();
 
@@ -1659,33 +1654,12 @@ function affwp_get_affiliate_dashboard_tabs( $all = true, $exclude = '' ) {
 
 		// If `visible` is not defined, set the tab to be visible by default. Also ensures tab is visible if
 		// set via `affwp_affiliate_area_show_tab`.
-		if ( ! isset( $tab[ 'visible' ] ) || true === affwp_affiliate_area_show_tab( $key ) ) {
-			$tab[ 'visible' ] = true;
-		}
+		// if ( true === affwp_affiliate_area_show_tab( $key ) ) {
+		// 	$tab[ 'visible' ] = true;
+		// }
 
-		if ( false === $tab[ 'visible' ] ) {
+		if ( 1 === $tab[ 'visible' ] ) {
 			$visible_tabs[ $key ] = $tab;
-		}
-	}
-
-	/**
-	 * Excludes an Affiliate Dashboard Tab by unsetting it from the return array,
-	 * if the provided string matches an existing tab.
-	 *
-	 * Note this differs from the `visible` parameter, which is used to hide tabs,
-	 * but retain their data in the return array of `affwp_get_affiliate_dashboard_tabs`.
-	 */
-	if ( ! empty( $exclude ) ) {
-		if ( is_array( $exclude ) ) {
-			foreach( $exclude as $key ) {
-				if ( array_key_exists( $key, $tabs ) ) {
-					unset( $tabs[ $key ] );
-					add_filter( 'affwp_affiliate_area_show_tab', false, $key );
-				}
-			}
-		} elseif ( array_key_exists( $exclude, $tabs ) ) {
-			unset( $tabs[ $exclude ] );
-			add_filter( 'affwp_affiliate_area_show_tab', false, $exclude );
 		}
 	}
 

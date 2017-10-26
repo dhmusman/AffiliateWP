@@ -1646,25 +1646,39 @@ function affwp_get_affiliate_dashboard_tabs( $all = true ) {
 		)
 	);
 
+	/**
+	 * Fires prior to tabs being sorted.
+	 *
+	 * @param $tabs Tab data.
+	 * @since 2.1.7
+	 */
+	do_action( 'affwp_pre_sort_dashboard_tabs', $tabs );
+
 	foreach ( $tabs as $key => $tab ) {
 		if ( empty( $tab[ 'priority' ] ) || ! is_int( $tab[ 'priority' ] ) ) {
 			// Go to the end of the line if you haven't specified a priority.
 			$tab[ 'priority' ] = count( $tabs ) + 10;
 		}
 
-		// If `visible` is not defined, set the tab to be visible by default. Also ensures tab is visible if
-		// set via `affwp_affiliate_area_show_tab`.
-		// if ( true === affwp_affiliate_area_show_tab( $key ) ) {
-		// 	$tab[ 'visible' ] = true;
-		// }
-
 		if ( 1 === $tab[ 'visible' ] ) {
 			$visible_tabs[ $key ] = $tab;
 		}
-	}
 
-	// If the $all parameter is true, return all tabs. If false, return the $visible_tabs array,
-	// which contains only tabs which are visible.
+		/**
+		 * Filters the visibility of each tab so that it may be adjusted elsewhere prior to sorting.
+		 *
+		 * The hook name contains the tab key; given the tab key of `urls`, the filter is:
+		 *    `affwp_urls_tab_visible`
+		 *
+		 * @param bool        Tab visibility parameter.
+		 * @param string $key Tab key.
+		 * @since 2.1.7
+		 */
+		$tab[ 'visible' ] = apply_filters( 'affwp_' . $key . '_tab_visible', $tab[ 'visible' ], $key );
+	}
+	error_log( 'all tabs after filters: '. print_r( affwp_sort_tabs_by_priority( $tabs ), true ) );
+	// If the $all parameter is true, return all tabs.
+	// If false, return the $visible_tabs array, which contains only tabs which are visible.
 	// Sort each by priority argument.
 	return $all ? affwp_sort_tabs_by_priority( $tabs ) : affwp_sort_tabs_by_priority( $visible_tabs );
 }
@@ -1678,6 +1692,10 @@ function affwp_get_affiliate_dashboard_tabs( $all = true ) {
  * @return boolean
  */
 function affwp_affiliate_area_show_tab( $tab = '' ) {
+	$visible = true;
+
+	add_filter( 'affwp_' . $tab . '_tab_visible', function( $visible, $tab ) { return $visible; }, 10, 2 );
+
 	/**
 	 * Determines visibility of the specified tab in the affiliate dashboard area.
 	 *
@@ -1685,7 +1703,7 @@ function affwp_affiliate_area_show_tab( $tab = '' ) {
 	 * @param string  $tab     The tab ID.
 	 * @since 1.8
 	 */
-	return apply_filters( 'affwp_affiliate_area_show_tab', true, $tab );
+	return apply_filters( 'affwp_affiliate_area_show_tab', $visible, $tab );
 }
 
 /**

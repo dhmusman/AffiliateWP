@@ -1566,10 +1566,31 @@ function affwp_get_lowest_priority_tab() {
 }
 
 /**
+ * Maintains a static list of core Affiliate Dashboard tabs for reference.
+ *
+ * @since  2.1.7
+ *
+ * @return array $core_tabs Core tabs.
+ */
+function affwp_get_core_dashboard_tabs() {
+
+	return array(
+		'urls',
+		'stats',
+		'graphs',
+		'referrals',
+		'payouts',
+		'visits',
+		'creatives',
+		'settings'
+	);
+}
+
+/**
  * /**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
- * @param  boolean $all   Whether to return all tabs, or only those which have the visible
+ * @param  boolean $all   Whether to return all tabs, or only those which are visible.
  * @return array   $tabs  Affiliate dashboard tabs.
  * @since  2.1.7
  */

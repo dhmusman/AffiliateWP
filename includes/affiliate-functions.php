@@ -1541,28 +1541,51 @@ function affwp_get_active_affiliate_area_tab() {
  * @return array  $tabs  Array of affiliate dashboard tabs, sorted by priority values.
  * @since  2.1.7
  */
-function affwp_sort_tabs_by_priority( $tabs ) {
+function affwp_sort_tabs_by_priority( $tabs, $order = SORT_ASC ) {
 	$sorted = array();
 
 	foreach ( $tabs as $key => $tab ) {
 	    $sorted[ $key ] = $tab[ 'priority' ];
 	}
 
-	array_multisort( $sorted, SORT_ASC, $tabs );
+	array_multisort( $sorted, $order, $tabs );
 
 	return $tabs;
 }
 
 /**
- * Gets the lowest priority affiliate dashbaord tab and returns the ID.
+ * Returns the lowest priority affiliate dashboard tab.
  *
- * @return string $tab Lowest-priority dashboard tab.
+ * @param  array $tabs Dashboard tabs to sort. Optional.
+ * @return array $tab Lowest-priority dashboard tab.
  * @since  2.1.7
  */
-function affwp_get_lowest_priority_tab() {
-	$tabs = affwp_sort_tabs_by_priority( affwp_get_affiliate_dashboard_tabs() );
+function affwp_get_lowest_priority_tab( $tabs = array() ) {
+	if ( empty( $tabs ) ) {
+		$tabs = affwp_sort_tabs_by_priority( affwp_get_affiliate_dashboard_tabs() );
+	}
+
 	reset( $tabs );
-	return key( $tabs );
+	return $tabs[ key( $tabs ) ];
+}
+
+/**
+ * Returns the highest priority affiliate dashboard tab.
+ *
+ * @param  array $tabs Dashboard tabs to sort. Optional.
+ * @return array $tab Highest-priority dashboard tab.
+ * @since  2.1.7
+ */
+function affwp_get_highest_priority_tab( $tabs = array() ) {
+
+	if ( empty( $tabs ) ) {
+		$tabs = affwp_sort_tabs_by_priority( affwp_get_affiliate_dashboard_tabs() );
+	}
+
+	reset( $tabs );
+	$tabs = affwp_sort_tabs_by_priority( $tabs, SORT_DESC );
+
+	return $tabs[ key( $tabs ) ];
 }
 
 /**
@@ -1575,14 +1598,14 @@ function affwp_get_lowest_priority_tab() {
 function affwp_get_core_dashboard_tabs() {
 
 	return array(
-		'urls',
-		'stats',
-		'graphs',
-		'referrals',
-		'payouts',
-		'visits',
-		'creatives',
-		'settings'
+		'urls'      => __( 'Affiliate URLs', 'affiliate-wp' ),
+		'stats'     => __( 'Statistics',     'affiliate-wp' ),
+		'graphs'    => __( 'Graphs',         'affiliate-wp' ),
+		'referrals' => __( 'Referrals',      'affiliate-wp' ),
+		'payouts'   => __( 'Payouts',        'affiliate-wp' ),
+		'visits'    => __( 'Visits',         'affiliate-wp' ),
+		'creatives' => __( 'Creatives',      'affiliate-wp' ),
+		'settings'  => __( 'Settings',       'affiliate-wp' )
 	);
 }
 
@@ -1681,14 +1704,21 @@ function affwp_get_affiliate_dashboard_tabs( $all = true ) {
 	do_action( 'affwp_pre_sort_dashboard_tabs', $tabs );
 
 	foreach ( $tabs as $key => $tab ) {
-		if ( empty( $tab[ 'priority' ] ) || ! is_int( $tab[ 'priority' ] ) ) {
-			// Go to the end of the line if you haven't specified a priority.
-			$tab[ 'priority' ] = count( $tabs ) + 10;
+		if ( ! isset( $tab[ 'visible' ] ) ) {
+			$tab[ 'visible' ] = true;
 		}
 
 		if ( true === $tab[ 'visible' ] ) {
 			$visible_tabs[ $key ] = $tab;
 		}
+
+		if ( ! isset( $tab[ 'priority' ] ) || empty( $tab[ 'priority' ] ) || ! is_int( $tab[ 'priority' ] ) ) {
+			// Go to the end of the line if you haven't specified a priority.
+			$highest           = affwp_get_highest_priority_tab( $tabs );
+			$highest_priority  = $highest[ 'priority' ];
+			$tab[ 'priority' ] = $highest_priority + 10;
+		}
+
 	}
 
 	// If the $all parameter is true, return all tabs.
@@ -1706,10 +1736,13 @@ function affwp_get_affiliate_dashboard_tabs( $all = true ) {
  * @return boolean     True if the specified tab is visible, false if not. True by default.
  */
 function affwp_affiliate_area_show_tab( $tab = '' ) {
-	$tabs = affwp_get_affiliate_dashboard_tabs();
+	$tabs    = affwp_get_affiliate_dashboard_tabs();
+	$visible = true;
 
 	if ( ! empty( $tab ) ) {
-		$visible = array_key_exists( $tab, $tabs ) ? $tabs[ $tab ][ 'visible' ] : true;
+		if ( array_key_exists( $tab, $tabs ) && isset( $tabs[ $tab ][ 'visible' ] ) ) {
+			$visible = $tabs[ $tab ][ 'visible' ];
+		}
 	} else {
 		$visible = false;
 	}

@@ -1494,11 +1494,17 @@ function affwp_get_active_affiliate_area_tab() {
 
 		foreach ( $tabs_data as $tab_key => $tab_data ) {
 
-			if ( in_array( $tab_key, $tabs ) ) {
-
+			if ( ! in_array( $tab_key, $tabs ) ) {
+				continue;
 			}
 
-			$priority[ $tab_key ] = $tab_data[ 'priority' ];
+			if ( isset( $tab_data[ 'priority' ] ) && ! empty( $tab_data[ 'priority' ] ) ) {
+				$priority[ $tab_key ] = $tab_data[ 'priority' ];
+			} else {
+				$highest              = affwp_get_highest_priority_tab();
+				$highest_priority     = $highest[ 'priority' ];
+				$priority[ $tab_key ] = $highest_priority + 10;
+			}
 		}
 
 		// Gets the lowest priority.
@@ -1545,6 +1551,10 @@ function affwp_sort_tabs_by_priority( $tabs, $order = SORT_ASC ) {
 	$sorted = array();
 
 	foreach ( $tabs as $key => $tab ) {
+		if ( ! isset( $tab[ 'priority' ] ) || empty( $tab[ 'priority' ] ) ) {
+			$tab[ 'priority' ] = 99;
+		}
+
 	    $sorted[ $key ] = $tab[ 'priority' ];
 	}
 
@@ -1717,6 +1727,10 @@ function affwp_get_affiliate_dashboard_tabs( $all = true ) {
 			$highest           = affwp_get_highest_priority_tab( $tabs );
 			$highest_priority  = $highest[ 'priority' ];
 			$tab[ 'priority' ] = $highest_priority + 10;
+		}
+
+		if ( empty($tab[ 'priority' ])) {
+			affiliate_wp()->utils->log( 'Unable to set priority for tab: ' . $key );
 		}
 
 	}

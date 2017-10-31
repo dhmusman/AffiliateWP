@@ -34,7 +34,6 @@ class Affiliate_WP_Affiliate_Area {
 
 		$this->_register_compat();
 
-//		log_it( $this->tabs->get_tabs() );
 	}
 
 	/**

@@ -1522,9 +1522,11 @@ function affwp_get_active_affiliate_area_tab() {
 	}
 
 	if ( ! empty( $active_tab ) && in_array( $active_tab, $tabs ) ) {
-		if ( 1 === $tabs_data[ $active_tab ][ 'visible' ] ) {
+
+		if ( isset( $tabs_data[ $active_tab ][ 'visible' ] ) && 1 === $tabs_data[ $active_tab ][ 'visible' ] ) {
 			$active_tab = $active_tab;
 		}
+
 	} elseif ( ! empty( $tabs ) ) {
 		$active_tab = reset( $tabs );
 	} else {

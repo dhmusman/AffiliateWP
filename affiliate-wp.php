@@ -221,6 +221,14 @@ final class Affiliate_WP {
 	public $utils;
 
 	/**
+	 * The Affiliate Area set up class.
+	 *
+	 * @since 2.1.7
+	 * @var   \Affiliate_WP_Affiliate_Area
+	 */
+	public $affiliate_area;
+
+	/**
 	 * Main Affiliate_WP Instance
 	 *
 	 * Insures that only one instance of Affiliate_WP exists in memory at any one
@@ -353,6 +361,7 @@ final class Affiliate_WP {
 		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/class-payouts-db.php';
 		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/class-capabilities.php';
 		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/class-utilities.php';
+		require_once AFFILIATEWP_PLUGIN_DIR . 'includes/affiliate-area/class-affwp-affiliate-area.php';
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 
@@ -461,6 +470,7 @@ final class Affiliate_WP {
 
 		self::$instance->affiliates     = new Affiliate_WP_DB_Affiliates;
 		self::$instance->affiliate_meta = new Affiliate_WP_Affiliate_Meta_DB;
+		self::$instance->affiliate_area = new Affiliate_WP_Affiliate_Area;
 		self::$instance->referrals      = new Affiliate_WP_Referrals_DB;
 		self::$instance->visits         = new Affiliate_WP_Visits_DB;
 		self::$instance->campaigns      = new Affiliate_WP_Campaigns_DB;

@@ -1620,7 +1620,6 @@ function affwp_get_core_dashboard_tabs() {
 }
 
 /**
- * /**
  * Returns all affiliate dashboard tabs in a filterable array.
  *
  * @param  boolean $all   Whether to return all tabs, or only those which are visible.

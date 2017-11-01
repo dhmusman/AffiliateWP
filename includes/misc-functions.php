@@ -517,7 +517,7 @@ function affwp_is_recaptcha_enabled() {
  * @param array $data `$_REQUEST` data to check.
  * @return bool True if the response is valid, otherwise false.
  */
-function verify_recaptcha_response( $data ) {
+function affwp_verify_recaptcha_response( $data ) {
 	if ( ! affwp_is_recaptcha_enabled() || empty( $data['g-recaptcha-response'] ) || empty( $data['g-recaptcha-remoteip'] ) ) {
 		return false;
 	}

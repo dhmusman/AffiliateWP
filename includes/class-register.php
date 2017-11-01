@@ -138,7 +138,7 @@ class Affiliate_WP_Register {
 			$this->add_error( 'empty_tos', __( 'Please agree to our terms of use', 'affiliate-wp' ) );
 		}
 
-		if ( affwp_is_recaptcha_enabled() && false === verify_recaptcha_response( $data ) ) {
+		if ( affwp_is_recaptcha_enabled() && false === affwp_verify_recaptcha_response( $data ) ) {
 			$this->add_error( 'recaptcha_required', __( 'Please verify that you are not a robot', 'affiliate-wp' ) );
 		}
 
@@ -577,9 +577,9 @@ class Affiliate_WP_Register {
 	 * @return bool True if the response is valid, otherwise false.
 	 */
 	private function recaptcha_response_is_valid( $data ) {
-		_deprecated_function( __METHOD__, '2.1.7', 'verify_recaptcha_response()' );
+		_deprecated_function( __METHOD__, '2.1.7', 'affwp_verify_recaptcha_response()' );
 
-		return verify_recaptcha_response( $data );
+		return affwp_verify_recaptcha_response( $data );
 	}
 
 }

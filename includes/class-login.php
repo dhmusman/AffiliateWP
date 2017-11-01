@@ -79,7 +79,7 @@ class Affiliate_WP_Login {
 		 */
 		if ( true === apply_filters( 'affwp_login_check_captcha', true, $user ) ) {
 
-			if ( affwp_is_recaptcha_enabled() && false === verify_recaptcha_response( $data ) ) {
+			if ( affwp_is_recaptcha_enabled() && false === affwp_verify_recaptcha_response( $data ) ) {
 				$this->add_error( 'recaptcha_required', __( 'Please verify that you are not a robot', 'affiliate-wp' ) );
 			}
 

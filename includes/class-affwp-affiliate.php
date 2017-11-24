@@ -34,6 +34,14 @@ final class Affiliate extends Base_Object {
 	public $affiliate_id = 0;
 
 	/**
+	 * Remote site and affiliate ID combination.
+	 *
+	 * @since 2.2
+	 * @var   string
+	 */
+	public $remote_id = '';
+
+	/**
 	 * Affiliate user ID.
 	 *
 	 * @since 1.9
@@ -233,6 +241,10 @@ final class Affiliate extends Base_Object {
 
 		if ( in_array( $field, array( 'earnings', 'unpaid_earnings' ) ) ) {
 			$value = floatval( $value );
+		}
+
+		if ( in_array( $field, array( 'remote_id' ) ) ) {
+			$value = sanitize_text_field( $value );
 		}
 
 		return $value;

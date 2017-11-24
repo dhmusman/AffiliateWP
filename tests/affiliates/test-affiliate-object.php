@@ -99,4 +99,27 @@ class Tests extends UnitTestCase {
 
 		$this->assertSame( 'double', gettype( $earnings ) );
 	}
+
+	/**
+	 * @covers \AffWP\Affiliate::is_remote()
+	 * @group remote
+	 */
+	public function test_is_remote_should_return_false_if_remote_id_is_empty() {
+		$this->assertFalse( affwp_get_affiliate( self::$affiliate_id )->is_remote() );
+	}
+
+	/**
+	 * @covers \AffWP\Affiliate::is_remote()
+	 * @group remote
+	 */
+	public function test_is_remote_should_return_true_if_remote_id_is_not_empty() {
+		$affiliate = $this->factory->affiliate->create_and_get( array(
+			'remote_id' => '12:34'
+		) );
+
+		$this->assertTrue( $affiliate->is_remote() );
+
+		// Clean up.
+		affwp_delete_affiliate( $affiliate->ID );
+	}
 }

@@ -87,6 +87,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	public function get_columns() {
 		return array(
 			'affiliate_id'    => '%d',
+			'remote_id'       => '%s',
 			'user_id'         => '%d',
 			'rate'            => '%s',
 			'rate_type'       => '%s',
@@ -149,6 +150,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			'exclude'      => array(),
 			'user_id'      => 0,
 			'affiliate_id' => 0,
+			'remote_id'    => '',
 			'status'       => '',
 			'order'        => 'DESC',
 			'orderby'      => 'affiliate_id',
@@ -205,6 +207,14 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 				$where .= "WHERE `affiliate_id` IN( {$affiliates} )";
 			} else {
 				$where .= "AND `affiliate_id` IN( {$affiliates} )";
+			}
+		}
+
+		if ( ! empty( $args['remote_id'] ) ) {
+			$parts = explode( ':', $args['remote_id'] );
+
+			if ( 2 === count( $parts ) ) {
+				// [0] = Site ID, [1] = Remote ID.
 			}
 		}
 
@@ -535,6 +545,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 
 		$sql = "CREATE TABLE {$this->table_name} (
 			affiliate_id bigint(20) NOT NULL AUTO_INCREMENT,
+			remote_id mediumtext NOT NULL,
 			user_id bigint(20) NOT NULL,
 			rate tinytext NOT NULL,
 			rate_type tinytext NOT NULL,

@@ -106,6 +106,7 @@ class Tests extends UnitTestCase {
 
 		$expected = array(
 			'affiliate_id'    => '%d',
+			'remote_id'       => '%s',
 			'user_id'         => '%d',
 			'rate'            => '%s',
 			'rate_type'       => '%s',

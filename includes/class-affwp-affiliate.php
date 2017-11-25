@@ -310,15 +310,4 @@ final class Affiliate extends Base_Object {
 		return empty( $this->rate ) ? false : true;
 	}
 
-	/**
-	 * Determines if the current affiliate is remote.
-	 *
-	 * @since 2.2
-	 *
-	 * @return bool True if the remote ID is set, otherwise false.
-	 */
-	public function has_rest_id() {
-		return empty( $this->rest_id ) ? false : true;
-	}
-
 }

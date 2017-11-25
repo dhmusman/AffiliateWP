@@ -158,4 +158,28 @@ class Tests extends UnitTestCase {
 
 		$this->assertSame( 'user_id, rate', $result );
 	}
+
+	/**
+	 * @covers \AffWP\Base_Object::has_rest_id()
+	 * @group rest
+	 */
+	public function test_has_rest_id_should_return_false_if_rest_id_is_empty() {
+		$this->assertFalse( affwp_get_affiliate( self::$affiliate_id )->has_rest_id() );
+	}
+
+	/**
+	 * @covers \AffWP\Affiliate::has_rest_id()
+	 * @group rest
+	 */
+	public function test_has_rest_id_should_return_true_if_rest_id_is_not_empty() {
+		$affiliate = $this->factory->affiliate->create_and_get( array(
+			'rest_id' => '12:34'
+		) );
+
+		$this->assertTrue( $affiliate->has_rest_id() );
+
+		// Clean up.
+		affwp_delete_affiliate( $affiliate->ID );
+	}
+
 }

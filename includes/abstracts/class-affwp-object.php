@@ -317,4 +317,15 @@ abstract class Base_Object {
 		return $value;
 	}
 
+	/**
+	 * Determines if the current object has a rest ID.
+	 *
+	 * @since 2.2
+	 *
+	 * @return bool True if the rest ID is set, otherwise false.
+	 */
+	public function has_rest_id() {
+		return empty( $this->rest_id ) ? false : true;
+	}
+
 }

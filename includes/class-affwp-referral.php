@@ -202,6 +202,10 @@ final class Referral extends Base_Object {
 			$value = affwp_maybe_unserialize( affwp_maybe_unserialize( $value ) );
 		}
 
+		if ( in_array( $field, array( 'rest_id' ) ) ) {
+			$value = sanitize_text_field( $value );
+		}
+
 		return $value;
 	}
 

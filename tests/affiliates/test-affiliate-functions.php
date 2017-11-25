@@ -1791,6 +1791,62 @@ class Tests extends UnitTestCase {
 	}
 
 	/**
+	 * @covers ::affwp_update_affiliate()
+	 * @group rest
+	 */
+	public function test_update_affiliate_without_rest_id_should_leave_rest_id_unchanged() {
+		$affiliate = $this->factory->affiliate->create_and_get();
+
+		affwp_update_affiliate( $affiliate->ID, array() );
+
+		$updated_affiliate = affwp_get_affiliate( $affiliate->ID );
+
+		$this->assertSame( $affiliate->rest_id, $updated_affiliate->rest_id );
+
+		// Clean up.
+		$this->factory->affiliate->delete( $affiliate->ID );
+	}
+
+	/**
+	 * @covers ::affwp_update_affiliate()
+	 * @group rest
+	 */
+	public function test_update_affiliate_with_invalid_rest_id_should_leave_rest_id_unchanged() {
+		$affiliate = $this->factory->affiliate->create_and_get();
+
+		affwp_update_affiliate( $affiliate->ID, array(
+			'rest_id' => 'foo'
+		) );
+
+		$updated_affiliate = affwp_get_affiliate( $affiliate->ID );
+
+		$this->assertSame( $affiliate->rest_id, $updated_affiliate->rest_id );
+
+		// Clean up.
+		$this->factory->affiliate->delete( $affiliate->ID );
+	}
+
+	/**
+	 * @covers ::affwp_update_affiliate()
+	 * @group rest
+	 */
+	public function test_update_affiliate_with_valid_rest_id_should_update_rest_id() {
+		$affiliate = $this->factory->affiliate->create_and_get();
+
+		affwp_update_affiliate( array(
+			'affiliate_id' => $affiliate->ID,
+			'rest_id'      => '12:34'
+		) );
+
+		$updated_affiliate = affwp_get_affiliate( $affiliate->ID );
+
+		$this->assertSame( '12:34', $updated_affiliate->rest_id );
+
+		// Clean up.
+		$this->factory->affiliate->delete( $affiliate->ID );
+	}
+
+	/**
 	 * @covers ::affwp_update_profile_settings()
 	 */
 	public function test_update_profile_settings_with_no_logged_in_user_should_return_false() {

@@ -40,6 +40,14 @@ final class Consumer extends \AffWP\Base_Object {
 	public $user_id = 0;
 
 	/**
+	 * REST ID (ironically unused for Consumers).
+	 *
+	 * @since 2.2
+	 * @var   null|string
+	 */
+	public $rest_id;
+
+	/**
 	 * API consumer token.
 	 *
 	 * @access public

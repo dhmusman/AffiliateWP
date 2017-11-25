@@ -96,6 +96,7 @@ class Referrals_DB_Tests extends UnitTestCase {
 			'referral_id' => '%d',
 			'affiliate_id'=> '%d',
 			'visit_id'    => '%d',
+			'rest_id'     => '%s',
 			'description' => '%s',
 			'status'      => '%s',
 			'amount'      => '%s',
@@ -340,6 +341,53 @@ class Referrals_DB_Tests extends UnitTestCase {
 		foreach ( array( $referral_A, $referral_B, $referral_C ) as $referral_id ) {
 			affwp_delete_referral( $referral_id );
 		}
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::add()
+	 * @group rest
+	 */
+	public function test_add_without_rest_id_should_leave_rest_id_empty() {
+		$referral_id = affiliate_wp()->referrals->add( array(
+			'affiliate_id' => self::$affiliate_id,
+		) );
+
+		$this->assertSame( '', affwp_get_referral( $referral_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_referral( $referral_id );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::add()
+	 * @group rest
+	 */
+	public function test_add_with_invalid_rest_id_should_leave_rest_id_empty() {
+		$referral_id = affiliate_wp()->referrals->add( array(
+			'affiliate_id' => self::$affiliate_id,
+			'rest_id'      => 'foo',
+		) );
+
+		$this->assertSame( '', affwp_get_referral( $referral_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_referral( $referral_id );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::add()
+	 * @group rest
+	 */
+	public function test_add_with_syntactically_correct_rest_id_should_store_rest_id() {
+		$referral_id = affiliate_wp()->referrals->add( array(
+			'affiliate_id' => self::$affiliate_id,
+			'rest_id'      => '12:34',
+		) );
+
+		$this->assertSame( '12:34', affwp_get_referral( $referral_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_referral( $referral_id );
 	}
 
 	/**

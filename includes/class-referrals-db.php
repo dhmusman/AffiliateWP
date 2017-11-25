@@ -79,6 +79,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			'referral_id' => '%d',
 			'affiliate_id'=> '%d',
 			'visit_id'    => '%d',
+			'rest_id'     => '%s',
 			'description' => '%s',
 			'status'      => '%s',
 			'amount'      => '%s',
@@ -146,6 +147,19 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 
 		if ( ! empty( $args['custom'] ) ) {
 			$args['custom']	 = maybe_serialize( $args['custom'] );
+		}
+
+		if ( ! empty( $args['rest_id'] ) ) {
+			if ( false === strpos( $args['rest_id'], ':' ) || ! is_string( $args['rest_id'] ) ) {
+				affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new referral with affiliate ID: #%2$d is invalid',
+					$args['rest_id'],
+					$args['affiliate_id']
+				) );
+
+				unset( $args['rest_id'] );
+			} else {
+				$args['rest_id'] = sanitize_text_field( $args['rest_id'] );
+			}
 		}
 
 		$add  = $this->insert( $args, 'referral' );
@@ -880,6 +894,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		referral_id bigint(20) NOT NULL AUTO_INCREMENT,
 		affiliate_id bigint(20) NOT NULL,
 		visit_id bigint(20) NOT NULL,
+		rest_id mediumtext NOT NULL,
 		description longtext NOT NULL,
 		status tinytext NOT NULL,
 		amount mediumtext NOT NULL,

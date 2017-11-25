@@ -50,6 +50,14 @@ final class Referral extends Base_Object {
 	public $visit_id = 0;
 
 	/**
+	 * REST ID (site:referral ID combination).
+	 *
+	 * @since 2.2
+	 * @var   string
+	 */
+	public $rest_id = '';
+
+	/**
 	 * Referral description.
 	 *
 	 * @since 1.9

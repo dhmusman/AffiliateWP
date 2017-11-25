@@ -50,7 +50,7 @@ class Affiliate_WP_Payouts_DB extends Affiliate_WP_DB {
 		$this->version     = '1.0';
 
 		// REST endpoints.
-		if ( version_compare( $wp_version, '4.4', '>=' ) ) {
+		if ( version_compare( $wp_version, '4.4', '>=' ) && current_user_can( 'manage_payouts' ) ) {
 			$this->REST = new \AffWP\Affiliate\Payout\REST\v1\Endpoints;
 		}
 	}

@@ -570,7 +570,7 @@ class Tests extends UnitTestCase {
 	public function test_update_visit_without_rest_id_should_leave_rest_id_unchanged() {
 		$visit = $this->factory->visit->create_and_get();
 
-		affiliate_wp()->visits->update_visit( $visit->ID, array() );
+		affiliate_wp()->visits->update_visit( $visit->ID );
 
 		$updated_visit = affwp_get_visit( $visit->ID );
 

@@ -691,7 +691,7 @@ class Affiliate_WP_Upgrades {
 	 * @since 2.2
 	 */
 	private function v22_upgrade() {
-		foreach ( get_sites_for_upgrade() as $site_id ) {
+		foreach ( $this->get_sites_for_upgrade() as $site_id ) {
 			switch_to_blog( $site_id );
 
 			affiliate_wp()->affiliates->create_table();

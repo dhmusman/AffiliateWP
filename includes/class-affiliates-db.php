@@ -517,12 +517,11 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			$args['website_url'] = sanitize_text_field( $data['website_url'] );
 		}
 
+		$rest_id_error = false;
+
 		if ( ! empty( $args['rest_id'] ) ) {
 			if ( false === strpos( $args['rest_id'], ':' ) || ! is_string( $args['rest_id'] ) ) {
-				affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new affiliate with user ID: #%2$d is invalid',
-					$args['rest_id'],
-					$args['user_id']
-				) );
+				$rest_id_error = $args['rest_id'];
 
 				unset( $args['rest_id'] );
 			} else {
@@ -541,6 +540,13 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			 * @param array $args The arguments passed to the insert method.
 			 */
 			do_action( 'affwp_insert_affiliate', $add, $args );
+
+			if ( false !== $rest_id_error ) {
+				affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new affiliate #%2$d is invalid.',
+					$rest_id_error,
+					$add
+				) );
+			}
 
 			return $add;
 		}

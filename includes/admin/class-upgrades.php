@@ -147,6 +147,10 @@ class Affiliate_WP_Upgrades {
 			$this->v2131_upgrade();
 		}
 
+		if ( version_compare( $this->version, '2.2', '<' ) ) {
+			$this->v22_upgrade();
+		}
+
 		// Inconsistency between current and saved version.
 		if ( version_compare( $this->version, AFFILIATEWP_VERSION, '<>' ) ) {
 			$this->upgraded = true;
@@ -680,4 +684,52 @@ class Affiliate_WP_Upgrades {
 
 		$this->upgraded = true;
 	}
+
+	/**
+	 * Performs database upgrades for version 2.2.
+	 *
+	 * @since 2.2
+	 */
+	private function v22_upgrade() {
+		foreach ( get_sites_for_upgrade() as $site_id ) {
+			switch_to_blog( $site_id );
+
+			affiliate_wp()->affiliates->create_table();
+			@affiliate_wp()->utils->log( sprintf( 'Upgrade: The rest_id column has been added to the Affiliates table for site #%1$s.', $site_id ) );
+
+			restore_current_blog();
+		}
+
+		$this->upgraded = true;
+	}
+
+	/**
+	 * Retrieves the site IDs array.
+	 *
+	 * Most commonly used for db schema changes in networks (but also works for single site).
+	 *
+	 * @return array Site IDs in the netework (single or multisite).
+	 */
+	private function get_sites_for_upgrade() {
+		if ( is_multisite() ) {
+
+			if ( true === version_compare( $GLOBALS['wp_version'], '4.6', '<' ) ) {
+
+				$sites = wp_list_pluck( 'blog_id', wp_get_sites() );
+
+			} else {
+
+				$sites = get_sites( array( 'fields' => 'ids' ) );
+
+			}
+
+		} else {
+
+			$sites = array( get_current_blog_id() );
+
+		}
+
+		return $sites;
+	}
+
 }

@@ -602,6 +602,10 @@ class AffWP_Referrals_Table extends List_Table {
 			'delete'         => __( 'Delete', 'affiliate-wp' ),
 		);
 
+		if ( ! current_user_can( 'manage_payouts' ) ) {
+			unset( $actions['mark_as_paid'] );
+		}
+
 		/**
 		 * Filters the bulk actions array for the referrals list table.
 		 *

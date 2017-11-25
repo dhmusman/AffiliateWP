@@ -402,7 +402,7 @@ class AffWP_Referrals_Table extends List_Table {
 
 		} else {
 
-			if( 'unpaid' == $referral->status ) {
+			if( 'unpaid' == $referral->status && current_user_can( 'manage_payouts' ) ) {
 
 				// Mark as Paid.
 				$row_actions['mark-as-paid'] = $this->get_row_action_link(

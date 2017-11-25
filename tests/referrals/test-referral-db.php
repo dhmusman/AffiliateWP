@@ -850,6 +850,61 @@ class Referrals_DB_Tests extends UnitTestCase {
 	}
 
 	/**
+	 * @covers \Affiliate_WP_Referrals_DB::update_referral()
+	 * @group rest
+	 */
+	public function test_update_referral_without_rest_id_should_leave_rest_id_unchanged() {
+		$referral = $this->factory->referral->create_and_get();
+
+		affiliate_wp()->referrals->update_referral( $referral->ID );
+
+		$updated_referral = affwp_get_referral( $referral->ID );
+
+		$this->assertSame( $referral->rest_id, $updated_referral->rest_id );
+
+		// Clean up.
+		$this->factory->referral->delete( $referral->ID );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::update_referral()
+	 * @group rest
+	 */
+	public function test_update_referral_with_invalid_rest_id_should_leave_rest_id_unchanged() {
+		$referral = $this->factory->referral->create_and_get();
+
+		affiliate_wp()->referrals->update_referral( $referral->ID, array(
+			'rest_id' => 'foo'
+		) );
+
+		$updated_referral = affwp_get_referral( $referral->ID );
+
+		$this->assertSame( $referral->rest_id, $updated_referral->rest_id );
+
+		// Clean up.
+		$this->factory->referral->delete( $referral->ID );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::update_referral()
+	 * @group rest
+	 */
+	public function test_update_referral_with_valid_rest_id_should_update_rest_id() {
+		$referral = $this->factory->referral->create_and_get();
+
+		affiliate_wp()->referrals->update_referral( $referral->ID, array(
+			'rest_id' => '12:34'
+		) );
+
+		$updated_referral = affwp_get_referral( $referral->ID );
+
+		$this->assertSame( '12:34', $updated_referral->rest_id );
+
+		// Clean up.
+		$this->factory->referral->delete( $referral->ID );
+	}
+
+	/**
 	 * @covers \Affiliate_WP_Referrals_DB::get_by()
 	 */
 	public function test_get_by_with_empty_column_should_return_false() {

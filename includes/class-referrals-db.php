@@ -221,6 +221,12 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			$args['date'] = gmdate( 'Y-m-d H:i:s', $timestamp );
 		}
 
+		if ( ! empty( $data['rest_id'] ) && is_string( $data['rest_id'] ) && $data['rest_id'] !== $referral->rest_id ) {
+			if ( false !== strpos( $data['rest_id'], ':' ) ) {
+				$args['rest_id'] = sanitize_text_field( $data['rest_id'] );
+			}
+		}
+
 		$args['affiliate_id']  = ! empty( $data['affiliate_id' ] ) ? absint( $data['affiliate_id'] )             : $referral->affiliate_id;
 		$args['visit_id']      = ! empty( $data['visit_id' ] )     ? absint( $data['visit_id'] )                 : $referral->visit_id;
 		$args['description']   = ! empty( $data['description' ] )  ? sanitize_text_field( $data['description'] ) : '';

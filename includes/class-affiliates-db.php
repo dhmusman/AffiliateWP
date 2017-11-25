@@ -87,8 +87,8 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	public function get_columns() {
 		return array(
 			'affiliate_id'    => '%d',
-			'remote_id'       => '%s',
 			'user_id'         => '%d',
+			'rest_id'         => '%s',
 			'rate'            => '%s',
 			'rate_type'       => '%s',
 			'payment_email'   => '%s',
@@ -150,7 +150,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			'exclude'      => array(),
 			'user_id'      => 0,
 			'affiliate_id' => 0,
-			'remote_id'    => '',
+			'rest_id'      => '',
 			'status'       => '',
 			'order'        => 'DESC',
 			'orderby'      => 'affiliate_id',
@@ -210,8 +210,8 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			}
 		}
 
-		if ( ! empty( $args['remote_id'] ) ) {
-			$parts = explode( ':', $args['remote_id'] );
+		if ( ! empty( $args['rest_id'] ) ) {
+			$parts = explode( ':', $args['rest_id'] );
 
 			if ( 2 === count( $parts ) ) {
 				// [0] = Site ID, [1] = Remote ID.
@@ -468,7 +468,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	 * Add a new affiliate
 	 *
 	 * @since 1.0
-	 * @since 2.2 Added support for a `$remote_id` argument.
+	 * @since 2.2 Added support for a `$rest_id` argument.
 	 * @access public
 	 *
 	 * @param array $args {
@@ -483,7 +483,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	 *     @type int    $referrals       Number of affiliate referrals.
 	 *     @type int    $visits          Number of visits.
 	 *     @type int    $user_id         User ID used to correspond to the affiliate.
-	 *     @type string $remote_id       Remote site:affiliate ID combination.
+	 *     @type string $rest_id         REST ID (site:affiliate ID combination).
 	 *     @type string $website_url     The affiliate's website URL.
 	 * }
 	 * @return int|false Affiliate ID if successfully added, otherwise false.
@@ -517,16 +517,16 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			$args['website_url'] = sanitize_text_field( $data['website_url'] );
 		}
 
-		if ( ! empty( $args['remote_id'] ) ) {
-			if ( false === strpos( $args['remote_id'], ':' ) || ! is_string( $args['remote_id'] ) ) {
-				affiliate_wp()->utils->log( sprintf( 'Remote ID %1$s for affiliate with user ID: %2$d is invalid',
-					$args['remote_id'],
+		if ( ! empty( $args['rest_id'] ) ) {
+			if ( false === strpos( $args['rest_id'], ':' ) || ! is_string( $args['rest_id'] ) ) {
+				affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new affiliate with user ID: #%2$d is invalid',
+					$args['rest_id'],
 					$args['user_id']
 				) );
 
-				unset( $args['remote_id'] );
+				unset( $args['rest_id'] );
 			} else {
-				$args['remote_id'] = sanitize_text_field( $args['remote_id'] );
+				$args['rest_id'] = sanitize_text_field( $args['rest_id'] );
 			}
 		}
 
@@ -560,7 +560,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 
 		$sql = "CREATE TABLE {$this->table_name} (
 			affiliate_id bigint(20) NOT NULL AUTO_INCREMENT,
-			remote_id mediumtext NOT NULL,
+			rest_id mediumtext NOT NULL,
 			user_id bigint(20) NOT NULL,
 			rate tinytext NOT NULL,
 			rate_type tinytext NOT NULL,

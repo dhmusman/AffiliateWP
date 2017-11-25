@@ -34,12 +34,12 @@ final class Affiliate extends Base_Object {
 	public $affiliate_id = 0;
 
 	/**
-	 * Remote site and affiliate ID combination.
+	 * REST ID (site:affiliate ID combination).
 	 *
 	 * @since 2.2
 	 * @var   string
 	 */
-	public $remote_id = '';
+	public $rest_id = '';
 
 	/**
 	 * Affiliate user ID.
@@ -243,7 +243,7 @@ final class Affiliate extends Base_Object {
 			$value = floatval( $value );
 		}
 
-		if ( in_array( $field, array( 'remote_id' ) ) ) {
+		if ( in_array( $field, array( 'rest_id' ) ) ) {
 			$value = sanitize_text_field( $value );
 		}
 
@@ -317,8 +317,8 @@ final class Affiliate extends Base_Object {
 	 *
 	 * @return bool True if the remote ID is set, otherwise false.
 	 */
-	public function is_remote() {
-		return empty( $this->remote_id ) ? false : true;
+	public function has_rest_id() {
+		return empty( $this->rest_id ) ? false : true;
 	}
 
 }

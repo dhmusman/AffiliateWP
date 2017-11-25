@@ -149,12 +149,11 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			$args['custom']	 = maybe_serialize( $args['custom'] );
 		}
 
+		$rest_id_error = false;
+
 		if ( ! empty( $args['rest_id'] ) ) {
 			if ( false === strpos( $args['rest_id'], ':' ) || ! is_string( $args['rest_id'] ) ) {
-				affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new referral with affiliate ID: #%2$d is invalid',
-					$args['rest_id'],
-					$args['affiliate_id']
-				) );
+				$rest_id_error = $args['rest_id'];
 
 				unset( $args['rest_id'] );
 			} else {
@@ -174,6 +173,13 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			 * @param int $add Referral ID.
 			 */
 			do_action( 'affwp_insert_referral', $add );
+
+			if ( false !== $rest_id_error ) {
+				affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new referral #%2$d is invalid.',
+					$rest_id_error,
+					$add
+				) );
+			}
 
 			return $add;
 		}

@@ -658,7 +658,7 @@ class AffWP_Referrals_Table extends List_Table {
 			}
 
 			if ( 'mark_as_paid' === $this->current_action() ) {
-				if ( $referral = affwp_get_referral( $id ) ) {
+				if ( $referral = affwp_get_referral( $id ) && current_user_can( 'manage_payouts' ) ) {
 					affwp_add_payout( array(
 						'affiliate_id'  => $referral->affiliate_id,
 						'referrals'     => $id,

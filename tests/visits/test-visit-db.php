@@ -52,6 +52,7 @@ class Tests extends UnitTestCase {
 			'visit_id'     => '%d',
 			'affiliate_id' => '%d',
 			'referral_id'  => '%d',
+			'rest_id'      => '%s',
 			'url'          => '%s',
 			'referrer'     => '%s',
 			'campaign'     => '%s',
@@ -322,6 +323,53 @@ class Tests extends UnitTestCase {
 
 		// Clean up.
 		affiliate_wp()->visits->delete( $visit->ID );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Visits_DB::add()
+	 * @group rest
+	 */
+	public function test_add_without_rest_id_should_leave_rest_id_empty() {
+		$visit_id = affiliate_wp()->visits->add( array(
+			'affiliate_id' => self::$affiliates[0],
+		) );
+
+		$this->assertSame( '', affwp_get_visit( $visit_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_visit( $visit_id );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Visits_DB::add()
+	 * @group rest
+	 */
+	public function test_add_with_invalid_rest_id_should_leave_rest_id_empty() {
+		$visit_id = affiliate_wp()->visits->add( array(
+			'affiliate_id' => self::$affiliates[0],
+			'rest_id'      => 'foo',
+		) );
+
+		$this->assertSame( '', affwp_get_visit( $visit_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_visit( $visit_id );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Visits_DB::add()
+	 * @group rest
+	 */
+	public function test_add_with_syntactically_correct_rest_id_should_store_rest_id() {
+		$visit_id = affiliate_wp()->visits->add( array(
+			'affiliate_id' => self::$affiliates[0],
+			'rest_id'      => '12:34',
+		) );
+
+		$this->assertSame( '12:34', affwp_get_visit( $visit_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_visit( $visit_id );
 	}
 
 	/**

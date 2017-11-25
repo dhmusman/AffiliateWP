@@ -67,6 +67,7 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			'visit_id'     => '%d',
 			'affiliate_id' => '%d',
 			'referral_id'  => '%d',
+			'rest_id'      => '%s',
 			'url'          => '%s',
 			'referrer'     => '%s',
 			'campaign'     => '%s',
@@ -438,8 +439,28 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			$data['context'] = sanitize_key( substr( $data['context'], 0, 50 ) );
 		}
 
+		$rest_id_error = false;
+
+		if ( ! empty( $data['rest_id'] ) ) {
+			if ( false === strpos( $data['rest_id'], ':' ) || ! is_string( $data['rest_id'] ) ) {
+				$rest_id_error = $data['rest_id'];
+
+				unset( $data['rest_id'] );
+			} else {
+				$data['rest_id'] = sanitize_text_field( $data['rest_id'] );
+			}
+		}
+
 		$visit_id = $this->insert( $data, 'visit' );
 
+		if ( $visit_id && false !== $rest_id_error ) {
+			affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new visit #%2$d is invalid.',
+				$rest_id_error,
+				$visit_id
+			) );
+		}
+
+		// TODO shouldn't this only happen if the visit was successfully added?
 		affwp_increase_affiliate_visit_count( $data['affiliate_id'] );
 
 		return $visit_id;
@@ -506,6 +527,7 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			visit_id bigint(20) NOT NULL AUTO_INCREMENT,
 			affiliate_id bigint(20) NOT NULL,
 			referral_id bigint(20) NOT NULL,
+			rest_id mediumtext NOT NULL,
 			url mediumtext NOT NULL,
 			referrer mediumtext NOT NULL,
 			campaign varchar(50) NOT NULL,

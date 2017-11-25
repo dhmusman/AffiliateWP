@@ -700,6 +700,9 @@ class Affiliate_WP_Upgrades {
 			affiliate_wp()->referrals->create_table();
 			@affiliate_wp()->utils->log( sprintf( 'Upgrade: The rest_id column has been added to the Referrals table for site #%1$s.', $site_id ) );
 
+			affiliate_wp()->visits->create_table();
+			@affiliate_wp()->utils->log( sprintf( 'Upgrade: The rest_id column has been added to the Visits table for site #%1$s.', $site_id ) );
+
 			restore_current_blog();
 		}
 

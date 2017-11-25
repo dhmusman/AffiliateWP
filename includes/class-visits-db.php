@@ -483,6 +483,14 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			$data['date'] = gmdate( 'Y-m-d H:i:s', $timestamp );
 		}
 
+		if ( ! empty( $data['rest_id'] ) && is_string( $data['rest_id'] ) && $data['rest_id'] !== $visit->rest_id ) {
+			if ( false !== strpos( $data['rest_id'], ':' ) ) {
+				$data['rest_id'] = sanitize_text_field( $data['rest_id'] );
+			} else {
+				$data['rest_id'] = $visit->rest_id;
+			}
+		}
+
 		if ( $this->update( $visit->ID, $data, '', 'visit' ) ) {
 			$updated_visit = affwp_get_visit( $visit->ID );
 

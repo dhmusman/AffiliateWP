@@ -558,5 +558,64 @@ class Tests extends UnitTestCase {
 		$updated_date  = gmdate( 'Y-m-d H:i:s', strtotime( '01/01/2001' ) - affiliate_wp()->utils->wp_offset );
 
 		$this->assertSame( $updated_date, $updated_visit->date );
+
+		// Clean up.
+		$this->factory->visit->delete( $visit->ID );
 	}
+
+	/**
+	 * @covers \Affiliate_WP_Visits_DB::update_visit()
+	 * @group rest
+	 */
+	public function test_update_visit_without_rest_id_should_leave_rest_id_unchanged() {
+		$visit = $this->factory->visit->create_and_get();
+
+		affiliate_wp()->visits->update_visit( $visit->ID, array() );
+
+		$updated_visit = affwp_get_visit( $visit->ID );
+
+		$this->assertSame( $visit->rest_id, $updated_visit->rest_id );
+
+		// Clean up.
+		$this->factory->visit->delete( $visit->ID );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Visits_DB::update_visit()
+	 * @group rest
+	 */
+	public function test_update_visit_with_invalid_rest_id_should_leave_rest_id_unchanged() {
+		$visit = $this->factory->visit->create_and_get();
+
+		affiliate_wp()->visits->update_visit( $visit->ID, array(
+			'rest_id' => 'foo'
+		) );
+
+		$updated_visit = affwp_get_visit( $visit->ID );
+
+		$this->assertSame( $visit->rest_id, $updated_visit->rest_id );
+
+		// Clean up.
+		$this->factory->visit->delete( $visit->ID );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Visits_DB::update_visit()
+	 * @group rest
+	 */
+	public function test_update_visit_with_valid_rest_id_should_update_rest_id() {
+		$visit = $this->factory->visit->create_and_get();
+
+		affiliate_wp()->visits->update_visit( $visit->ID, array(
+			'rest_id' => '12:34'
+		) );
+
+		$updated_visit = affwp_get_visit( $visit->ID );
+
+		$this->assertSame( '12:34', $updated_visit->rest_id );
+
+		// Clean up.
+		$this->factory->visit->delete( $visit->ID );
+	}
+
 }

@@ -122,7 +122,7 @@ class Tests extends UnitTestCase {
 			'date_registered' => '%s',
 		);
 
-		$this->assertEqualSets( $expected, $columns );
+		$this->assertEqualSetsWithIndex( $expected, $columns );
 	}
 
 	/**

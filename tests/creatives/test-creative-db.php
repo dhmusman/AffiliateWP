@@ -114,7 +114,7 @@ class Tests extends UnitTestCase {
 			'date'         => '%s',
 		);
 
-		$this->assertEqualSets( $expected, affiliate_wp()->creatives->get_columns() );
+		$this->assertEqualSetsWithIndex( $expected, affiliate_wp()->creatives->get_columns() );
 	}
 
 	/**

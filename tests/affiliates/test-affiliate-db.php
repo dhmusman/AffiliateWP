@@ -204,9 +204,6 @@ class Tests extends UnitTestCase {
 
 		// Assert that the result we're looking for was found.
 		$this->assertNotEmpty( wp_list_filter( $results, array( 'user_id' => $user_id ) ) );
-
-		// Clean up.
-		affwp_delete_affiliate( $affiliate_id );
 	}
 
 	/**
@@ -256,11 +253,6 @@ class Tests extends UnitTestCase {
 
 		// Assert that the third user wasn't found.
 		$this->assertEmpty( wp_list_filter( $results, array( 'user_id' => $user3 ) ) );
-
-		// Clean up.
-		foreach ( $affiliates as $affiliate ) {
-			affwp_delete_affiliate( $affiliate );
-		}
 	}
 
 	/**
@@ -837,9 +829,6 @@ class Tests extends UnitTestCase {
 		) );
 
 		$this->assertEqualSets( self::$affiliates, $results );
-
-		// Clean up.
-		$this->factory->affiliate->delete_many( $affiliates );
 	}
 
 	/**
@@ -858,9 +847,6 @@ class Tests extends UnitTestCase {
 
 		// Should catch all but the one just created +1 day.
 		$this->assertEqualSets( self::$affiliates, $results );
-
-		// Clean up.
-		$this->factory->affiliate->delete( $affiliate );
 	}
 
 	/**
@@ -957,9 +943,6 @@ class Tests extends UnitTestCase {
 		) );
 
 		$this->assertSame( $affiliate, $results[0] );
-
-		// Clean up.
-		affwp_delete_affiliate( $affiliate );
 	}
 
 	/**
@@ -978,9 +961,6 @@ class Tests extends UnitTestCase {
 		$actual   = gmdate( 'Y-m-d H:i', strtotime( $affiliate->date_registered ) );
 
 		$this->assertSame( $expected, $actual );
-
-		// Clean up.
-		affwp_delete_affiliate( $affiliate_id );
 	}
 
 	/**
@@ -999,9 +979,6 @@ class Tests extends UnitTestCase {
 		$actual        = gmdate( 'Y-m-d H:i', strtotime( $affiliate->date_registered ) );
 
 		$this->assertSame( $expected_date, $actual );
-
-		// Clean up.
-		affwp_delete_affiliate( $affiliate_id );
 	}
 
 	/**
@@ -1015,9 +992,6 @@ class Tests extends UnitTestCase {
 		$user_data = get_user_by( 'id', $user_id );
 
 		$this->assertSame( '', $user_data->user_url );
-
-		// Clean up.
-		affwp_delete_affiliate( $affiliate_id );
 	}
 
 	/**
@@ -1034,9 +1008,6 @@ class Tests extends UnitTestCase {
 		$user_data = get_user_by( 'id', $user_id );
 
 		$this->assertSame( $website_url, $user_data->user_url );
-
-		// Clean up.
-		affwp_delete_affiliate( $affiliate_id );
 	}
 
 	/**

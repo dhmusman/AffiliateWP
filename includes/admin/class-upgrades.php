@@ -735,6 +735,18 @@ class Affiliate_WP_Upgrades {
 
 		}
 
+		$plugin = AFFILIATEWP_PLUGIN_DIR_NAME . '/affiliate-wp.php';
+
+		// Only return sites AffWP is active on.
+		foreach ( $sites as $index => $site_id ) {
+			switch_to_blog( $site_id );
+
+			if ( ! in_array( $plugin, get_option( 'active_plugins', array() ) ) ) {
+				unset( $sites[ $index ] );
+			}
+
+			restore_current_blog();
+		}
 		return $sites;
 	}
 

@@ -318,6 +318,11 @@ final class Affiliate_WP {
 			define( 'AFFILIATEWP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 		}
 
+		// Plugin directory name only.
+		if ( ! defined( 'AFFILIATEWP_PLUGIN_DIR_NAME' ) ) {
+			define( 'AFFILIATEWP_PLUGIN_DIR_NAME', basename( __DIR__ ) );
+		}
+
 		// Plugin Root File
 		if ( ! defined( 'AFFILIATEWP_PLUGIN_FILE' ) ) {
 			define( 'AFFILIATEWP_PLUGIN_FILE', __FILE__ );

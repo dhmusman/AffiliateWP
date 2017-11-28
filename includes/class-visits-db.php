@@ -39,7 +39,7 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			$this->table_name  = $wpdb->prefix . 'affiliate_wp_visits';
 		}
 		$this->primary_key = 'visit_id';
-		$this->version     = '1.1';
+		$this->version     = '1.2';
 
 		// REST endpoints.
 		if ( version_compare( $wp_version, '4.4', '>=' ) ) {

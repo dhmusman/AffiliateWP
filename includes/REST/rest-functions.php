@@ -127,12 +127,10 @@ function affwp_register_rest_field( $object_type, $field_name, $args = array() )
  *
  * @since 2.2
  *
- * @param mixed            $value   Parameter value to validate
- * @param \WP_REST_Request $request Request object.
- * @param string           $param   The parameter name, used in error messages.
+ * @param string $value Potential REST ID to validate.
  * @return bool True of the rest_id value is syntactically valid, otherwise false.
  */
-function affwp_validate_rest_id( $value, $request, $param ) {
+function affwp_validate_rest_id( $value ) {
 	$valid = false;
 
 	if ( false !== strpos( $valid, ':' ) ) {
@@ -141,4 +139,3 @@ function affwp_validate_rest_id( $value, $request, $param ) {
 
 	return $valid;
 }
-

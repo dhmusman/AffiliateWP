@@ -700,8 +700,34 @@ class Affiliate_WP_Upgrades {
 			affiliate_wp()->referrals->create_table();
 			@affiliate_wp()->utils->log( sprintf( 'Upgrade: The rest_id column has been added to the Referrals table for site #%1$s.', $site_id ) );
 
+			affiliate_wp()->REST->consumers->create_table();
+			@affiliate_wp()->utils->log( sprintf( 'Upgrade: The status and date columns have been added to the REST Consumers table for site #%1$s.', $site_id ) );
+
 			affiliate_wp()->visits->create_table();
 			@affiliate_wp()->utils->log( sprintf( 'Upgrade: The rest_id column has been added to the Visits table for site #%1$s.', $site_id ) );
+
+			// Populate the date and status columns for existing consumers.
+			$consumers = affiliate_wp()->REST->consumers->get_consumers( array(
+				'number' => -1
+			) );
+
+			if ( ! empty( $consumers ) ) {
+				$date = get_post_field( 'post_date', affwp_get_affiliate_area_page_id() );
+
+				if ( empty( $date ) ) {
+					$date = gmdate( 'Y-m-d H:i:s' );
+				} else {
+					$date = gmdate( 'Y-m-d H:i:s', strtotime( $date ) );
+				}
+
+				foreach ( $consumers as $consumer ) {
+
+					affiliate_wp()->REST->consumers->update( $consumer->ID, array(
+						'date'   => $date,
+						'status' => 'active'
+					) );
+				}
+			}
 
 			restore_current_blog();
 		}

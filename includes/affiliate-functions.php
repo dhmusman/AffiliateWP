@@ -1256,9 +1256,9 @@ function affwp_update_affiliate( $data = array() ) {
 		$args['date_registered'] = gmdate( 'Y-m-d H:i:s', $timestamp );
 	}
 
-	if ( ! empty( $data['rest_id'] ) && is_string( $data['rest_id'] ) && $data['rest_id'] !== $affiliate->rest_id ) {
-		if ( false !== strpos( $data['rest_id'], ':' ) ) {
-			$args['rest_id'] = sanitize_text_field( $data['rest_id'] );
+	if ( ! empty( $data['rest_id'] ) ) {
+		if ( affwp_validate_rest_id( $args['rest_id'] ) ) {
+			$args['rest_id'] = sanitize_text_field( $args['rest_id'] );
 		} else {
 			$args['rest_id'] = $affiliate->rest_id;
 		}

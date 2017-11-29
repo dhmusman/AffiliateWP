@@ -1257,10 +1257,8 @@ function affwp_update_affiliate( $data = array() ) {
 	}
 
 	if ( ! empty( $data['rest_id'] ) ) {
-		if ( affwp_validate_rest_id( $args['rest_id'] ) ) {
-			$args['rest_id'] = sanitize_text_field( $args['rest_id'] );
-		} else {
-			$args['rest_id'] = $affiliate->rest_id;
+		if ( affwp_validate_rest_id( $data['rest_id'] ) ) {
+			$args['rest_id'] = sanitize_text_field( $data['rest_id'] );
 		}
 	}
 

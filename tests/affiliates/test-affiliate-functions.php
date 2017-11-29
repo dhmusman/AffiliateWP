@@ -1789,7 +1789,7 @@ class Tests extends UnitTestCase {
 
 		affwp_update_affiliate( array(
 			'affiliate_id' => $affiliate->ID,
-			'rest_id'      => '12:34'
+			'rest_id'      => '12:34',
 		) );
 
 		$updated_affiliate = affwp_get_affiliate( $affiliate->ID );

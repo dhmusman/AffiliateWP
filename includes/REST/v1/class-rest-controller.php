@@ -120,7 +120,7 @@ abstract class Controller {
 			'rest_id' => array(
 				'description'       => __( 'The rest ID (site:object ID combination)', 'affiliate-wp' ),
 				'sanitize_callback' => 'sanitize_text_field',
-				'validate_callback' => array( $this, 'validate_rest_id' ),
+				'validate_callback' => 'affwp_validate_rest_id',
 			),
 
 		);
@@ -393,26 +393,6 @@ abstract class Controller {
 		}
 
 		return $schema;
-	}
-
-	/**
-	 * Validates a rest_id field.
-	 *
-	 * @since 2.2
-	 *
-	 * @param mixed            $value   Parameter value to validate
-	 * @param \WP_REST_Request $request Request object.
-	 * @param string           $param   The parameter name, used in error messages.
-	 * @return bool True of the rest_id value is syntactically valid, otherwise false.
-	 */
-	public function validate_rest_id( $value, $request, $param ) {
-		$valid = false;
-
-		if ( false !== strpos( $valid, ':' ) ) {
-			$valid = true;
-		}
-
-		return $valid;
 	}
 
 }

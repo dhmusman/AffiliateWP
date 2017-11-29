@@ -152,8 +152,8 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		$rest_id_error = false;
 
 		if ( ! empty( $args['rest_id'] ) ) {
-			if ( false === strpos( $args['rest_id'], ':' ) || ! is_string( $args['rest_id'] ) ) {
-				$rest_id_error = $args['rest_id'];
+			if ( ! affwp_validate_rest_id( $args['rest_id'] ) ) {
+				$rest_id_error = true;
 
 				unset( $args['rest_id'] );
 			} else {

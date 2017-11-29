@@ -411,8 +411,8 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 		$rest_id_error = false;
 
 		if ( ! empty( $data['rest_id'] ) ) {
-			if ( false === strpos( $data['rest_id'], ':' ) || ! is_string( $data['rest_id'] ) ) {
-				$rest_id_error = $data['rest_id'];
+			if ( ! affwp_validate_rest_id( $data['rest_id'] ) ) {
+				$rest_id_error = true;
 
 				unset( $data['rest_id'] );
 			} else {

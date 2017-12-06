@@ -237,7 +237,7 @@ abstract class Affiliate_WP_DB {
 		 *
 		 * @since 2.1.9
 		 *
-		 * @param array $data Object data to be inserted for the new object.
+		 * @param array $data Data to be inserted for the new object.
 		 */
 		$data = apply_filters( "affwp_pre_insert_{$type}_data", $data );
 

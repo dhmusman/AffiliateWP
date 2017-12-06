@@ -235,7 +235,7 @@ abstract class Affiliate_WP_DB {
 		 *
 		 *     add_filter( 'affwp_pre_insert_payout_data', '__return_empty_array' );
 		 *
-		 * @since 2.2
+		 * @since 2.1.9
 		 *
 		 * @param array $data Object data to be inserted for the new object.
 		 */

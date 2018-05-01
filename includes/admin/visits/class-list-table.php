@@ -328,6 +328,8 @@ class AffWP_Visits_Table extends List_Table {
 
 		}
 
+		$url = '';
+
 		if ( strpos( $search, 'referral:' ) !== false ) {
 			$referral_id = absint( trim( str_replace( 'referral:', '', $search ) ) );
 			$search      = '';

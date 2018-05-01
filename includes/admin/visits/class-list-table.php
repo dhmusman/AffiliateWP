@@ -339,7 +339,11 @@ class AffWP_Visits_Table extends List_Table {
 			$search   = '';
 		} elseif ( strpos( $search, 'context:' ) !== false ) {
 			$context = trim( str_replace( 'context:', '', $search ) );
-			$search   = '';
+			$search  = '';
+		} elseif ( strpos( $search, 'url:' ) !== false ) {
+			$url    = trim( str_replace( 'url:', '', $search ) );
+			$url    = rtrim( $url, '/' ) . '/';
+			$search = '';
 		}
 
 		$per_page = $this->get_items_per_page( 'affwp_edit_visits_per_page', $this->per_page );
@@ -355,6 +359,7 @@ class AffWP_Visits_Table extends List_Table {
 			'orderby'         => $orderby,
 			'order'           => $order,
 			'search'          => $search,
+			'url'             => $url,
 			'referral_status' => $status
 		) );
 

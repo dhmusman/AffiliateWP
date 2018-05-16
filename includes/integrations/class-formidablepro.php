@@ -15,8 +15,12 @@ class Affiliate_WP_Formidable_Pro extends Affiliate_WP_Base {
 		add_filter( 'frm_form_options_before_update', array( $this, 'frm_form_options_before_update' ), 15, 2 );
 
 		add_filter( 'frm_after_create_entry', array( $this, 'add_pending_referral' ), 9, 2 );
-		add_action( 'frm_after_payment_completed', array( $this, 'mark_referral_complete' ), 10, 2 );
-		add_action( 'frm_after_payment_refunded', array( $this, 'revoke_referral_on_refund' ), 10, 2 );
+
+		add_action( 'frm_payment_status_complete', array( $this, 'mark_referral_complete' ), 10 );
+		add_action( 'frm_payment_paypal_ipn', array( $this, 'mark_referral_complete_paypal' ), 10 );
+
+		add_action( 'frm_payment_status_failed', array( $this, 'revoke_referral_on_refund' ), 10, 2 );
+		add_action( 'frm_payment_status_refunded', array( $this, 'revoke_referral_on_refund' ), 10, 2 );
 
 		add_filter( 'affwp_referral_reference_column', array( $this, 'reference_link' ), 10, 2 );
 
@@ -181,7 +185,7 @@ class Affiliate_WP_Formidable_Pro extends Affiliate_WP_Base {
 			$this->insert_pending_referral( $referral_total, $entry_id, $description );
 
 			if ( empty( $referral_total ) ) {
-				$this->mark_referral_complete( $entry_id, $form_id );
+				$this->mark_referral_complete( array( 'entry_id' => $entry_id ) );
 			}
 		}
 
@@ -194,10 +198,31 @@ class Affiliate_WP_Formidable_Pro extends Affiliate_WP_Base {
 	 *
 	 * @author Naomi C. Bush <hello@naomicbush.com>
 	 *
-	 * @param int $entry_id
-	 * @param int $form_id
+	 * @param array $atts
 	 */
-	public function mark_referral_complete( $entry_id, $form_id ) {
+	public function mark_referral_complete( $atts ) {
+
+		$this->complete_referral( $atts['entry_id'] );
+
+		$referral = affiliate_wp()->referrals->get_by( 'reference', $atts['entry_id'], $this->context );
+		$amount   = affwp_currency_filter( affwp_format_amount( $referral->amount ) );
+		$name     = affiliate_wp()->affiliates->get_affiliate_name( $referral->affiliate_id );
+		$note     = sprintf( __( 'AffiliateWP: Referral #%d for %s recorded for %s', 'affiliate-wp' ), $referral->referral_id, $amount, $name );
+
+		FrmEntryMeta::add_entry_meta( $atts['entry_id'], 0, '', array( 'comment' => $note, 'user_id' => 0 ) );
+
+	}
+
+	/**
+	 * Update referral status and add note to Formidable Pro entry for Formidable PayPal Standard add-on
+	 *
+	 * @since 2.2.2
+	 *
+	 * @param array $atts
+	 */
+	public function mark_referral_complete_paypal( $atts ) {
+
+		$entry_id = $atts['entry']->id;
 
 		$this->complete_referral( $entry_id );
 
@@ -217,19 +242,18 @@ class Affiliate_WP_Formidable_Pro extends Affiliate_WP_Base {
 	 *
 	 * @author Naomi C. Bush <hello@naomicbush.com>
 	 *
-	 * @param int $entry_id
-	 * @param int $form_id
+	 * @param array $atts
 	 */
-	public function revoke_referral_on_refund( $entry_id, $form_id ) {
+	public function revoke_referral_on_refund( $atts ) {
 
-		$this->reject_referral( $entry_id );
+		$this->reject_referral( $atts['entry_id'] );
 
-		$referral = affiliate_wp()->referrals->get_by( 'reference', $entry_id, $this->context );
+		$referral = affiliate_wp()->referrals->get_by( 'reference', $atts['entry_id'], $this->context );
 		$amount   = affwp_currency_filter( affwp_format_amount( $referral->amount ) );
 		$name     = affiliate_wp()->affiliates->get_affiliate_name( $referral->affiliate_id );
 		$note     = sprintf( __( 'AffiliateWP: Referral #%d for %s for %s rejected', 'affiliate-wp' ), $referral->referral_id, $amount, $name );
 
-		FrmEntryMeta::add_entry_meta( $entry_id, 0, '', array( 'comment' => $note, 'user_id' => 0 ) );
+		FrmEntryMeta::add_entry_meta( $atts['entry_id'], 0, '', array( 'comment' => $note, 'user_id' => 0 ) );
 
 	}
 

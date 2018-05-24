@@ -222,16 +222,24 @@ class Affiliate_WP_Formidable_Pro extends Affiliate_WP_Base {
 	 */
 	public function mark_referral_complete_paypal( $atts ) {
 
-		$entry_id = $atts['entry']->id;
+		if ( isset( $atts['pay_vars']['completed'] ) && $atts['pay_vars']['completed'] ) {
 
-		$this->complete_referral( $entry_id );
+			if ( isset( $atts['entry']->id ) ) {
 
-		$referral = affiliate_wp()->referrals->get_by( 'reference', $entry_id, $this->context );
-		$amount   = affwp_currency_filter( affwp_format_amount( $referral->amount ) );
-		$name     = affiliate_wp()->affiliates->get_affiliate_name( $referral->affiliate_id );
-		$note     = sprintf( __( 'AffiliateWP: Referral #%d for %s recorded for %s', 'affiliate-wp' ), $referral->referral_id, $amount, $name );
+				$entry_id = $atts['entry']->id;
 
-		FrmEntryMeta::add_entry_meta( $entry_id, 0, '', array( 'comment' => $note, 'user_id' => 0 ) );
+				$this->complete_referral( $entry_id );
+
+				$referral = affiliate_wp()->referrals->get_by( 'reference', $entry_id, $this->context );
+				$amount   = affwp_currency_filter( affwp_format_amount( $referral->amount ) );
+				$name     = affiliate_wp()->affiliates->get_affiliate_name( $referral->affiliate_id );
+				$note     = sprintf( __( 'AffiliateWP: Referral #%d for %s recorded for %s', 'affiliate-wp' ), $referral->referral_id, $amount, $name );
+
+				FrmEntryMeta::add_entry_meta( $entry_id, 0, '', array( 'comment' => $note, 'user_id' => 0 ) );
+
+			}
+
+		}
 
 	}
 

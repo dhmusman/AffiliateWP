@@ -369,7 +369,7 @@ abstract class Base_Object {
 	/**
 	 * Determines if the current object has a rest ID.
 	 *
-	 * @since 2.2
+	 * @since 2.2.2
 	 *
 	 * @return bool True if the rest ID is set, otherwise false.
 	 */

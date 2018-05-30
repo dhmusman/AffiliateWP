@@ -52,7 +52,7 @@ final class Visit extends Base_Object {
 	/**
 	 * REST ID (site:visit ID combination).
 	 *
-	 * @since 2.2
+	 * @since 2.2.2
 	 * @var   string
 	 */
 	public $rest_id = '';

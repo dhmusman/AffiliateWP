@@ -22,7 +22,7 @@ function affwp_get_payout( $payout = 0 ) {
 	 * Passing a non-null value in the hook callback will effectively preempt retrieving
 	 * the payout from the database, returning the passed value instead.
 	 *
-	 * @since 2.2
+	 * @since 2.2.2
 	 *
 	 * @param null                        $payout_before Value to short circuit retrieval of the payout.
 	 * @param int|\AffWP\Affiliate\Payout $payout        Payout ID or object passed to affwp_get_payout().

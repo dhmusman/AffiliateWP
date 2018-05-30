@@ -125,7 +125,7 @@ function affwp_register_rest_field( $object_type, $field_name, $args = array() )
 /**
  * Validates a rest_id value.
  *
- * @since 2.2
+ * @since 2.2.2
  *
  * @param string $rest_id Potential REST ID to validate.
  * @return bool True of the rest_id value is syntactically valid, otherwise false.

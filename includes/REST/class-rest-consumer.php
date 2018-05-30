@@ -42,7 +42,7 @@ final class Consumer extends \AffWP\Base_Object {
 	/**
 	 * REST ID (ironically unused for Consumers).
 	 *
-	 * @since 2.2
+	 * @since 2.2.2
 	 * @var   null|string
 	 */
 	public $rest_id;
@@ -77,7 +77,7 @@ final class Consumer extends \AffWP\Base_Object {
 	/**
 	 * Consumer status.
 	 *
-	 * @since 2.2
+	 * @since 2.2.2
 	 * @var   string
 	 */
 	public $status;
@@ -85,7 +85,7 @@ final class Consumer extends \AffWP\Base_Object {
 	/**
 	 * Date the consumer was created.
 	 *
-	 * @since 2.2
+	 * @since 2.2.2
 	 * @var   string
 	 */
 	public $date;

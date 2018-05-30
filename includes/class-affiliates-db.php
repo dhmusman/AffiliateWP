@@ -439,7 +439,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	 * Add a new affiliate
 	 *
 	 * @since 1.0
-	 * @since 2.2 Added support for a `$rest_id` argument.
+	 * @since 2.2.2 Added support for a `$rest_id` argument.
 	 * @access public
 	 *
 	 * @param array $args {

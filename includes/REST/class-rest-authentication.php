@@ -46,7 +46,7 @@ final class Authentication {
 				/**
 				 * Fires immediately after a REST consumer has been successfully authenticated.
 				 *
-				 * @since 2.2
+				 * @since 2.2.2
 				 *
 				 * @param \AffWP\REST\Consumer $consumer REST Consumer object.
 				 */

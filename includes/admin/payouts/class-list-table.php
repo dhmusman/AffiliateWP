@@ -74,7 +74,7 @@ class AffWP_Payouts_Table extends List_Table {
 	public function __construct( $args = array() ) {
 		$args = wp_parse_args( $args, array(
 			'singular' => 'payout',
-			'plurla'   => 'payouts',
+			'plural'   => 'payouts',
 		) );
 
 		parent::__construct( $args );
@@ -175,7 +175,7 @@ class AffWP_Payouts_Table extends List_Table {
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
-		return array(
+		$columns = array(
 			'payout_id'     => array( 'payout_id', false ),
 			'amount'        => array( 'amount', false ),
 			'affiliate'     => array( 'affiliate', false ),
@@ -183,6 +183,14 @@ class AffWP_Payouts_Table extends List_Table {
 			'status'        => array( 'status', false ),
 			'date'          => array( 'date', false ),
 		);
+
+		/**
+		 * Filters the payouts list table sortable columns.
+		 *
+		 * @param array                $columns          The sortable columns for this list table.
+		 * @param \AffWP_Payouts_Table $this             List table instance.
+		 */
+		return apply_filters( 'affwp_payout_table_sortable_columns', $columns, $this );
 	}
 
 	/**
@@ -438,6 +446,19 @@ class AffWP_Payouts_Table extends List_Table {
 			);
 		}
 
+		// Delete.
+		$row_actions['delete'] = $this->get_row_action_link(
+			__( 'Delete', 'affiliate-wp' ),
+			array_merge( $base_query_args, array(
+				'affwp_action' => 'process_delete_payout'
+			) ),
+			array(
+				'nonce' => 'affwp_delete_payout_nonce',
+				'class' => 'delete'
+			)
+		);
+		$row_actions['delete'] = '<span class="trash">' . $row_actions['delete'] . '</span>';
+
 		/**
 		 * Filters the row actions for the payouts list table row.
 		 *
@@ -524,6 +545,7 @@ class AffWP_Payouts_Table extends List_Table {
 	public function get_bulk_actions() {
 		$actions = array(
 			'retry_payment' => __( 'Retry Payment', 'affiliate-wp' ),
+			'delete'        => __( 'Delete', 'affiliate-wp' ),
 		);
 
 		/**
@@ -543,7 +565,45 @@ class AffWP_Payouts_Table extends List_Table {
 	 * @since  1.9
 	 */
 	public function process_bulk_action() {
-		// @todo Hook up bulk actions.
+
+		if( empty( $_REQUEST['_wpnonce'] ) ) {
+			return;
+		}
+
+		if( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-payouts' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'payout-nonce' ) ) {
+			return;
+		}
+
+		$ids = isset( $_GET['payout_id'] ) ? $_GET['payout_id'] : array();
+
+		if ( ! is_array( $ids ) ) {
+			$ids = array( $ids );
+		}
+
+		$ids    = array_map( 'absint', $ids );
+		$action = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : false;
+
+		if( empty( $ids ) || empty( $action ) ) {
+			return;
+		}
+
+		foreach ( $ids as $id ) {
+
+			if ( 'delete' === $this->current_action() ) {
+				affwp_delete_payout( $id );
+			}
+
+			/**
+			 * Fires after a payout bulk action is performed.
+			 *
+			 * The dynamic portion of the hook name, `$this->current_action()` refers
+			 * to the current bulk action being performed.
+			 *
+			 * @param int $id The ID of the object.
+			 */
+			do_action( 'affwp_payouts_do_bulk_action_' . $this->current_action(), $id );
+		}
+
 	}
 
 	/**

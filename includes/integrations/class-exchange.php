@@ -23,6 +23,7 @@ class Affiliate_WP_Exchange extends Affiliate_WP_Base {
 		add_action( 'it_exchange_update_transaction_status', array( $this, 'mark_referral_complete' ), 10, 4 );
 		add_action( 'it_exchange_update_transaction_status', array( $this, 'revoke_referral_on_refund' ), 10, 4 );
 		add_action( 'it_exchange_update_transaction_status', array( $this, 'revoke_referral_on_void' ), 10, 4 );
+		add_action( 'it_exchange_update_transaction_status', array( $this, 'revoke_referral_on_cancelled' ), 10, 4 );
 		add_action( 'wp_trash_post', array( $this, 'revoke_referral_on_delete' ), 10 );
 
 		// coupon code tracking actions and filters
@@ -74,20 +75,24 @@ class Affiliate_WP_Exchange extends Affiliate_WP_Base {
 
 				foreach ( $this->transaction->coupons['cart'] as $coupon ) {
 
-					$affiliate_id = get_post_meta( $coupon['id'], 'affwp_coupon_affiliate', true );
+					$coupon_affiliate_id = get_post_meta( $coupon['id'], 'affwp_coupon_affiliate', true );
 
-					if ( ! $affiliate_id ) {
+					if ( ! $coupon_affiliate_id ) {
 
 						$this->log( 'Referral not created because of missing affiliate ID.' );
 
 						continue;
 					}
 
-					if ( ! affiliate_wp()->tracking->is_valid_affiliate( $affiliate_id ) ) {
-						
+					if ( ! affiliate_wp()->tracking->is_valid_affiliate( $coupon_affiliate_id ) ) {
+
 						$this->log( 'Referral not created because affiliate is invalid.' );
 
 						continue;
+					}
+
+					if ( false !== $coupon_affiliate_id ) {
+						$affiliate_id = $coupon_affiliate_id;
 					}
 
 					break;
@@ -99,9 +104,9 @@ class Affiliate_WP_Exchange extends Affiliate_WP_Base {
 		if ( $affiliate_id ) {
 
 			$guest_checkout_email = it_exchange_get_transaction_customer_email( $transaction_id );
-			$email                = isset( $guest_checkout_email ) ? $guest_checkout_email : $this->transaction->shipping_address['email'];
+			$this->email                = isset( $guest_checkout_email ) ? $guest_checkout_email : $this->transaction->shipping_address['email'];
 
-			if ( $this->is_affiliate_email( $email, $affiliate_id ) ) {
+			if ( $this->is_affiliate_email( $this->email, $affiliate_id ) ) {
 
 				$this->log( 'Referral not created because affiliate\'s own account was used.' );
 
@@ -200,7 +205,7 @@ class Affiliate_WP_Exchange extends Affiliate_WP_Base {
 			return;
 		}
 
-		if( 'refunded' == $transaction->get_status() && 'paid' == $old_status ) {
+		if( 'refunded' == strtolower( $transaction->get_status() ) && ( in_array( strtolower( $old_status ), array( 'completed', 'paid', 'succeeded' ), true ) ) ) {
 
 			$this->reject_referral( $transaction->ID );
 
@@ -214,7 +219,21 @@ class Affiliate_WP_Exchange extends Affiliate_WP_Base {
 			return;
 		}
 
-		if( 'voided' == $transaction->get_status() ) {
+		if( 'voided' == strtolower( $transaction->get_status() ) ) {
+
+			$this->reject_referral( $transaction->ID );
+
+		}
+
+	}
+
+	public function revoke_referral_on_cancelled( $transaction, $old_status, $old_status_cleared, $new_status ) {
+
+		if( ! affiliate_wp()->settings->get( 'revoke_on_refund' ) ) {
+			return;
+		}
+
+		if( 'cancelled' == strtolower( $transaction->get_status() ) ) {
 
 			$this->reject_referral( $transaction->ID );
 

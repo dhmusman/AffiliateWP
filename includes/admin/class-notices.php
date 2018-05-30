@@ -225,6 +225,20 @@ class Affiliate_WP_Admin_Notices {
 
 					break;
 
+				case 'referral_add_failed' :
+
+					$message = __( 'Referral wasn&#8217;t created, please try again.', 'affiliate-wp' );
+					$class   = 'error';
+
+					break;
+
+				case 'referral_add_invalid_affiliate' :
+
+					$message = __( 'Referral not created because affiliate is invalid', 'affiliate-wp' );
+					$class   = 'error';
+
+					break;
+
 				case 'referral_updated' :
 
 					$message = __( 'Referral updated successfully', 'affiliate-wp' );
@@ -253,6 +267,18 @@ class Affiliate_WP_Admin_Notices {
 				case 'payout_created' :
 
 					$message = sprintf( __( 'A payout has been created.', 'affiliate-wp' ) );
+
+					break;
+
+				case 'payout_deleted' :
+
+					$message = sprintf( __( 'Payout deleted successfully.', 'affiliate-wp' ) );
+
+					break;
+
+				case 'payout_delete_failed' :
+
+					$message = sprintf( __( 'Payout deletion failed, please try again.', 'affiliate-wp' ) );
 
 					break;
 
@@ -424,10 +450,25 @@ class Affiliate_WP_Admin_Notices {
 			affwp_enqueue_admin_js();
 			?>
 			<div class="notice notice-info is-dismissible">
-				<p><?php _e( 'Your database needs to be upgraded following the latest AffiliateWP update.', 'affiliate-wp-' ); ?></p>
+				<p><?php _e( 'Your database needs to be upgraded following the latest AffiliateWP update.', 'affiliate-wp' ); ?></p>
 				<form method="post" class="affwp-batch-form" data-batch_id="recount-affiliate-stats-upgrade" data-nonce="<?php echo esc_attr( wp_create_nonce( 'recount-affiliate-stats-upgrade_step_nonce' ) ); ?>">
 					<p>
 						<?php submit_button( __( 'Upgrade Database', 'affiliate-wp' ), 'secondary', 'v20-recount-unpaid-earnings', false ); ?>
+					</p>
+				</form>
+			</div>
+		<?php endif;
+
+		if ( false === affwp_has_upgrade_completed( 'upgrade_v22_create_customer_records' ) ) :
+
+			// Enqueue admin JS for the batch processor.
+			affwp_enqueue_admin_js();
+			?>
+			<div class="notice notice-info is-dismissible">
+				<p><?php _e( 'Your database needs to be upgraded following the latest AffiliateWP update. Depending on the size of your database, this upgrade could take some time.', 'affiliate-wp' ); ?></p>
+				<form method="post" class="affwp-batch-form" data-batch_id="create-customers-upgrade" data-nonce="<?php echo esc_attr( wp_create_nonce( 'create-customers-upgrade_step_nonce' ) ); ?>">
+					<p>
+						<?php submit_button( __( 'Upgrade Database', 'affiliate-wp' ), 'secondary', 'v22-create-customers', false ); ?>
 					</p>
 				</form>
 			</div>

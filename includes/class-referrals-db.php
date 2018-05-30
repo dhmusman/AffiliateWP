@@ -30,6 +30,15 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 	public $query_object_type = 'AffWP\Referral';
 
 	/**
+	 * Referral types registry.
+	 *
+	 * @since 2.2
+	 * @access public
+	 * @var object
+	 */
+	public $types_registry;
+
+	/**
 	 * Get things started
 	 *
 	 * @access  public
@@ -51,6 +60,9 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		if ( version_compare( $wp_version, '4.4', '>=' ) ) {
 			$this->REST = new \AffWP\Referral\REST\v1\Endpoints;
 		}
+
+		$this->types_registry = new AffWP\Utils\Referral_Types\Registry;
+		$this->types_registry->init();
 	}
 
 	/**
@@ -80,6 +92,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			'affiliate_id'=> '%d',
 			'visit_id'    => '%d',
 			'rest_id'     => '%s',
+			'customer_id' => '%d',
 			'description' => '%s',
 			'status'      => '%s',
 			'amount'      => '%s',
@@ -90,6 +103,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			'reference'   => '%s',
 			'products'    => '%s',
 			'payout_id'   => '%d',
+			'type'        => '%s',
 			'date'        => '%s',
 		);
 	}
@@ -103,8 +117,10 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 	public function get_column_defaults() {
 		return array(
 			'affiliate_id' => 0,
+			'customer_id'  => 0,
 			'date'         => gmdate( 'Y-m-d H:i:s' ),
-			'currency'     => affwp_get_currency()
+			'currency'     => affwp_get_currency(),
+			'type'         => 'sale',
 		);
 	}
 
@@ -126,7 +142,8 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 
 		$defaults = array(
 			'status' => 'pending',
-			'amount' => 0
+			'amount' => 0,
+			'type'   => 'sale'
 		);
 
 		$args = wp_parse_args( $data, $defaults );
@@ -143,6 +160,10 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 
 		if( ! empty( $args['products'] ) ) {
 			$args['products'] = maybe_serialize( $args['products'] );
+		}
+
+		if( empty( $args['description'] ) ) {
+			$args['description'] = ''; // Force description to empty string. NULL values won't work. See https://github.com/AffiliateWP/AffiliateWP/issues/2672
 		}
 
 		if ( ! empty( $args['custom'] ) ) {
@@ -169,7 +190,13 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			$args['date'] = gmdate( 'Y-m-d H:i:s', $time - affiliate_wp()->utils->wp_offset );
 		}
 
-		$add  = $this->insert( $args, 'referral' );
+		if( ! empty( $args['type'] ) && ! $this->types_registry->get_type( $args['type'] ) ) {
+			$args['type'] = 'sale';
+		}
+
+		$args['customer_id'] = $this->setup_customer( $args );
+
+		$add = $this->insert( $args, 'referral' );
 
 		if ( $add ) {
 
@@ -203,6 +230,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 	 * @since   1.5
 	 *
 	 * @param int|AffWP\Referral $referral Referral ID or object.
+	 * @return bool True if the referral was successfully updated, otherwise false.
 	*/
 	public function update_referral( $referral = 0, $data = array() ) {
 
@@ -229,6 +257,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 
 		$args['affiliate_id']  = ! empty( $data['affiliate_id' ] ) ? absint( $data['affiliate_id'] )             : $referral->affiliate_id;
 		$args['visit_id']      = ! empty( $data['visit_id' ] )     ? absint( $data['visit_id'] )                 : $referral->visit_id;
+		$args['customer_id']   = ! empty( $data['customer_id' ] )  ? absint( $data['customer_id'] )              : $referral->customer_id;
 		$args['description']   = ! empty( $data['description' ] )  ? sanitize_text_field( $data['description'] ) : '';
 		$args['amount']        = ! empty( $data['amount'] )        ? affwp_sanitize_amount( $data['amount'] )    : $referral->amount;
 		$args['currency']      = ! empty( $data['currency'] )      ? sanitize_text_field( $data['currency'] )    : '';
@@ -236,6 +265,11 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		$args['context']       = ! empty( $data['context'] )       ? sanitize_text_field( $data['context'] )     : '';
 		$args['campaign']      = ! empty( $data['campaign'] )      ? sanitize_text_field( $data['campaign'] )    : '';
 		$args['reference']     = ! empty( $data['reference'] )     ? sanitize_text_field( $data['reference'] )   : '';
+		$args['type']          = ! empty( $data['type'] )          ? sanitize_text_field( $data['type'] )        : '';
+
+		if( ! empty( $args['type'] ) && ! $this->types_registry->get_type( $args['type'] ) ) {
+			$args['type'] = 'sale';
+		}
 
 		/*
 		 * Deliberately defer updating the status – it will be updated instead
@@ -247,9 +281,20 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		 */
 		$new_status = ! empty( $data['status'] ) ? sanitize_key( $data['status'] ) : $referral->status;
 
-		$update = $this->update( $referral->ID, $args, '', 'referral' );
+		$updated = $this->update( $referral->ID, $args, '', 'referral' );
 
-		if( $update ) {
+		/**
+		 * Fires immediately after a referral update has been attempted.
+		 *
+		 * @since 2.1.9
+		 *
+		 * @param \AffWP\Referral $updated_referral Updated referral object.
+		 * @param \AffWP\Referral $referral         Original referral object.
+		 * @param bool            $updated          Whether the referral was successfully updated.
+		 */
+		do_action( 'affwp_updated_referral', affwp_get_referral( $referral ), $referral, $updated );
+
+		if( $updated ) {
 
 			if( ! empty( $new_status ) && $referral->status !== $new_status ) {
 
@@ -284,7 +329,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 				}
 			}
 
-			return $update;
+			return true;
 		}
 
 		return false;
@@ -328,6 +373,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 	 *     @type int          $offset         Number of referrals to offset in the query. Default 0.
 	 *     @type int|array    $referral_id    Specific referral ID or array of IDs to query for. Default 0 (all).
 	 *     @type int|array    $affiliate_id   Affiliate ID or array of IDs to query referrals for. Default 0 (all).
+	 *     @type int|array    $customer_id    Customer ID or array of IDs to query referrals for. Default 0 (all).
 	 *     @type int|array    $payout_id      Payout ID or array of IDs to query referrals for. Default 0 (all).
 	 *     @type float|array  $amount {
 	 *         Specific amount to query for or min/max range. If float, can be used with `$amount_compare`.
@@ -348,6 +394,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 	 *                                        Default empty.
 	 *     @type string       $context        Specific context to query referrals for. Default empty.
 	 *     @type string       $campaign       Specific campaign to query referrals for. Default empty.
+	 *     @type string       $type           Specific referral type to query referrals for. Default empty.
 	 *     @type string       $description    Description to search referrals for. Fuzzy matching is permitted when
 	 *                                        `$search` is true.
 	 *     @type string|array $status         Referral status or array of statuses to query referrals for.
@@ -373,12 +420,14 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			'referral_id'    => 0,
 			'payout_id'      => 0,
 			'affiliate_id'   => 0,
+			'customer_id'    => 0,
 			'amount'         => 0,
 			'amount_compare' => '=',
 			'description'    => '',
 			'reference'      => '',
 			'context'        => '',
 			'campaign'       => '',
+			'type'           => '',
 			'status'         => '',
 			'orderby'        => 'referral_id',
 			'order'          => 'DESC',
@@ -417,6 +466,19 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			}
 
 			$where .= "WHERE `affiliate_id` IN( {$affiliate_ids} ) ";
+
+		}
+
+		// Referrals for specific customers
+		if( ! empty( $args['customer_id'] ) ) {
+
+			if( is_array( $args['customer_id'] ) ) {
+				$customer_ids = implode( ',', array_map( 'intval', $args['customer_id'] ) );
+			} else {
+				$customer_ids = intval( $args['customer_id'] );
+			}
+
+			$where .= "WHERE `customer_id` IN( {$customer_ids} ) ";
 
 		}
 
@@ -533,6 +595,25 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			}
 
 		}
+
+		if( ! empty( $args['type'] ) ) {
+
+			$where .= empty( $where ) ? "WHERE " : "AND ";
+
+			if( is_array( $args['type'] ) ) {
+				$where .= "`type` IN(" . implode( ',', array_map( 'esc_sql', $args['type'] ) ) . ") ";
+			} else {
+				$type = esc_sql( $args['type'] );
+
+				if ( ! empty( $args['search'] ) ) {
+					$where .= "`type` LIKE '%%" . $type . "%%' ";
+				} else {
+					$where .= "`type` = '" . $type . "' ";
+				}
+			}
+
+		}
+
 
 		// Description.
 		if( ! empty( $args['description'] ) ) {
@@ -782,6 +863,22 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 	}
 
 	/**
+	 * Count the total number of paid referrals
+	 *
+	 * @access  public
+	 * @since   2.1.11
+	 *
+	 * @see count_by_status()
+	 *
+	 * @param string $date         Optional. Date range in which to search. Accepts 'month'. Default empty.
+	 * @param int    $affiliate_id Optional. Affiliate ID. Default 0.
+	 * @return int Number of referrals for the given status or 0 if the affiliate doesn't exist.
+	*/
+	public function paid_count( $date = '', $affiliate_id = 0 ) {
+		return $this->count_by_status( 'paid', $affiliate_id, $date );
+	}
+
+	/**
 	 * Count the total number of unpaid referrals
 	 *
 	 * @access  public
@@ -828,6 +925,70 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 	}
 
 	/**
+	 * Set up the customer_id key for the args array.
+	 *
+	 * A customer record will be created if it does not already exist.
+	 *
+	 * @since 2.2
+	 *
+	 * @param array $args {
+	 *     Optional. Arguments for setting up the customer record.
+	 *
+	 *     @type int    $customer_id ID of an existing customer record to attribute the referral to.
+	 *     @type string $email       Email address for the customer.
+	 * }
+	 * @return int The ID of the customer record for the referral.
+	 */
+	private function setup_customer( $args = array() ) {
+
+		$existing      = false;
+		$customer_id   = 0;
+
+		if( ! isset( $args['customer'] ) ) {
+			return $customer_id;
+		}
+
+		if( ! empty( $args['customer_id'] ) ) {
+
+			// Ensure the provided customer ID exists
+			$customer = affwp_get_customer( absint( $args['customer_id'] ) );
+
+			if( $customer ) {
+				$existing    = true;
+				$customer_id = $customer->customer_id;
+			}
+
+		}
+
+		if( ! $existing && is_array( $args['customer'] ) && ! empty( $args['customer']['email'] ) ) {
+
+			$customer = affiliate_wp()->customers->get_by( 'email', $args['customer']['email'] );
+
+			if( $customer ) {
+				$existing = true;
+				$customer_id = $customer->customer_id;
+			}
+
+		}
+
+		if( $existing ) {
+
+			// Update the customer record
+			$args['customer_id'] = $customer_id;
+
+			affwp_update_customer( $args );
+
+		} else {
+
+			// Create a new customer record
+			$customer_id = affiliate_wp()->customers->add( $args['customer'] );
+
+		}
+
+		return $customer_id;
+	}
+
+	/**
 	 * Create the table
 	 *
 	 * @access  public
@@ -844,6 +1005,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		affiliate_id bigint(20) NOT NULL,
 		visit_id bigint(20) NOT NULL,
 		rest_id mediumtext NOT NULL,
+		customer_id bigint(20) NOT NULL,
 		description longtext NOT NULL,
 		status tinytext NOT NULL,
 		amount mediumtext NOT NULL,
@@ -851,6 +1013,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		custom longtext NOT NULL,
 		context tinytext NOT NULL,
 		campaign varchar(30) NOT NULL,
+		type varchar(30) NOT NULL,
 		reference mediumtext NOT NULL,
 		products mediumtext NOT NULL,
 		payout_id bigint(20) NOT NULL,

@@ -166,6 +166,7 @@ abstract class Affiliate_WP_DB {
 	public function get_results( $clauses, $args, $callback = '' ) {
 		global $wpdb;
 
+
 		if ( true === $clauses['count'] ) {
 
 			$results = $wpdb->get_var(
@@ -223,6 +224,27 @@ abstract class Affiliate_WP_DB {
 
 		// Set default values
 		$data = wp_parse_args( $data, $this->get_column_defaults() );
+
+		/**
+		 * Filters the data array to be used for inserting a new object of a given type.
+		 *
+		 * The dynamic portion of the hook, `$type`, refers to the data type, such as
+		 * 'affiliate', 'creative', 'payout', etc.
+		 *
+		 * Passing a falsey value back via a filter callback will effectively allow
+		 * insertion of the new object to be short-circuited. Example:
+		 *
+		 *     add_filter( 'affwp_pre_insert_payout_data', '__return_empty_array' );
+		 *
+		 * @since 2.1.9
+		 *
+		 * @param array $data Data to be inserted for the new object.
+		 */
+		$data = apply_filters( "affwp_pre_insert_{$type}_data", $data );
+
+		if ( empty( $data ) ) {
+			return false;
+		}
 
 		/**
 		 * Fires immediately before an item has been created in the database.
@@ -319,6 +341,10 @@ abstract class Affiliate_WP_DB {
 		// Reorder $column_formats to match the order of columns given in $data
 		$data_keys = array_keys( $data );
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
+
+		if ( empty( $data ) ) {
+			return false;
+		}
 
 		if ( false === $wpdb->update( $this->table_name, $data, array( $where => $object->{$this->primary_key} ), $column_formats ) ) {
 			return false;

@@ -4,7 +4,7 @@
 
 	<?php
 	$per_page  = 30;
-	$page      = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+	$page      = affwp_get_current_page_number();
 	$pages     = absint( ceil( affiliate_wp()->creatives->count( array( 'status' => 'active' ) ) / $per_page ) );
 	$args      = array(
 		'number' => $per_page,
@@ -22,7 +22,7 @@
 		do_action( 'affwp_before_creatives' );
 		?>
 
-		<?php echo affiliate_wp()->creative->affiliate_creatives( $args ); ?>
+		<?php echo $creatives; ?>
 
 		<?php if ( $pages > 1 ) : ?>
 

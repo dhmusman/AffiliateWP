@@ -357,13 +357,25 @@ class Affiliate_WP_WooCommerce extends Affiliate_WP_Base {
 
 			$order = wc_get_order( $order_id );
 
-			if( $order ) {
+			if ( $order ) {
+
+				if ( true === version_compare( WC()->version, '3.0.0', '>=' ) ) {
+					$email      = $order->get_billing_email();
+					$first_name = $order->get_billing_first_name();
+					$last_name  = $order->get_billing_last_name();
+					$ip         = $order->get_customer_ip_address();
+				} else {
+					$email      = $order->billing_email;
+					$first_name = $order->billing_first_name;
+					$last_name  = $order->billing_last_name;
+					$ip         = $order->customer_ip_address;
+				}
 
 				$customer['user_id']    = $order->get_user_id();
-				$customer['email']      = $order->get_billing_email();
-				$customer['first_name'] = $order->get_billing_first_name();
-				$customer['last_name']  = $order->get_billing_last_name();
-				$customer['ip']         = $order->get_customer_ip_address();
+				$customer['email']      = $email;
+				$customer['first_name'] = $first_name;
+				$customer['last_name']  = $last_name;
+				$customer['ip']         = $ip;
 
 			}
 		}

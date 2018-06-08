@@ -794,7 +794,10 @@ class Affiliate_WP_Upgrades {
 	 */
 	private function v222_upgrade() {
 		foreach ( $this->get_sites_for_upgrade() as $site_id ) {
-			switch_to_blog( $site_id );
+
+			if( is_multisite() ) {
+				switch_to_blog( $site_id );
+			}
 
 			affiliate_wp()->affiliates->create_table();
 			@affiliate_wp()->utils->log( sprintf( 'Upgrade: The rest_id column has been added to the Affiliates table for site #%1$s.', $site_id ) );
@@ -831,7 +834,9 @@ class Affiliate_WP_Upgrades {
 				}
 			}
 
-			restore_current_blog();
+			if( is_multisite() ) {
+				restore_current_blog();
+			}
 		}
 
 		$this->upgraded = true;

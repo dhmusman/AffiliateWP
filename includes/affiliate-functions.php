@@ -1259,6 +1259,12 @@ function affwp_update_affiliate( $data = array() ) {
 		$args['date_registered'] = gmdate( 'Y-m-d H:i:s', $timestamp );
 	}
 
+	if ( ! empty( $data['rest_id'] ) ) {
+		if ( affwp_validate_rest_id( $data['rest_id'] ) ) {
+			$args['rest_id'] = sanitize_text_field( $data['rest_id'] );
+		}
+	}
+
 	/**
 	 * Fires immediately before data for the current affiliate is updated.
 	 *

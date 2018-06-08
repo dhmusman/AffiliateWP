@@ -313,7 +313,7 @@ abstract class Affiliate_WP_DB {
 
 		$object = $this->get_core_object( $row_id, $this->query_object_type );
 
-		if ( ! $object ) {
+		if ( ! $object || empty( $data ) ) {
 			return false;
 		}
 

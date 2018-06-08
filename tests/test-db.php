@@ -511,6 +511,13 @@ class Tests extends UnitTestCase {
 	}
 
 	/**
+	 * @covers \Affiliate_WP_DB::update()
+	 */
+	public function test_update_with_empty_data_should_return_false() {
+		$this->assertFalse( affiliate_wp()->affiliates->update( self::$affiliate_id, array() ) );
+	}
+
+	/**
 	 * @covers \Affiliate_WP_DB::insert()
 	 * @group filters
 	 */

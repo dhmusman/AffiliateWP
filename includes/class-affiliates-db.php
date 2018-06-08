@@ -53,7 +53,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			$this->table_name  = $wpdb->prefix . 'affiliate_wp_affiliates';
 		}
 		$this->primary_key = 'affiliate_id';
-		$this->version     = '1.1';
+		$this->version     = '1.2';
 
 		$this->payouts = new Affiliate_WP_Payouts_DB;
 
@@ -88,6 +88,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 		return array(
 			'affiliate_id'    => '%d',
 			'user_id'         => '%d',
+			'rest_id'         => '%s',
 			'rate'            => '%s',
 			'rate_type'       => '%s',
 			'payment_email'   => '%s',
@@ -150,6 +151,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			'exclude'      => array(),
 			'user_id'      => 0,
 			'affiliate_id' => 0,
+			'rest_id'      => '',
 			'status'       => '',
 			'order'        => 'DESC',
 			'orderby'      => 'affiliate_id',
@@ -206,6 +208,14 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 				$where .= "WHERE `affiliate_id` IN( {$affiliates} )";
 			} else {
 				$where .= "AND `affiliate_id` IN( {$affiliates} )";
+			}
+		}
+
+		if ( ! empty( $args['rest_id'] ) ) {
+			$parts = explode( ':', $args['rest_id'] );
+
+			if ( 2 === count( $parts ) ) {
+				// [0] = Site ID, [1] = Remote ID.
 			}
 		}
 
@@ -429,6 +439,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	 * Add a new affiliate
 	 *
 	 * @since 1.0
+	 * @since 2.2.2 Added support for a `$rest_id` argument.
 	 * @access public
 	 *
 	 * @param array $args {
@@ -443,6 +454,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 	 *     @type int    $referrals       Number of affiliate referrals.
 	 *     @type int    $visits          Number of visits.
 	 *     @type int    $user_id         User ID used to correspond to the affiliate.
+	 *     @type string $rest_id         REST ID (site:affiliate ID combination).
 	 *     @type string $website_url     The affiliate's website URL.
 	 * }
 	 * @return int|false Affiliate ID if successfully added, otherwise false.
@@ -477,6 +489,18 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			$args['website_url'] = sanitize_text_field( $data['website_url'] );
 		}
 
+		$rest_id_error = false;
+
+		if ( ! empty( $args['rest_id'] ) ) {
+			if ( ! affwp_validate_rest_id( $args['rest_id'] ) ) {
+				$rest_id_error = true;
+
+				unset( $args['rest_id'] );
+			} else {
+				$args['rest_id'] = sanitize_text_field( $args['rest_id'] );
+			}
+		}
+
 		$add = $this->insert( $args, 'affiliate' );
 
 		if ( $add ) {
@@ -488,6 +512,13 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			 * @param array $args The arguments passed to the insert method.
 			 */
 			do_action( 'affwp_insert_affiliate', $add, $args );
+
+			if ( false !== $rest_id_error ) {
+				affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new affiliate #%2$d is invalid.',
+					$rest_id_error,
+					$add
+				) );
+			}
 
 			return $add;
 		}
@@ -507,6 +538,7 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 
 		$sql = "CREATE TABLE {$this->table_name} (
 			affiliate_id bigint(20) NOT NULL AUTO_INCREMENT,
+			rest_id mediumtext NOT NULL,
 			user_id bigint(20) NOT NULL,
 			rate tinytext NOT NULL,
 			rate_type tinytext NOT NULL,

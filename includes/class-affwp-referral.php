@@ -50,6 +50,14 @@ final class Referral extends Base_Object {
 	public $visit_id = 0;
 
 	/**
+	 * REST ID (site:referral ID combination).
+	 *
+	 * @since 2.2.2
+	 * @var   string
+	 */
+	public $rest_id = '';
+
+	/**
 	 * Customer ID.
 	 *
 	 * @since 2.2
@@ -210,6 +218,10 @@ final class Referral extends Base_Object {
 
 		if ( 'custom' === $field ) {
 			$value = affwp_maybe_unserialize( affwp_maybe_unserialize( $value ) );
+		}
+
+		if ( in_array( $field, array( 'rest_id' ) ) ) {
+			$value = sanitize_text_field( $value );
 		}
 
 		return $value;

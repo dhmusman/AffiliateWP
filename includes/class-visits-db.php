@@ -39,7 +39,7 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			$this->table_name  = $wpdb->prefix . 'affiliate_wp_visits';
 		}
 		$this->primary_key = 'visit_id';
-		$this->version     = '1.1';
+		$this->version     = '1.2';
 
 		// REST endpoints.
 		if ( version_compare( $wp_version, '4.4', '>=' ) ) {
@@ -67,6 +67,7 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			'visit_id'     => '%d',
 			'affiliate_id' => '%d',
 			'referral_id'  => '%d',
+			'rest_id'      => '%s',
 			'url'          => '%s',
 			'referrer'     => '%s',
 			'campaign'     => '%s',
@@ -407,6 +408,18 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			$data['context'] = sanitize_key( substr( $data['context'], 0, 50 ) );
 		}
 
+		$rest_id_error = false;
+
+		if ( ! empty( $data['rest_id'] ) ) {
+			if ( ! affwp_validate_rest_id( $data['rest_id'] ) ) {
+				$rest_id_error = true;
+
+				unset( $data['rest_id'] );
+			} else {
+				$data['rest_id'] = sanitize_text_field( $data['rest_id'] );
+			}
+		}
+
 		if ( ! empty( $data['date'] ) ) {
 			$time = strtotime( $data['date'] );
 
@@ -420,7 +433,15 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 		$visit_id = $this->insert( $data, 'visit' );
 
 		if ( $visit_id ) {
+
 			affwp_increase_affiliate_visit_count( $data['affiliate_id'] );
+
+			if ( false !== $rest_id_error ) {
+				affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new visit #%2$d is invalid.',
+					$rest_id_error,
+					$visit_id
+				) );
+			}
 		}
 
 		return $visit_id;
@@ -466,6 +487,14 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			$data['date'] = gmdate( 'Y-m-d H:i:s', $timestamp );
 		}
 
+		if ( ! empty( $data['rest_id'] ) && is_string( $data['rest_id'] ) && $data['rest_id'] !== $visit->rest_id ) {
+			if ( false !== strpos( $data['rest_id'], ':' ) ) {
+				$data['rest_id'] = sanitize_text_field( $data['rest_id'] );
+			} else {
+				$data['rest_id'] = $visit->rest_id;
+			}
+		}
+
 		if ( $this->update( $visit->ID, $data, '', 'visit' ) ) {
 			$updated_visit = affwp_get_visit( $visit->ID );
 
@@ -493,6 +522,7 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			visit_id bigint(20) NOT NULL AUTO_INCREMENT,
 			affiliate_id bigint(20) NOT NULL,
 			referral_id bigint(20) NOT NULL,
+			rest_id mediumtext NOT NULL,
 			url mediumtext NOT NULL,
 			referrer mediumtext NOT NULL,
 			campaign varchar(50) NOT NULL,

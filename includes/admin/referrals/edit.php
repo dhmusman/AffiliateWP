@@ -69,60 +69,62 @@ $disabled = disabled( (bool) $payout, true, false );
 
 			</tr>
 
-			<tr class="form-row form-required">
+			<?php if ( current_user_can( 'manage_payouts' ) ) : ?>
+				<tr class="form-row form-required">
 
-				<th scope="row">
-					<label for="payout"><?php _e( 'Payout', 'affiliate-wp' ); ?></label>
-				</th>
+					<th scope="row">
+						<label for="payout"><?php _e( 'Payout', 'affiliate-wp' ); ?></label>
+					</th>
 
-				<td>
-					<?php if ( $payout ) : ?>
+					<td>
+						<?php if ( $payout ) : ?>
 
-						<p>
-							<?php
-							/* translators: 1: Payout total amount with view link */
-							$payout_total_link = sprintf( __( 'Total: %1$s', 'affiliate-wp' ),
-								affwp_admin_link( 'payouts', affwp_currency_filter( affwp_format_amount( $payout->amount ) ), array(
-									'action'    => 'view_payout',
-									'payout_id' => $payout->ID
-								) )
-							);
-
-							/* translators: 1: Payout link with total, 2: Payout ID */
-							printf( __( '%1$s (ID: #%2$s)', 'affiliate-wp' ),
-								$payout_total_link,
-								esc_html( $payout->ID )
-							);
-							?>
-						</p>
-
-					<?php else : ?>
-
-						<p>
-							<?php
-							if ( in_array( $referral->status, array( 'pending', 'unpaid' ), true ) ) {
-
-								/* translators: 1: Pay Out action link */
-								printf( __( 'None | %1$s', 'affiliate-wp' ),
-									affwp_admin_link( 'referrals', __( 'Pay Out', 'affiliate-wp' ), array(
-										'referral_id'  => $referral->ID,
-										'action'       => 'mark_as_paid',
-										'_wpnonce'     => wp_create_nonce( 'referral-nonce' ),
-										'affwp_notice' => 'payout_created',
+							<p>
+								<?php
+								/* translators: 1: Payout total amount with view link */
+								$payout_total_link = sprintf( __( 'Total: %1$s', 'affiliate-wp' ),
+									affwp_admin_link( 'payouts', affwp_currency_filter( affwp_format_amount( $payout->amount ) ), array(
+										'action'    => 'view_payout',
+										'payout_id' => $payout->ID
 									) )
 								);
 
-							} else {
-								esc_html_e( 'None', 'affiliate-wp' );
-							}
-							?>
-						</p>
+								/* translators: 1: Payout link with total, 2: Payout ID */
+								printf( __( '%1$s (ID: #%2$s)', 'affiliate-wp' ),
+									$payout_total_link,
+									esc_html( $payout->ID )
+								);
+								?>
+							</p>
 
-					<?php endif; ?>
+						<?php else : ?>
 
-				</td>
+							<p>
+								<?php
+								if ( in_array( $referral->status, array( 'pending', 'unpaid' ), true ) ) {
 
-			</tr>
+									/* translators: 1: Pay Out action link */
+									printf( __( 'None | %1$s', 'affiliate-wp' ),
+										affwp_admin_link( 'referrals', __( 'Pay Out', 'affiliate-wp' ), array(
+											'referral_id'  => $referral->ID,
+											'action'       => 'mark_as_paid',
+											'_wpnonce'     => wp_create_nonce( 'referral-nonce' ),
+											'affwp_notice' => 'payout_created',
+										) )
+									);
+
+								} else {
+									esc_html_e( 'None', 'affiliate-wp' );
+								}
+								?>
+							</p>
+
+						<?php endif; ?>
+
+					</td>
+
+				</tr>
+			<?php endif; // manage_payouts ?>
 
 			<tr class="form-row form-required">
 
@@ -275,7 +277,9 @@ $disabled = disabled( (bool) $payout, true, false );
 				<td>
 					<select name="status" id="status" <?php echo $disabled; ?>>
 						<option value="unpaid"<?php selected( 'unpaid', $referral->status ); ?>><?php _e( 'Unpaid', 'affiliate-wp' ); ?></option>
-						<option value="paid"<?php selected( 'paid', $referral->status ); ?>><?php _e( 'Paid', 'affiliate-wp' ); ?></option>
+						<?php if ( current_user_can( 'manage_payouts' ) ) : ?>
+							<option value="paid"<?php selected( 'paid', $referral->status ); ?>><?php _e( 'Paid', 'affiliate-wp' ); ?></option>
+						<?php endif; ?>
 						<option value="pending"<?php selected( 'pending', $referral->status ); ?>><?php _e( 'Pending', 'affiliate-wp' ); ?></option>
 						<option value="rejected"<?php selected( 'rejected', $referral->status ); ?>><?php _e( 'Rejected', 'affiliate-wp' ); ?></option>
 					</select>

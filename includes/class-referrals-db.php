@@ -54,7 +54,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			$this->table_name  = $wpdb->prefix . 'affiliate_wp_referrals';
 		}
 		$this->primary_key = 'referral_id';
-		$this->version     = '1.1';
+		$this->version     = '1.2';
 
 		// REST endpoints.
 		if ( version_compare( $wp_version, '4.4', '>=' ) ) {
@@ -91,6 +91,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			'referral_id' => '%d',
 			'affiliate_id'=> '%d',
 			'visit_id'    => '%d',
+			'rest_id'     => '%s',
 			'customer_id' => '%d',
 			'description' => '%s',
 			'status'      => '%s',
@@ -169,6 +170,18 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			$args['custom']	 = maybe_serialize( $args['custom'] );
 		}
 
+		$rest_id_error = false;
+
+		if ( ! empty( $args['rest_id'] ) ) {
+			if ( ! affwp_validate_rest_id( $args['rest_id'] ) ) {
+				$rest_id_error = true;
+
+				unset( $args['rest_id'] );
+			} else {
+				$args['rest_id'] = sanitize_text_field( $args['rest_id'] );
+			}
+		}
+
 		if ( empty( $args['date'] ) ) {
 			unset( $args['date'] );
 		} else {
@@ -195,6 +208,13 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			 * @param int $add Referral ID.
 			 */
 			do_action( 'affwp_insert_referral', $add );
+
+			if ( false !== $rest_id_error ) {
+				affiliate_wp()->utils->log( sprintf( 'REST ID %1$s for new referral #%2$d is invalid.',
+					$rest_id_error,
+					$add
+				) );
+			}
 
 			return $add;
 		}
@@ -227,6 +247,12 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		if ( ! empty( $data['date' ] ) && $data['date'] !== $referral->date ) {
 			$timestamp    = strtotime( $data['date'] ) - affiliate_wp()->utils->wp_offset;
 			$args['date'] = gmdate( 'Y-m-d H:i:s', $timestamp );
+		}
+
+		if ( ! empty( $data['rest_id'] ) && is_string( $data['rest_id'] ) && $data['rest_id'] !== $referral->rest_id ) {
+			if ( false !== strpos( $data['rest_id'], ':' ) ) {
+				$args['rest_id'] = sanitize_text_field( $data['rest_id'] );
+			}
 		}
 
 		$args['affiliate_id']  = ! empty( $data['affiliate_id' ] ) ? absint( $data['affiliate_id'] )             : $referral->affiliate_id;
@@ -986,6 +1012,7 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 		referral_id bigint(20) NOT NULL AUTO_INCREMENT,
 		affiliate_id bigint(20) NOT NULL,
 		visit_id bigint(20) NOT NULL,
+		rest_id mediumtext NOT NULL,
 		customer_id bigint(20) NOT NULL,
 		description longtext NOT NULL,
 		status tinytext NOT NULL,

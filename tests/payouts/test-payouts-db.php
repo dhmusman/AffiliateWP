@@ -190,7 +190,7 @@ class Tests extends UnitTestCase {
 			'date'          => '%s',
 		);
 
-		$this->assertEqualSets( $expected, $columns );
+		$this->assertEqualSetsWithIndex( $expected, $columns );
 	}
 
 	/**

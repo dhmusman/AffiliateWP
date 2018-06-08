@@ -83,6 +83,39 @@ class Tests extends UnitTestCase {
 	}
 
 	/**
+	 * @covers ::affwp_get_payout()
+	 */
+	public function test_get_payout_with_before_filter_null_value_should_retrieve_payout_as_expected() {
+		$payout = affwp_get_payout( self::$payouts[0] );
+
+		$this->assertSame( self::$payouts[0], $payout->ID );
+	}
+
+	/**
+	 * @covers ::affwp_get_payout()
+	 */
+	public function test_get_payout_with_before_filter_not_null_value_should_retrieve_value() {
+		add_filter( 'affwp_get_payout_before', array( $this, 'filter_get_payout_before' ), 10, 2 );
+
+		$payout = affwp_get_payout( self::$payouts[0] );
+
+		$this->assertSame( 'foo', $payout );
+
+		// Clean up.
+		remove_filter( 'affwp_get_payout_before', array( $this, 'filter_get_payout_before' ), 10, 2 );
+	}
+
+	/**
+	 * Callback used to test affwp_get_payout() with the affwp_get_payout_before filter.
+	 *
+	 * @param null|mixed                  $value  Value.
+	 * @param int|\AffWP\Affiliate\Payout $payout Payout object or ID.
+	 */
+	public function filter_get_payout_before( $value, $payout ) {
+		return 'foo';
+	}
+
+	/**
 	 * @covers ::affwp_add_payout()
 	 */
 	public function test_add_payout_without_affiliate_id_should_return_false() {

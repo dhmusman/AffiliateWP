@@ -107,4 +107,25 @@ class Tests extends UnitTestCase {
 		$this->assertSame( true, isset( $fields[ $field_name ] ) );
 	}
 
+	/**
+	 * @covers ::affwp_validate_rest_id()
+	 */
+	public function test_validate_rest_id_with_empty_value_should_return_false() {
+		$this->assertFalse( affwp_validate_rest_id( '' ) );
+	}
+
+	/**
+	 * @covers ::affwp_validate_rest_id()
+	 */
+	public function test_validate_rest_id_with_non_empty_value_without_colon_CURIE_should_return_false() {
+		$this->assertFalse( affwp_validate_rest_id( 'foo' ) );
+	}
+
+	/**
+	 * @covers ::affwp_validate_rest_id()
+	 */
+	public function test_validate_rest_id_with_value_with_colon_CURIE_should_return_true() {
+		$this->assertTrue( affwp_validate_rest_id( 'foo:bar' ) );
+	}
+
 }

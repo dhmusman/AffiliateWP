@@ -424,7 +424,7 @@ class AffWP_Referrals_Table extends List_Table {
 
 		} else {
 
-			if( 'unpaid' == $referral->status ) {
+			if( 'unpaid' == $referral->status && current_user_can( 'manage_payouts' ) ) {
 
 				// Mark as Paid.
 				$row_actions['mark-as-paid'] = $this->get_row_action_link(
@@ -640,6 +640,10 @@ class AffWP_Referrals_Table extends List_Table {
 			'delete'         => __( 'Delete', 'affiliate-wp' ),
 		);
 
+		if ( ! current_user_can( 'manage_payouts' ) ) {
+			unset( $actions['mark_as_paid'] );
+		}
+
 		/**
 		 * Filters the bulk actions array for the referrals list table.
 		 *
@@ -692,7 +696,7 @@ class AffWP_Referrals_Table extends List_Table {
 			}
 
 			if ( 'mark_as_paid' === $this->current_action() ) {
-				if ( $referral = affwp_get_referral( $id ) ) {
+				if ( $referral = affwp_get_referral( $id ) && current_user_can( 'manage_payouts' ) ) {
 					affwp_add_payout( array(
 						'affiliate_id'  => $referral->affiliate_id,
 						'referrals'     => $id,

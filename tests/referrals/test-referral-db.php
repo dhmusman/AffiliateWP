@@ -99,6 +99,7 @@ class Referrals_DB_Tests extends UnitTestCase {
 			'referral_id' => '%d',
 			'affiliate_id'=> '%d',
 			'visit_id'    => '%d',
+			'rest_id'     => '%s',
 			'customer_id' => '%d',
 			'description' => '%s',
 			'status'      => '%s',
@@ -114,7 +115,7 @@ class Referrals_DB_Tests extends UnitTestCase {
 			'date'        => '%s',
 		);
 
-		$this->assertEqualSets( $expected, $columns );
+		$this->assertEqualSetsWithIndex( $expected, $columns );
 	}
 
 	/**
@@ -424,6 +425,53 @@ class Referrals_DB_Tests extends UnitTestCase {
 
 		// Should catch all but the one just created +1 day.
 		$this->assertEqualSets( self::$referrals, $results );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::add()
+	 * @group rest
+	 */
+	public function test_add_without_rest_id_should_leave_rest_id_empty() {
+		$referral_id = affiliate_wp()->referrals->add( array(
+			'affiliate_id' => self::$affiliate_id,
+		) );
+
+		$this->assertSame( '', affwp_get_referral( $referral_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_referral( $referral_id );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::add()
+	 * @group rest
+	 */
+	public function test_add_with_invalid_rest_id_should_leave_rest_id_empty() {
+		$referral_id = affiliate_wp()->referrals->add( array(
+			'affiliate_id' => self::$affiliate_id,
+			'rest_id'      => 'foo',
+		) );
+
+		$this->assertSame( '', affwp_get_referral( $referral_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_referral( $referral_id );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::add()
+	 * @group rest
+	 */
+	public function test_add_with_syntactically_correct_rest_id_should_store_rest_id() {
+		$referral_id = affiliate_wp()->referrals->add( array(
+			'affiliate_id' => self::$affiliate_id,
+			'rest_id'      => '12:34',
+		) );
+
+		$this->assertSame( '12:34', affwp_get_referral( $referral_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_referral( $referral_id );
 	}
 
 	/**
@@ -751,6 +799,61 @@ class Referrals_DB_Tests extends UnitTestCase {
 	}
 
 	/**
+	 * @covers \Affiliate_WP_Referrals_DB::update_referral()
+	 * @group rest
+	 */
+	public function test_update_referral_without_rest_id_should_leave_rest_id_unchanged() {
+		$referral = $this->factory->referral->create_and_get();
+
+		affiliate_wp()->referrals->update_referral( $referral->ID );
+
+		$updated_referral = affwp_get_referral( $referral->ID );
+
+		$this->assertSame( $referral->rest_id, $updated_referral->rest_id );
+
+		// Clean up.
+		$this->factory->referral->delete( $referral->ID );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::update_referral()
+	 * @group rest
+	 */
+	public function test_update_referral_with_invalid_rest_id_should_leave_rest_id_unchanged() {
+		$referral = $this->factory->referral->create_and_get();
+
+		affiliate_wp()->referrals->update_referral( $referral->ID, array(
+			'rest_id' => 'foo'
+		) );
+
+		$updated_referral = affwp_get_referral( $referral->ID );
+
+		$this->assertSame( $referral->rest_id, $updated_referral->rest_id );
+
+		// Clean up.
+		$this->factory->referral->delete( $referral->ID );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_Referrals_DB::update_referral()
+	 * @group rest
+	 */
+	public function test_update_referral_with_valid_rest_id_should_update_rest_id() {
+		$referral = $this->factory->referral->create_and_get();
+
+		affiliate_wp()->referrals->update_referral( $referral->ID, array(
+			'rest_id' => '12:34'
+		) );
+
+		$updated_referral = affwp_get_referral( $referral->ID );
+
+		$this->assertSame( '12:34', $updated_referral->rest_id );
+
+		// Clean up.
+		$this->factory->referral->delete( $referral->ID );
+	}
+
+	/**
 	 * @covers \Affiliate_WP_Referrals_DB::get_by()
 	 */
 	public function test_get_by_with_empty_column_should_return_false() {
@@ -763,7 +866,6 @@ class Referrals_DB_Tests extends UnitTestCase {
 	public function test_get_by_with_empty_row_id_should_return_false() {
 		$this->assertFalse( affiliate_wp()->referrals->get_by( 'affiliate_id', '' ) );
 	}
-
 
 	/**
 	 * @covers \Affiliate_WP_Referrals_DB::paid_earnings()
@@ -780,7 +882,6 @@ class Referrals_DB_Tests extends UnitTestCase {
 	}
 
 	/**
-	 *
 	 * @group type
 	 */
 	public function test_referral_type_is_sale() {

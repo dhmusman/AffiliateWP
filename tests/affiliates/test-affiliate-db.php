@@ -110,6 +110,7 @@ class Tests extends UnitTestCase {
 		$expected = array(
 			'affiliate_id'    => '%d',
 			'user_id'         => '%d',
+			'rest_id'         => '%s',
 			'rate'            => '%s',
 			'rate_type'       => '%s',
 			'payment_email'   => '%s',
@@ -121,7 +122,7 @@ class Tests extends UnitTestCase {
 			'date_registered' => '%s',
 		);
 
-		$this->assertEqualSets( $expected, $columns );
+		$this->assertEqualSetsWithIndex( $expected, $columns );
 	}
 
 	/**
@@ -1007,6 +1008,53 @@ class Tests extends UnitTestCase {
 		$user_data = get_user_by( 'id', $user_id );
 
 		$this->assertSame( $website_url, $user_data->user_url );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_DB_Affiliates::add()
+	 * @group rest
+	 */
+	public function test_add_without_rest_id_should_leave_rest_id_empty() {
+		$affiliate_id = affiliate_wp()->affiliates->add( array(
+			'user_id' => $this->factory->user->create(),
+		) );
+
+		$this->assertSame( '', affwp_get_affiliate( $affiliate_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_affiliate( $affiliate_id );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_DB_Affiliates::add()
+	 * @group rest
+	 */
+	public function test_add_with_invalid_rest_id_should_leave_rest_id_empty() {
+		$affiliate_id = affiliate_wp()->affiliates->add( array(
+			'user_id' => $this->factory->user->create(),
+			'rest_id' => 'foo',
+		) );
+
+		$this->assertSame( '', affwp_get_affiliate( $affiliate_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_affiliate( $affiliate_id );
+	}
+
+	/**
+	 * @covers \Affiliate_WP_DB_Affiliates::add()
+	 * @group rest
+	 */
+	public function test_add_with_syntactically_correct_rest_id_should_store_rest_id() {
+		$affiliate_id = affiliate_wp()->affiliates->add( array(
+			'user_id' => $this->factory->user->create(),
+			'rest_id' => '12:34',
+		) );
+
+		$this->assertSame( '12:34', affwp_get_affiliate( $affiliate_id )->rest_id );
+
+		// Clean up.
+		affwp_delete_affiliate( $affiliate_id );
 	}
 
 }

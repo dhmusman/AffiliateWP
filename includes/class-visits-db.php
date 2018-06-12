@@ -308,6 +308,17 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			$where = $this->prepare_date_query( $where, $args['date'] );
 		}
 
+		// visits for specific referring url
+		if( ! empty( $args['url'] ) ) {
+
+			$where .= empty( $where ) ? "WHERE " : "AND ";
+
+			$search_value = esc_sql( $args['url'] );
+
+			$where .= "`referrer` LIKE '" . $search_value . "'";
+
+		}
+
 		// Build the search query
 		if( ! empty( $args['search'] ) ) {
 

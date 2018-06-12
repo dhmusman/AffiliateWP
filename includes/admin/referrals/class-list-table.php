@@ -416,7 +416,6 @@ class AffWP_Referrals_Table extends List_Table {
 					'action' => 'mark_as_unpaid'
 				) ),
 				array(
-					'base_uri' => affwp_admin_url( 'referrals' ),
 					'nonce'    => 'referral-nonce',
 					'class'    => 'mark-as-unpaid'
 				)
@@ -433,7 +432,6 @@ class AffWP_Referrals_Table extends List_Table {
 						'action' => 'mark_as_paid'
 					) ),
 					array(
-						'base_uri' => affwp_admin_url( 'referrals' ),
 						'nonce'    => 'referral-nonce',
 						'class'    => 'mark-as-paid'
 					)
@@ -450,7 +448,6 @@ class AffWP_Referrals_Table extends List_Table {
 						'action' => 'accept'
 					) ),
 					array(
-						'base_uri' => affwp_admin_url( 'referrals' ),
 						'nonce'    => 'referral-nonce',
 						'class'    => 'accept'
 					)
@@ -467,7 +464,6 @@ class AffWP_Referrals_Table extends List_Table {
 						'action' => 'reject'
 					) ),
 					array(
-						'base_uri' => affwp_admin_url( 'referrals' ),
 						'nonce'    => 'referral-nonce',
 						'class'    => 'reject'
 					)

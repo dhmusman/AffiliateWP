@@ -2,7 +2,8 @@
 $default_rate = affiliate_wp()->settings->get( 'referral_rate', 20 );
 $default_rate = affwp_abs_number_round( $default_rate );
 $user_id      = isset( $_GET['user_id'] ) ? absint( $_GET['user_id'] ) : '';
-$user         = ! empty( $user_id ) && ! affwp_is_affiliate( $user_id ) ? get_userdata( $user_id ) : '';
+$user         = ! empty( $user_id ) && ! affwp_is_affiliate( $user_id ) ? get_userdata( $user_id ) : false;
+$disabled     = disabled( (bool) $user, false, false );
 ?>
 <div class="wrap">
 
@@ -77,25 +78,14 @@ $user         = ! empty( $user_id ) && ! affwp_is_affiliate( $user_id ) ? get_us
 					<label for="status"><?php _e( 'Affiliate Status', 'affiliate-wp' ); ?></label>
 				</th>
 
-				<?php if ( $user ): ?>
-					<td>
-						<select name="status" id="status">
-							<option value="active"><?php _e( 'Active', 'affiliate-wp' ); ?></option>
-							<option value="inactive"><?php _e( 'Inactive', 'affiliate-wp' ); ?></option>
-							<option value="pending"><?php _e( 'Pending', 'affiliate-wp' ); ?></option>
-						</select>
-						<p class="description"><?php _e( 'The status assigned to the affiliate&#8217;s account.', 'affiliate-wp' ); ?></p>
-					</td>
-				<?php else: ?>
-					<td>
-						<select name="status" id="status" disabled="disabled">
-							<option value="active"><?php _e( 'Active', 'affiliate-wp' ); ?></option>
-							<option value="inactive"><?php _e( 'Inactive', 'affiliate-wp' ); ?></option>
-							<option value="pending"><?php _e( 'Pending', 'affiliate-wp' ); ?></option>
-						</select>
-						<p class="description"><?php _e( 'The status assigned to the affiliate&#8217;s account.', 'affiliate-wp' ); ?></p>
-					</td>
-				<?php endif; ?>
+                <td>
+                    <select name="status" id="status" <?php echo $disabled; ?>>
+                        <option value="active"><?php _e( 'Active', 'affiliate-wp' ); ?></option>
+                        <option value="inactive"><?php _e( 'Inactive', 'affiliate-wp' ); ?></option>
+                        <option value="pending"><?php _e( 'Pending', 'affiliate-wp' ); ?></option>
+                    </select>
+                    <p class="description"><?php _e( 'The status assigned to the affiliate&#8217;s account.', 'affiliate-wp' ); ?></p>
+                </td>
 
 			</tr>
 

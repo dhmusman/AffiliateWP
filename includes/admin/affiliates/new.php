@@ -72,11 +72,11 @@ $disabled     = disabled( (bool) $user, false, false );
 
 			</tr>
 
-			<tr class="form-row">
+            <tr class="form-row">
 
-				<th scope="row">
-					<label for="status"><?php _e( 'Affiliate Status', 'affiliate-wp' ); ?></label>
-				</th>
+                <th scope="row">
+                    <label for="status"><?php _e( 'Affiliate Status', 'affiliate-wp' ); ?></label>
+                </th>
 
                 <td>
                     <select name="status" id="status" <?php echo $disabled; ?>>
@@ -87,57 +87,38 @@ $disabled     = disabled( (bool) $user, false, false );
                     <p class="description"><?php _e( 'The status assigned to the affiliate&#8217;s account.', 'affiliate-wp' ); ?></p>
                 </td>
 
-			</tr>
+            </tr>
 
-			<tr class="form-row">
+            <tr class="form-row">
 
-				<th scope="row">
-					<label for="rate_type"><?php _e( 'Referral Rate Type', 'affiliate-wp' ); ?></label>
-				</th>
+                <th scope="row">
+                    <label for="rate_type"><?php _e( 'Referral Rate Type', 'affiliate-wp' ); ?></label>
+                </th>
 
-				<?php if ( $user ): ?>
-					<td>
-						<select name="rate_type" id="rate_type">
-							<option value=""><?php _e( 'Site Default', 'affiliate-wp' ); ?></option>
-							<?php foreach( affwp_get_affiliate_rate_types() as $key => $type ) : ?>
-								<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $type ); ?></option>
-							<?php endforeach; ?>
-						</select>
-						<p class="description"><?php _e( 'The affiliate&#8217;s referral rate type.', 'affiliate-wp' ); ?></p>
-					</td>
-				<?php else: ?>
-					<td>
-						<select name="rate_type" id="rate_type" disabled="disabled">
-							<option value=""><?php _e( 'Site Default', 'affiliate-wp' ); ?></option>
-							<?php foreach( affwp_get_affiliate_rate_types() as $key => $type ) : ?>
-								<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $type ); ?></option>
-							<?php endforeach; ?>
-						</select>
-						<p class="description"><?php _e( 'The affiliate&#8217;s referral rate type.', 'affiliate-wp' ); ?></p>
-					</td>
-				<?php endif; ?>
+                <td>
+                    <select name="rate_type" id="rate_type" <?php echo $disabled; ?>>
+                        <option value=""><?php _e( 'Site Default', 'affiliate-wp' ); ?></option>
+						<?php foreach ( affwp_get_affiliate_rate_types() as $key => $type ) : ?>
+                            <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $type ); ?></option>
+						<?php endforeach; ?>
+                    </select>
+                    <p class="description"><?php _e( 'The affiliate&#8217;s referral rate type.', 'affiliate-wp' ); ?></p>
+                </td>
 
-			</tr>
+            </tr>
 
-			<tr class="form-row">
+            <tr class="form-row">
 
-				<th scope="row">
-					<label for="rate"><?php _e( 'Referral Rate', 'affiliate-wp' ); ?></label>
-				</th>
+                <th scope="row">
+                    <label for="rate"><?php _e( 'Referral Rate', 'affiliate-wp' ); ?></label>
+                </th>
 
-				<?php if ( $user ): ?>
-					<td>
-						<input class="small-text" type="number" name="rate" id="rate" step="0.01" min="0" max="999999" placeholder="<?php echo esc_attr( $default_rate ); ?>" />
-						<p class="description"><?php _e( 'The affiliate&#8217;s referral rate, such as 20 for 20%. If left blank, the site default will be used.', 'affiliate-wp' ); ?></p>
-					</td>
-				<?php else: ?>
-					<td>
-						<input class="small-text" type="number" name="rate" id="rate" step="0.01" min="0" max="999999" placeholder="<?php echo esc_attr( $default_rate ); ?>" disabled="disabled" />
-						<p class="description"><?php _e( 'The affiliate&#8217;s referral rate, such as 20 for 20%. If left blank, the site default will be used.', 'affiliate-wp' ); ?></p>
-					</td>
-				<?php endif; ?>
+                <td>
+                    <input class="small-text" type="number" name="rate" id="rate" step="0.01" min="0" max="999999" placeholder="<?php echo esc_attr( $default_rate ); ?>" <?php echo $disabled; ?>/>
+                    <p class="description"><?php _e( 'The affiliate&#8217;s referral rate, such as 20 for 20%. If left blank, the site default will be used.', 'affiliate-wp' ); ?></p>
+                </td>
 
-			</tr>
+            </tr>
 
 			<tr class="form-row">
 
@@ -159,49 +140,33 @@ $disabled     = disabled( (bool) $user, false, false );
 
 			</tr>
 
-			<tr class="form-row">
+            <tr class="form-row">
 
-				<th scope="row">
-					<label for="notes"><?php _e( 'Affiliate Notes', 'affiliate-wp' ); ?></label>
-				</th>
+                <th scope="row">
+                    <label for="notes"><?php _e( 'Affiliate Notes', 'affiliate-wp' ); ?></label>
+                </th>
 
-				<?php if ( $user ): ?>
-					<td>
-						<textarea name="notes" rows="5" cols="50" id="notes" class="large-text"></textarea>
-						<p class="description"><?php _e( 'Enter any notes for this affiliate. Notes are only visible to the admin.', 'affiliate-wp' ); ?></p>
-					</td>
-				<?php else: ?>
-					<td>
-						<textarea name="notes" rows="5" cols="50" id="notes" class="large-text" disabled="disabled"></textarea>
-						<p class="description"><?php _e( 'Enter any notes for this affiliate. Notes are only visible to the admin.', 'affiliate-wp' ); ?></p>
-					</td>
-				<?php endif; ?>
+                <td>
+                    <textarea name="notes" rows="5" cols="50" id="notes" class="large-text" <?php echo $disabled; ?>></textarea>
+                    <p class="description"><?php _e( 'Enter any notes for this affiliate. Notes are only visible to the admin.', 'affiliate-wp' ); ?></p>
+                </td>
 
-			</tr>
+            </tr>
 
-			<tr class="form-row" id="affwp-welcome-email-row">
+            <tr class="form-row" id="affwp-welcome-email-row">
 
-				<th scope="row">
-					<label for="welcome_email"><?php _e( 'Welcome Email', 'affiliate-wp' ); ?></label>
-				</th>
+                <th scope="row">
+                    <label for="welcome_email"><?php _e( 'Welcome Email', 'affiliate-wp' ); ?></label>
+                </th>
 
-				<?php if ( $user ): ?>
-					<td>
-						<label class="description">
-							<input type="checkbox" name="welcome_email" id="welcome_email" value="1" />
-							<?php _e( 'Send welcome email after registering affiliate?', 'affiliate-wp' ); ?>
-						</label>
-					</td>
-				<?php else: ?>
-					<td>
-						<label class="description">
-							<input type="checkbox" name="welcome_email" id="welcome_email" value="1" disabled="disabled" />
-							<?php _e( 'Send welcome email after registering affiliate?', 'affiliate-wp' ); ?>
-						</label>
-					</td>
-				<?php endif; ?>
+                <td>
+                    <label class="description">
+                        <input type="checkbox" name="welcome_email" id="welcome_email" value="1" <?php echo $disabled; ?>/>
+						<?php _e( 'Send welcome email after registering affiliate?', 'affiliate-wp' ); ?>
+                    </label>
+                </td>
 
-			</tr>
+            </tr>
 
 			<?php
 			/**

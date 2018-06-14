@@ -205,6 +205,35 @@ class Affiliate_WP_PayPal extends Affiliate_WP_Base {
 
 		$this->log( 'Referral ID (' . $referral->ID . ') successfully retrieved during process_ipn()' );
 
+		$payer_email = ! empty( $ipn_data['payer_email'] ) ? sanitize_text_field( $ipn_data['payer_email'] ) : '';
+
+		if ( ! empty( $payer_email ) ) {
+
+			$customer = affwp_get_customer( $payer_email );
+
+			if ( ! $customer ) {
+
+				$first_name = ! empty( $ipn_data['first_name'] ) ? sanitize_text_field( $ipn_data['first_name'] ) : '';
+				$last_name  = ! empty( $ipn_data['last_name'] ) ? sanitize_text_field( $ipn_data['last_name'] ) : '';
+
+				$args = array(
+					'email'        => $payer_email,
+					'first_name'   => $first_name,
+					'last_name'    => $last_name,
+					'affiliate_id' => $affiliate_id,
+					'ip'           => $visit->ip
+				);
+
+				$user = get_user_by( 'email', $payer_email );
+
+				if ( $user ) {
+					$args['user_id'] = $user->ID;
+				}
+
+				affwp_add_customer( $args );
+			}
+		}
+
 		if( 'completed' === strtolower( $ipn_data['payment_status'] ) ) {
 
 			if( 'pending' !== $referral->status ) {

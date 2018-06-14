@@ -181,14 +181,14 @@ class Affiliate_WP_Tracking {
 		$md5 = md5( $args['amount'] . $args['description'] . $args['reference'] . $args['context'] . $args['status'] . $args['campaign'] );
 
 		/**
-		 * Fires immediately prior to tracking a conversion using the [affiliate_conversion_script] shortcode.
+		 * Fires before the JavaScript that maybe fires off a conversion creation is triggered via the [affiliate_conversion_script] shortcode.
 		 *
 		 * @since 2.2.4
 		 *
 		 * @param array  $args The arguments passed to the track_conversion() method.
 		 * @param string $md5  The md5 hash of the amount, description, reference, context, status and campaign arguments.
 		 */
-		do_action( 'affwp_before_track_conversion', $args, $md5 );
+		do_action( 'affwp_before_conversion_tracking_script', $args, $md5 );
 
 ?>
 		<script type="text/javascript">

@@ -22,7 +22,7 @@ function affwp_process_add_affiliate( $data ) {
 		wp_die( __( 'You do not have permission to manage affiliates', 'affiliate-wp' ), __( 'Error', 'affiliate-wp' ), array( 'response' => 403 ) );
 	}
 
-	if ( is_numeric( $data['user_name'] ) ) {
+	if ( ! username_exists( $data['user_name'] ) && is_numeric( $data['user_name'] ) ) {
 		$errors[ 'invalid_username_numeric' ] = __( 'Invalid user login name. User login name must include at least one letter', 'affiliate_wp' );
 	}
 

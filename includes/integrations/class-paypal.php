@@ -231,7 +231,13 @@ class Affiliate_WP_PayPal extends Affiliate_WP_Base {
 				}
 
 				affwp_add_customer( $args );
+
+			} else {
+
+				affwp_add_customer_meta( $customer->customer_id, 'affiliate_id', $affiliate_id, true );
+
 			}
+
 		}
 
 		if( 'completed' === strtolower( $ipn_data['payment_status'] ) ) {

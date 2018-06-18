@@ -1099,7 +1099,7 @@ class Affiliate_WP_Settings {
 	 */
 	function text_callback( $args ) {
 
-		if ( isset( $this->options[ $args['id'] ] ) )
+		if ( isset( $this->options[ $args['id'] ] ) && ! empty( $this->options[ $args['id'] ] ) )
 			$value = $this->options[ $args['id'] ];
 		else
 			$value = isset( $args['std'] ) ? $args['std'] : '';

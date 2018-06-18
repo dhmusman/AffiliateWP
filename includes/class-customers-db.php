@@ -434,7 +434,7 @@ class Affiliate_WP_Customers_DB extends Affiliate_WP_DB {
 
 		if( isset( $data['affiliate_id'] ) ) {
 			$affiliate_id = absint( $data['affiliate_id'] );
-			affwp_add_customer_meta( $row_id, 'affiliate_id', $affiliate_id, false );
+			affwp_add_customer_meta( $row_id, 'affiliate_id', $affiliate_id, true );
 			unset( $data['affiliate_id'] );
 		}
 

@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: AffiliateWP\n"
 "Report-Msgid-Bugs-To: https://affiliatewp.com/support/\n"
 "POT-Creation-Date: 2018-05-21 13:44:31+00:00\n"
-"PO-Revision-Date: 2017-07-29 01:58+0500\n"
-"Last-Translator: Andrew Munro, Sumobi <andrew@sumobi.com>\n"
+"PO-Revision-Date: 2018-06-20 16:39+0500\n"
+"Last-Translator: Airat Halitov <airat.halitov@gmail.com>\n"
 "Language-Team: AffiliateWP <support@affiliatewp.com>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
@@ -50,8 +50,7 @@ msgstr "Ошибка проверки"
 #: includes/admin/affiliates/actions.php:189
 #: includes/admin/affiliates/actions.php:193
 #: includes/admin/class-addon-updater.php:283
-#: includes/admin/class-notices.php:605
-#: includes/admin/creatives/actions.php:16
+#: includes/admin/class-notices.php:605 includes/admin/creatives/actions.php:16
 #: includes/admin/creatives/actions.php:44
 #: includes/admin/creatives/actions.php:48
 #: includes/admin/creatives/actions.php:52
@@ -63,9 +62,8 @@ msgstr "Ошибка проверки"
 #: includes/admin/tools/import/class-batch-import-affiliates.php:111
 #: includes/admin/tools/import/class-batch-import-referrals.php:103
 #: includes/admin/tools/import/import.php:24
-#: includes/admin/tools/import/import.php:30
-#: includes/admin/tools/tools.php:668 includes/admin/tools/tools.php:676
-#: includes/admin/tools/tools.php:686
+#: includes/admin/tools/import/import.php:30 includes/admin/tools/tools.php:668
+#: includes/admin/tools/tools.php:676 includes/admin/tools/tools.php:686
 msgid "Error"
 msgstr "Ошибка"
 
@@ -516,11 +514,11 @@ msgstr "Дата создания визита."
 
 #: includes/abstracts/class-affwp-opt-in-platform.php:141
 msgid "Please provide a platform API URL"
-msgstr ""
+msgstr "Пожалуйста, укажите URL-адрес API платформы"
 
 #: includes/abstracts/class-affwp-opt-in-platform.php:146
 msgid "Please provide platform API body parameters"
-msgstr ""
+msgstr "Пожалуйста, укажите параметры тела API платформы"
 
 #: includes/abstracts/class-affwp-reports-tab.php:135
 msgid "Filters"
@@ -601,17 +599,15 @@ msgstr "%1$s to %2$s"
 
 #: includes/abstracts/class-affwp-reports-tab.php:499
 #: includes/admin/referrals/class-list-table.php:589
-#: includes/admin/referrals/referrals.php:64
-#: includes/admin/tools/tools.php:152 includes/admin/tools/tools.php:308
-#: includes/admin/tools/tools.php:335 includes/admin/tools/tools.php:359
-#: includes/admin/visits/visits.php:55
+#: includes/admin/referrals/referrals.php:64 includes/admin/tools/tools.php:152
+#: includes/admin/tools/tools.php:308 includes/admin/tools/tools.php:335
+#: includes/admin/tools/tools.php:359 includes/admin/visits/visits.php:55
 msgid "Affiliate name"
 msgstr "Имя Партнера"
 
 #: includes/actions.php:112
-#, fuzzy
 msgid "Affiliate Area Page"
-msgstr "Кабинет Партнера"
+msgstr "Страница кабинета Партнера"
 
 #: includes/admin/AFFWP_Plugin_Updater.php:201
 msgid ""
@@ -688,7 +684,6 @@ msgid "You do not have permission to manage affiliates"
 msgstr "У Вас нет разрешения на управление партнерами"
 
 #: includes/admin/affiliates/actions.php:26
-#, fuzzy
 msgid ""
 "Invalid user login name. User login name must include at least one letter"
 msgstr ""
@@ -696,14 +691,12 @@ msgstr ""
 "буквы"
 
 #: includes/admin/affiliates/actions.php:30
-#, fuzzy
 msgid "Invalid user login name. Must be between 4 and 60 characters."
-msgstr "Неверное имя пользователя. Должно быть от 1 до 60 символов."
+msgstr "Неверное имя пользователя. Должно быть от 4 до 60 символов."
 
 #: includes/admin/affiliates/actions.php:34
-#, fuzzy
 msgid "Invalid user email"
-msgstr "Неправильный платежный email"
+msgstr "Неправильный email пользователя"
 
 #: includes/admin/affiliates/actions.php:38 includes/class-register.php:111
 msgid "Invalid payment email"
@@ -715,8 +708,7 @@ msgstr "У Вас нет разрешения удалять аккаунты П
 
 #: includes/admin/affiliates/actions.php:107
 #: includes/admin/affiliates/actions.php:193
-#: includes/admin/class-notices.php:605
-#: includes/admin/creatives/actions.php:48
+#: includes/admin/class-notices.php:605 includes/admin/creatives/actions.php:48
 #: includes/admin/referrals/actions.php:22
 #: includes/admin/referrals/actions.php:73
 #: includes/admin/referrals/actions.php:104
@@ -728,8 +720,8 @@ msgstr "Ошибка проверки безопасности"
 msgid "No affiliate IDs specified for deletion"
 msgstr "Отсутствуют ID партнеров, указанных для удаления"
 
-#: includes/admin/affiliates/affiliates.php:59
-#: includes/admin/class-menu.php:11 includes/admin/class-menu.php:14
+#: includes/admin/affiliates/affiliates.php:59 includes/admin/class-menu.php:11
+#: includes/admin/class-menu.php:14
 #: includes/admin/reports/tabs/class-affiliates-reports-tab.php:23
 msgid "Affiliates"
 msgstr "Партнеры"
@@ -1006,8 +998,7 @@ msgstr ""
 "Имя и фамилия Партнера. Будет пусто если Имя не указано. Можно изменить на "
 "странице <a href=\"%1$s\" alt=\"%2$s\">редактирования</a>."
 
-#: includes/admin/affiliates/edit.php:42
-#: includes/admin/affiliates/edit.php:147
+#: includes/admin/affiliates/edit.php:42 includes/admin/affiliates/edit.php:147
 msgid "A link to the user edit screen for this user."
 msgstr "Ссылка редактирования данных для этого пользователя."
 
@@ -1090,8 +1081,7 @@ msgstr "Сайт по-умолчанию"
 msgid "The affiliate&#8217;s referral rate type."
 msgstr "Тип партнерской&#8217;s ставки."
 
-#: includes/admin/affiliates/edit.php:174
-#: includes/admin/affiliates/new.php:100
+#: includes/admin/affiliates/edit.php:174 includes/admin/affiliates/new.php:100
 #: includes/admin/settings/class-settings.php:534
 #: includes/integrations/class-edd.php:717
 #: includes/integrations/class-edd.php:754
@@ -1107,8 +1097,7 @@ msgstr "Тип партнерской&#8217;s ставки."
 msgid "Referral Rate"
 msgstr "Реферальная ставка"
 
-#: includes/admin/affiliates/edit.php:179
-#: includes/admin/affiliates/new.php:105
+#: includes/admin/affiliates/edit.php:179 includes/admin/affiliates/new.php:105
 msgid ""
 "The affiliate&#8217;s referral rate, such as 20 for 20%. If left blank, the "
 "site default will be used."
@@ -1128,8 +1117,7 @@ msgstr ""
 "Емейл учетной записи Партнера. Обновление приведет к изменению емейла , "
 "который отображается на странице профиля пользователя."
 
-#: includes/admin/affiliates/edit.php:200
-#: includes/admin/affiliates/new.php:113
+#: includes/admin/affiliates/edit.php:200 includes/admin/affiliates/new.php:113
 #: includes/admin/settings/class-settings.php:905
 #: includes/admin/tools/export/class-batch-export-affiliates.php:96
 #: includes/admin/tools/export/class-batch-export-referrals.php:146
@@ -1142,8 +1130,7 @@ msgstr ""
 msgid "Payment Email"
 msgstr "Емейл для платежей"
 
-#: includes/admin/affiliates/edit.php:205
-#: includes/admin/affiliates/new.php:118
+#: includes/admin/affiliates/edit.php:205 includes/admin/affiliates/new.php:118
 msgid ""
 "Affiliate&#8217;s payment email for systems such as PayPal, Moneybookers, or "
 "others. Leave blank to use the affiliate&#8217;s user email."
@@ -1159,13 +1146,11 @@ msgstr "Метод продвижения"
 msgid "Promotion methods entered by the affiliate during registration."
 msgstr "Метод продвижения, выбранный Партнером."
 
-#: includes/admin/affiliates/edit.php:226
-#: includes/admin/affiliates/new.php:126
+#: includes/admin/affiliates/edit.php:226 includes/admin/affiliates/new.php:126
 msgid "Affiliate Notes"
 msgstr "Заметки партнеров"
 
-#: includes/admin/affiliates/edit.php:231
-#: includes/admin/affiliates/new.php:131
+#: includes/admin/affiliates/edit.php:231 includes/admin/affiliates/new.php:131
 msgid ""
 "Enter any notes for this affiliate. Notes are only visible to the admin."
 msgstr ""
@@ -1186,19 +1171,17 @@ msgid "New Affiliate"
 msgstr "Новый Партнер"
 
 #: includes/admin/affiliates/new.php:18
-#, fuzzy
 msgid ""
 "Use this form to create a new affiliate account. Each affiliate is tied "
 "directly to a user account, so if the user account for the affiliate does "
 "not yet exist, <a href=\"%s\" target=\"_blank\">create one</a>."
 msgstr ""
-"Используйте эту страницу, чтобы зарегистрировать нового Партнера. Каждый "
+"Используйте эту форму, чтобы зарегистрировать нового Партнера. Каждый "
 "Партнер привязывается к пользовательску аккаунту, поэтому, если "
 "пользовательский аккаунт для Партнера до сих пор не существует, <a href=\"%s"
 "\" target=\"_blank\">создайте его</a>."
 
 #: includes/admin/affiliates/new.php:25
-#, fuzzy
 msgid "User login name"
 msgstr "Имя пользователя"
 
@@ -1211,25 +1194,24 @@ msgstr ""
 "пользовательского аккаунта."
 
 #: includes/admin/affiliates/new.php:40
-#, fuzzy
 msgid "User email"
-msgstr "Email покупателю"
+msgstr "Email пользователя"
 
 #: includes/admin/affiliates/new.php:45
-#, fuzzy
 msgid "Enter an email address for the new user."
-msgstr "Разрешить создание рефералов для этой формы"
+msgstr "Введите email для нового пользователя."
 
 #: includes/admin/affiliates/new.php:53
-#, fuzzy
 msgid "User Password"
-msgstr "Пароль"
+msgstr "Пароль пользователя"
 
 #: includes/admin/affiliates/new.php:57
 msgid ""
 "The password will be auto-generated and can be reset by the user or an "
 "administrator after the account is created."
 msgstr ""
+"Пароль будет автоматически сгенерирован и может быть сброшен пользователем "
+"или администратором после создания учетной записи."
 
 #: includes/admin/affiliates/new.php:74
 msgid "The status assigned to the affiliate&#8217;s account."
@@ -1481,14 +1463,12 @@ msgid "Referral added successfully"
 msgstr "Реферал успешно добавлен"
 
 #: includes/admin/class-notices.php:230
-#, fuzzy
 msgid "Referral wasn&#8217;t created, please try again."
-msgstr "Партнер не был добавлен, пожалуйста, попробуйте снова."
+msgstr "Реферал не был добавлен, пожалуйста, попробуйте снова."
 
 #: includes/admin/class-notices.php:237
-#, fuzzy
 msgid "Referral not created because affiliate is invalid"
-msgstr "Реферал не создан, т.к использовался аккаунт партнера."
+msgstr "Реферал не создан, потому что партнер недействителен"
 
 #: includes/admin/class-notices.php:244
 msgid "Referral updated successfully"
@@ -1511,14 +1491,12 @@ msgid "A payout has been created."
 msgstr "Выплата создана."
 
 #: includes/admin/class-notices.php:275
-#, fuzzy
 msgid "Payout deleted successfully."
-msgstr "Рекламный материал успешно удален"
+msgstr "Выплата была успешно удалена."
 
 #: includes/admin/class-notices.php:281
-#, fuzzy
 msgid "Payout deletion failed, please try again."
-msgstr "Не удалось удалить Партнера, пожалуйста, попробуйте снова"
+msgstr "Не удалось удалить выплату, пожалуйста, попробуйте снова."
 
 #: includes/admin/class-notices.php:288
 msgid "Creative updated successfully"
@@ -1623,13 +1601,13 @@ msgid "Upgrade Database"
 msgstr "Обновление базы данных"
 
 #: includes/admin/class-notices.php:468
-#, fuzzy
 msgid ""
 "Your database needs to be upgraded following the latest AffiliateWP update. "
 "Depending on the size of your database, this upgrade could take some time."
 msgstr ""
 "Ваша БД нуждается в обновлении для совместимости с последней версией "
-"AffiliateWP."
+"AffiliateWP. В зависимости от размера вашей базы данных это обновление может "
+"занять некоторое время."
 
 #: includes/admin/class-notices.php:494 tests/admin/test-notices.php:605
 msgid ""
@@ -1665,16 +1643,12 @@ msgid "Your Name"
 msgstr "Ваше имя"
 
 #: includes/admin/class-upgrades.php:742
-#, fuzzy
 msgid "Notify site admin when a new affiliate has registered"
-msgstr ""
-"Оповещать администраторов сайта о новых зарегистрировавшихся Партнерах."
+msgstr "Оповещать администраторов сайта о новых зарегистрировавшихся Партнерах"
 
 #: includes/admin/class-upgrades.php:750
-#, fuzzy
 msgid "Notify site admin when new referrals are earned"
-msgstr ""
-"Оповещать администраторов сайта о новых зарегистрировавшихся Партнерах."
+msgstr "Оповещать администраторов сайта о новых полученных рефералах."
 
 #: includes/admin/creatives/actions.php:16
 #: includes/admin/creatives/actions.php:80
@@ -1782,14 +1756,12 @@ msgid ""
 msgstr "Выберите свою картинку. Вы также можете ввести ссылка на картинку."
 
 #: includes/admin/creatives/edit.php:100
-#, fuzzy
 msgid "Created"
-msgstr "Рекламный материал"
+msgstr "Создано"
 
 #: includes/admin/creatives/edit.php:105
-#, fuzzy
 msgid "The date the creative was created. This cannot be changed."
-msgstr "Дата создания баннера."
+msgstr "Дата создания баннера. Это невозможно изменить."
 
 #: includes/admin/creatives/edit.php:121 includes/admin/creatives/new.php:97
 msgid "Select the status of the creative."
@@ -1836,15 +1808,13 @@ msgid "Number of creatives per page:"
 msgstr "Количество баннеров на странице:"
 
 #: includes/admin/overview/metaboxes/class-metabox-overview-highest-converting-urls.php:33
-#, fuzzy
 msgid "Highest Converting URLs"
-msgstr "Лучшие партнеры по конверсии"
+msgstr "Лучшие URL по конверсии"
 
 #: includes/admin/overview/metaboxes/class-metabox-overview-highest-converting-urls.php:99
 #: includes/admin/overview/metaboxes/class-metabox-overview-highest-converting-urls.php:105
-#, fuzzy
 msgid "No highest converting urls recorded yet."
-msgstr "Рефералы еще не записаны"
+msgstr "Лучшие URL по конверсии еще не записаны."
 
 #: includes/admin/overview/metaboxes/class-metabox-overview-most-valuable.php:39
 msgid "Most Valuable Affiliates"
@@ -2011,14 +1981,12 @@ msgid "You do not have permission to manage referrals"
 msgstr "У Вас нет разрешения управлять рефералами"
 
 #: includes/admin/referrals/actions.php:26
-#, fuzzy
 msgid "Referral not created because affiliate is invalid."
-msgstr "Реферал не создан, т.к использовался аккаунт партнера."
+msgstr "Реферал не создан, потому что партнер недействителен."
 
 #: includes/admin/referrals/actions.php:131
-#, fuzzy
 msgid "You do not have permission to manage payouts"
-msgstr "У Вас нет разрешения управлять баннерами"
+msgstr "У Вас нет разрешения управлять выплатами"
 
 #: includes/admin/referrals/class-list-table.php:150
 #: includes/admin/referrals/edit.php:277 includes/admin/referrals/new.php:135
@@ -2040,9 +2008,8 @@ msgid "Reference"
 msgstr "Отсылка"
 
 #: includes/admin/referrals/class-list-table.php:172
-#, fuzzy
 msgid "Type"
-msgstr "Вид реферальной ставки"
+msgstr "Тип"
 
 #: includes/admin/referrals/class-list-table.php:173
 #: includes/admin/referrals/edit.php:164 includes/admin/referrals/new.php:66
@@ -2082,25 +2049,22 @@ msgid "Apply"
 msgstr "Применить"
 
 #: includes/admin/referrals/class-list-table.php:596
-#: includes/admin/referrals/referrals.php:67
-#: includes/admin/tools/tools.php:310 includes/admin/tools/tools.php:337
-#: includes/admin/tools/tools.php:361 includes/admin/visits/visits.php:58
-#: includes/class-graph.php:419
+#: includes/admin/referrals/referrals.php:67 includes/admin/tools/tools.php:310
+#: includes/admin/tools/tools.php:337 includes/admin/tools/tools.php:361
+#: includes/admin/visits/visits.php:58 includes/class-graph.php:419
 msgid "From - mm/dd/yyyy"
 msgstr "С - мм/дд/гггг"
 
 #: includes/admin/referrals/class-list-table.php:597
-#: includes/admin/referrals/referrals.php:68
-#: includes/admin/tools/tools.php:311 includes/admin/tools/tools.php:338
-#: includes/admin/tools/tools.php:362 includes/admin/visits/visits.php:59
-#: includes/class-graph.php:421
+#: includes/admin/referrals/referrals.php:68 includes/admin/tools/tools.php:311
+#: includes/admin/tools/tools.php:338 includes/admin/tools/tools.php:362
+#: includes/admin/visits/visits.php:59 includes/class-graph.php:421
 msgid "To - mm/dd/yyyy"
 msgstr "По - мм/дд/гггг"
 
 #: includes/admin/referrals/class-list-table.php:601
-#, fuzzy
 msgid "All Types"
-msgstr "За все время"
+msgstr "Все типы"
 
 #: includes/admin/referrals/contextual-help.php:29
 #: includes/admin/visits/contextual-help.php:29
@@ -2291,14 +2255,12 @@ msgstr "Количество рефералов, такое как 15."
 #: includes/integrations/class-formidablepro.php:128
 #: includes/integrations/class-gravityforms.php:295
 #: includes/integrations/extras/class-ninja-forms-action-add-referral.php:101
-#, fuzzy
 msgid "Referral Type"
-msgstr "Вид реферальной ставки"
+msgstr "Тип реферала"
 
 #: includes/admin/referrals/edit.php:156 includes/admin/referrals/new.php:58
-#, fuzzy
 msgid "Select the type of the referral."
-msgstr "Выберите статус реферала."
+msgstr "Выберите тип реферала."
 
 #: includes/admin/referrals/edit.php:176
 msgid "Visit"
@@ -2726,24 +2688,25 @@ msgid "Terms of Use"
 msgstr "Правила пользования"
 
 #: includes/admin/settings/class-settings.php:478
-#, fuzzy
 msgid "Select the page that shows the terms of use for Affiliate Registration."
 msgstr ""
 "Выберите страницу, которая будет показывать Правила пользования при "
-"Регистрации Партнера"
+"регистрации Партнера."
 
 #: includes/admin/settings/class-settings.php:484
-#, fuzzy
 msgid "Terms of Use Label"
-msgstr "Правила пользования"
+msgstr "Текст о Правилах пользования"
 
 #: includes/admin/settings/class-settings.php:485
 msgid "Enter the text you would like shown for the Terms of Use checkbox."
 msgstr ""
+"Введите текст, который вы хотите показать для чекбокса о согласии с "
+"Правилами использования."
 
 #: includes/admin/settings/class-settings.php:487 templates/register.php:121
 msgid "Agree to our Terms of Use and Privacy Policy"
 msgstr ""
+"Согласен с нашими Условиями использования и Политикой конфиденциальности"
 
 #: includes/admin/settings/class-settings.php:490
 msgid "Referral Settings"
@@ -2759,7 +2722,7 @@ msgstr "Переменная URL для реферальной ссылки. Н�
 
 #: includes/admin/settings/class-settings.php:501
 msgid "Default Referral Format"
-msgstr "Вид реф. ссылки"
+msgstr "Вид реферальной ссылки"
 
 #: includes/admin/settings/class-settings.php:502
 msgid ""
@@ -2828,9 +2791,8 @@ msgid "Enter how many days the referral tracking cookie should be valid for."
 msgstr "Сколько дней cookie для отслеживания рефералов могут работать."
 
 #: includes/admin/settings/class-settings.php:559
-#, fuzzy
 msgid "Cookie Sharing"
-msgstr "Истечение файлов-cookie"
+msgstr "Совместное использование файлов cookie"
 
 #: includes/admin/settings/class-settings.php:560
 msgid ""
@@ -2838,6 +2800,10 @@ msgid ""
 "enabled, tracking cookies created on domain.com will also be available on "
 "sub.domain.com. Note: this only applies to WordPress Multisite installs."
 msgstr ""
+"Совместное использование файлов cookie с поддоменами в мультисайтовой "
+"установке. Когда включено, файлы cookie, созданные на domain.com, также "
+"будут доступны на sub.domain.com. Примечание: это относится только к "
+"установкам WordPress Multisite."
 
 #: includes/admin/settings/class-settings.php:564
 msgid "Currency Settings"
@@ -2945,39 +2911,43 @@ msgstr ""
 "\">документации</a> для подробного объяснения."
 
 #: includes/admin/settings/class-settings.php:642
-#, fuzzy
 msgid "Opt-In Referral Amount"
-msgstr "Реферальная ставка."
+msgstr "Реферальная ставка за подписку"
 
 #: includes/admin/settings/class-settings.php:647
 msgid ""
 "Enter the amount affiliates should receive for each opt-in referral. Default "
 "is 0.00."
 msgstr ""
+"Введите партнерскую ставку, которая должна быть получена за каждую заявку. "
+"Значение по умолчанию: 0.00."
 
 #: includes/admin/settings/class-settings.php:650
-#, fuzzy
 msgid "Opt-In Referral Status"
-msgstr "Статусы реферал:"
+msgstr "Статусы подписок рефералов:"
 
 #: includes/admin/settings/class-settings.php:657
 msgid ""
 "Select the status that should be assigned to opt-in referrals by default."
 msgstr ""
+"Выберите статус, который должен быть назначен по умолчанию для подписок "
+"рефералов."
 
 #: includes/admin/settings/class-settings.php:660
 msgid "Message shown upon opt-in success"
-msgstr ""
+msgstr "Сообщение, показанное после успешной подписки"
 
 #: includes/admin/settings/class-settings.php:663
 msgid ""
 "Enter the message you would like to show subscribers after they have opted-"
 "in successfully."
 msgstr ""
+"Введите сообщение, которое вы хотите показывать подписчикам после того, как "
+"они успешно подписались."
 
 #: includes/admin/settings/class-settings.php:666
 msgid "Platform"
-msgstr ""
+msgstr "Платформа"
 
 #: includes/admin/settings/class-settings.php:667
 msgid ""
@@ -2986,19 +2956,23 @@ msgid ""
 "using the [opt_in] shortcode. <a href=\"https://docs.affiliatewp.com/"
 "article/2034-optin-opt-in-form\">Learn more</a>."
 msgstr ""
+"Выберите поставщика платформы для подписок, который вы хотите использовать, "
+"затем нажмите Сохранить изменения, чтобы настроить параметры. Форма подписки "
+"может отображаться на любой странице с помощью шорткода [opt_in]. <a href="
+"\"https://docs.affiliatewp.com/article/2034-optin-opt-in-form\">Узнать "
+"больше</a>."
 
 #: includes/admin/settings/class-settings.php:669
 msgid "(select one)"
-msgstr ""
+msgstr "(выбрать)"
 
 #: includes/admin/settings/class-settings.php:684
-#, fuzzy
 msgid "Email Options"
-msgstr "Емейлы"
+msgstr "Параметры Email"
 
 #: includes/admin/settings/class-settings.php:689
 msgid "Logo"
-msgstr "Лого"
+msgstr "Логотип"
 
 #: includes/admin/settings/class-settings.php:690
 msgid "Upload or choose a logo to be displayed at the top of emails."
@@ -3033,24 +3007,20 @@ msgstr ""
 "\"от\" или \"ответить\"."
 
 #: includes/admin/settings/class-settings.php:712
-#, fuzzy
 msgid "Email Notifications"
-msgstr "Email уведомления: %s"
+msgstr "Email уведомления"
 
 #: includes/admin/settings/class-settings.php:713
-#, fuzzy
 msgid "The email notifications sent to the admin and affiliate."
-msgstr "Email-адресс Партнера"
+msgstr "Уведомления по email отправляются администратору и партнеру."
 
 #: includes/admin/settings/class-settings.php:718
-#, fuzzy
 msgid "Registration Email Admin Options"
-msgstr "Регистрация email сообщения"
+msgstr "Настройки письма администратору о регистрации"
 
 #: includes/admin/settings/class-settings.php:723
-#, fuzzy
 msgid "Registration Email Admin Subject"
-msgstr "Регистрация темы емейла"
+msgstr "Тема письма администратору о регистрации"
 
 #: includes/admin/settings/class-settings.php:724
 msgid ""
@@ -3066,9 +3036,8 @@ msgid "New Affiliate Registration"
 msgstr "Регистрация нового Партнера"
 
 #: includes/admin/settings/class-settings.php:729
-#, fuzzy
 msgid "Registration Email Admin Content"
-msgstr "Регистрация email сообщения"
+msgstr "Содержимое письма администратору о регистрации"
 
 #: includes/admin/settings/class-settings.php:730
 msgid ""
@@ -3087,57 +3056,49 @@ msgid "Name: "
 msgstr "Имя: "
 
 #: includes/admin/settings/class-settings.php:735
-#, fuzzy
 msgid "New Referral Admin Email Options"
-msgstr "Новый реферал, текст сообщения"
+msgstr "Настройки письма администратору о новом реферале"
 
 #: includes/admin/settings/class-settings.php:740
-#, fuzzy
 msgid "New Referral Admin Email Subject"
-msgstr "Тема email письма о новом реферале"
+msgstr "Тема письма администратору о новом реферале"
 
 #: includes/admin/settings/class-settings.php:741
-#, fuzzy
 msgid ""
 "Enter the subject line for the email sent to site the site administrator "
 "when affiliates earn referrals."
 msgstr ""
-"Введите тему для сообщения, которое отправляется, когда Партнер заработает "
-"на реферале."
+"Введите тему для сообщения, которое отправляется админитратору, когда "
+"Партнер заработает на реферале."
 
 #: includes/admin/settings/class-settings.php:743
 #: includes/emails/actions.php:353
-#, fuzzy
 msgid "Referral Earned!"
-msgstr "Реферал отмечен!"
+msgstr "Получен реферал!"
 
 #: includes/admin/settings/class-settings.php:746
-#, fuzzy
 msgid "New Referral Admin Email Content"
-msgstr "Новый реферал, текст сообщения"
+msgstr "Содержимое письма администратору о новом реферале"
 
 #: includes/admin/settings/class-settings.php:747
-#, fuzzy
 msgid ""
 "Enter the email to send to site administrators when new referrals are "
 "earned. HTML is accepted. Available template tags:"
 msgstr ""
-"Введите текст сообщения для уведомления о новом реферале. HTML разрешен. "
-"Допустимые теги шаблона:"
+"Введите текст сообщения для уведомления администратора о новом реферале. "
+"HTML разрешен. Допустимые теги шаблона:"
 
 #: includes/admin/settings/class-settings.php:749
-#, fuzzy
 msgid "{name} has been awarded a new referral of {amount} on {site_name}."
-msgstr "Вы получили нового реферала %s %s!"
+msgstr "{name} получил нового реферала на сумму {amount} на сайте {site_name}."
 
 #: includes/admin/settings/class-settings.php:752
-#, fuzzy
 msgid "New Referral Email Options"
-msgstr "Новый реферал, текст сообщения"
+msgstr "Настройки письма о новом реферале"
 
 #: includes/admin/settings/class-settings.php:757
 msgid "New Referral Email Subject"
-msgstr "Тема email письма о новом реферале"
+msgstr "Тема письма о новом реферале"
 
 #: includes/admin/settings/class-settings.php:758
 msgid ""
@@ -3150,11 +3111,11 @@ msgstr ""
 #: includes/admin/settings/class-settings.php:760
 #: includes/emails/actions.php:294
 msgid "Referral Awarded!"
-msgstr "Реферал отмечен!"
+msgstr "Реферал получен!"
 
 #: includes/admin/settings/class-settings.php:763
 msgid "New Referral Email Content"
-msgstr "Новый реферал, текст сообщения"
+msgstr "Содержимое письма о новом реферале"
 
 #: includes/admin/settings/class-settings.php:764
 msgid ""
@@ -3186,13 +3147,12 @@ msgstr ""
 "эти оповещения:"
 
 #: includes/admin/settings/class-settings.php:769
-#, fuzzy
 msgid "Application Accepted Email Options"
-msgstr "Заявка Партнера принята"
+msgstr "Настройки письма о принятой заявке"
 
 #: includes/admin/settings/class-settings.php:774
 msgid "Application Accepted Email Subject"
-msgstr "Заявка Партнера принята"
+msgstr "Тема письма о принятой заявке"
 
 #: includes/admin/settings/class-settings.php:775
 msgid ""
@@ -3209,7 +3169,7 @@ msgstr "Заявка Партнера принята"
 
 #: includes/admin/settings/class-settings.php:780
 msgid "Application Accepted Email Content"
-msgstr "Заявка Партнера принята"
+msgstr "Содержимое письма о принятой заявке"
 
 #: includes/admin/settings/class-settings.php:781
 msgid ""
@@ -3262,7 +3222,7 @@ msgstr "Ссылка выхода"
 
 #: includes/admin/settings/class-settings.php:813
 msgid "Add a logout link to the Affiliate Area."
-msgstr "Добавить ссылку выхода в Партнерской зоне."
+msgstr "Добавить ссылку выхода в Партнерский кабинет."
 
 #: includes/admin/settings/class-settings.php:817
 msgid "Default Referral URL"
@@ -3297,7 +3257,7 @@ msgstr "Это используется для идентификации ваш
 
 #: includes/admin/settings/class-settings.php:832
 msgid "reCAPTCHA Secret Key"
-msgstr "секретный ключ reCAPTCHA"
+msgstr "Секретный ключ reCAPTCHA"
 
 #: includes/admin/settings/class-settings.php:833
 msgid ""
@@ -3379,16 +3339,15 @@ msgstr ""
 
 #: includes/admin/settings/class-settings.php:862
 msgid "Opt into Beta Versions"
-msgstr "Опт в бета-версии"
+msgstr "Сообщать о бета-версиях"
 
 #: includes/admin/settings/class-settings.php:863
-#, fuzzy
 msgid ""
 "Receive update notifications for beta releases. When beta versions are "
 "available, an update notification will be shown on your Plugins page."
 msgstr ""
 "Получать уведомления об обновлениях для бета-релизов. Когда бета-версии "
-"доступны, уведомление об обновлении будут указаны на странице плагинов.\n"
+"доступны, уведомление об обновлении будут указаны на странице плагинов."
 
 #: includes/admin/settings/class-settings.php:867
 msgid "Remove Data on Uninstall"
@@ -3404,16 +3363,15 @@ msgid "Required Registration Fields"
 msgstr "Модерировать регистрации"
 
 #: includes/admin/settings/class-settings.php:899
-#, fuzzy
 msgid ""
 "Select which fields should be required for affiliate registration. The "
 "<strong>Username</strong> and <strong>Account Email</strong> form fields are "
 "always required. The <strong>Password</strong> form field will be removed if "
 "not required."
 msgstr ""
-"Выберите поля, которые должны быть необходимые для регистрации партнерства. "
-"В <сильный>Имя пользователя в для учетной записи электронной почты или "
-"пароль в поля формы являются обязательными."
+"Выберите поля, которые необходимы для регистрации партнера. Обязательные "
+"поля: <strong>Имя пользователя</strong> и <strong>Email пользователя</"
+"strong>. Поле <strong>Пароль</strong> будет удалено, если это не требуется."
 
 #: includes/admin/settings/class-settings.php:902 templates/login.php:30
 #: templates/register.php:98
@@ -3425,41 +3383,32 @@ msgid "How will you promote us?"
 msgstr "Как вы будете нас продвигать?"
 
 #: includes/admin/settings/class-settings.php:927
-#, fuzzy
 msgid "Notify admin when a new affiliate has registered"
-msgstr ""
-"Оповещать администраторов сайта о новых зарегистрировавшихся Партнерах."
+msgstr "Оповещать администраторов о новых зарегистрировавшихся Партнерах"
 
 #: includes/admin/settings/class-settings.php:928
-#, fuzzy
 msgid "Notify admin when a new referral has been created"
-msgstr ""
-"Оповещать администраторов сайта о новых зарегистрировавшихся Партнерах."
+msgstr "Оповещать администраторов о новых полученных рефералах"
 
 #: includes/admin/settings/class-settings.php:929
-#, fuzzy
 msgid "Notify affiliate when they earn a new referral"
-msgstr ""
-"Оповещать администраторов сайта о новых зарегистрировавшихся Партнерах."
+msgstr "Оповещать партнеров о новых полученных рефералах"
 
 #: includes/admin/settings/class-settings.php:930
-#, fuzzy
 msgid "Notify affiliate when their affiliate application is accepted"
-msgstr "Ваша партнерская заявка на %s была принята!"
+msgstr "Оповещать партнеров, когда их заявка принята"
 
 #: includes/admin/settings/class-settings.php:934
 msgid "Notify affiliate when their affiliate application is pending"
-msgstr ""
+msgstr "Оповещать партнеров, когда их заявка ожидается"
 
 #: includes/admin/settings/class-settings.php:935
-#, fuzzy
 msgid "Notify affiliate when their affiliate application is rejected"
-msgstr "Ваша заявка на Партнера была отклонена"
+msgstr "Оповещать партнеров, когда их заявка отклонена"
 
 #: includes/admin/settings/class-settings.php:959
-#, fuzzy
 msgid "Application Pending Email Options"
-msgstr "Текст сообщения"
+msgstr "Текст сообщения об ожидании заявки"
 
 #: includes/admin/settings/class-settings.php:964
 msgid "Application Pending Email Subject"
@@ -3503,9 +3452,8 @@ msgid ""
 msgstr "Мы рассматриваем вашу заявку и в скором времени с вами свяжемся!"
 
 #: includes/admin/settings/class-settings.php:976
-#, fuzzy
 msgid "Application Rejection Email Options"
-msgstr "Текст сообщения об отклонении заявки на Партнера"
+msgstr "Текст сообщения об отклонении заявки"
 
 #: includes/admin/settings/class-settings.php:981
 msgid "Application Rejection Email Subject"
@@ -3619,7 +3567,7 @@ msgstr "Общее"
 
 #: includes/admin/settings/display-settings.php:62
 msgid "Opt-In Form"
-msgstr ""
+msgstr "Формы подписки"
 
 #: includes/admin/settings/display-settings.php:63
 msgid "Emails"
@@ -3721,11 +3669,10 @@ msgid "Email"
 msgstr "Емейл"
 
 #: includes/admin/tools/export/class-batch-export-affiliates.php:94
-#: includes/admin/utilities/class-privacy-tools.php:167
-#: templates/opt-in.php:21 templates/opt-in.php:22
-#, fuzzy
+#: includes/admin/utilities/class-privacy-tools.php:167 templates/opt-in.php:21
+#: templates/opt-in.php:22
 msgid "First Name"
-msgstr "Имя/ФИО"
+msgstr "Имя"
 
 #: includes/admin/tools/export/class-batch-export-affiliates.php:95
 #: includes/admin/utilities/class-privacy-tools.php:171
@@ -4085,13 +4032,12 @@ msgid "Export payouts to a CSV file."
 msgstr "Экспорт выплат в CSV-файл."
 
 #: includes/admin/tools/tools.php:343
-#, fuzzy
 msgid ""
 "To search for an affiliate, enter the affiliate&#8217;s login name, first "
 "name, or last name. Leave blank to export payouts for all affiliates."
 msgstr ""
 "Чтобы найти Партнера, введите логин Партнера, Имя или Фамилию. Оставьте поле "
-"пустым, чтобы экспортировать рефералов всех Партнеров."
+"пустым, чтобы экспортировать выплаты для всех Партнеров."
 
 #: includes/admin/tools/tools.php:353
 msgid "Export Visits"
@@ -4106,13 +4052,12 @@ msgid "Unconverted"
 msgstr "Не конвертирован"
 
 #: includes/admin/tools/tools.php:368
-#, fuzzy
 msgid ""
 "To search for an affiliate, enter the affiliate&#8217;s login name, first "
 "name, or last name. Leave blank to export visits for all affiliates."
 msgstr ""
 "Чтобы найти Партнера, введите логин Партнера, Имя или Фамилию. Оставьте поле "
-"пустым, чтобы экспортировать рефералов всех Партнеров."
+"пустым, чтобы экспортировать посещения для всех Партнеров."
 
 #: includes/admin/tools/tools.php:378
 msgid "Export Settings"
@@ -4315,52 +4260,44 @@ msgstr[2] "%s элементов было успешно обработано."
 #: includes/admin/utilities/class-privacy-tools.php:55
 #: includes/admin/utilities/class-privacy-tools.php:90
 #: includes/admin/utilities/class-privacy-tools.php:122
-#, fuzzy
 msgid "Affiliate Record"
-msgstr "Ставка Партнера"
+msgstr "Запись Партнера"
 
 #: includes/admin/utilities/class-privacy-tools.php:37
 #: includes/admin/utilities/class-privacy-tools.php:60
 #: includes/admin/utilities/class-privacy-tools.php:155
 #: includes/admin/utilities/class-privacy-tools.php:185
-#, fuzzy
 msgid "Affiliate Customer Record"
-msgstr "Имя Партнера"
+msgstr "Запись клиента Партнера"
 
 #: includes/admin/utilities/class-privacy-tools.php:94
 #: includes/admin/utilities/class-privacy-tools.php:126
 #: includes/admin/utilities/class-privacy-tools.php:159
 #: includes/admin/utilities/class-privacy-tools.php:189
-#, fuzzy
 msgid "Customer ID"
-msgstr "Email покупателю"
+msgstr "ID покупателя"
 
 #: includes/admin/utilities/class-privacy-tools.php:98
-#, fuzzy
 msgid "Primary Email"
-msgstr "Email-адрес отправителя"
+msgstr "Основной email"
 
 #: includes/admin/utilities/class-privacy-tools.php:110
 #: includes/admin/utilities/class-privacy-tools.php:175
-#, fuzzy
 msgid "Date Created"
-msgstr "Обновить баннер"
+msgstr "Дата создания"
 
 #: includes/admin/utilities/class-privacy-tools.php:127
 #: includes/admin/utilities/class-privacy-tools.php:190
-#, fuzzy
 msgid "No records found"
-msgstr "Рефералы не найдены."
+msgstr "Записи не найдены"
 
 #: includes/admin/utilities/class-privacy-tools.php:233
-#, fuzzy
 msgid "Affiliate record has been deleted."
-msgstr "Ваш профиль Партнера был обновлен"
+msgstr "Запись партнера была удалена."
 
 #: includes/admin/utilities/class-privacy-tools.php:266
-#, fuzzy
 msgid "Affiliate customer record has been deleted."
-msgstr "Учетная запись партнера не может быть удалена."
+msgstr "Запись клиента партнера была удалена."
 
 #: includes/admin/visits/class-list-table.php:104
 msgid "Landing Page"
@@ -4527,20 +4464,19 @@ msgstr "Неверное имя или пароль"
 
 #: includes/class-referral-type-registry.php:50
 msgid "Sale"
-msgstr ""
+msgstr "Продажа"
 
 #: includes/class-referral-type-registry.php:55
 msgid "Opt-In"
-msgstr ""
+msgstr "Opt-In"
 
 #: includes/class-referral-type-registry.php:60
 msgid "Lead"
-msgstr ""
+msgstr "Лид"
 
 #: includes/class-referral-type-registry.php:83
-#, fuzzy
 msgid "A referral type label must be specified."
-msgstr "Пакетное класс процесс должен быть указан."
+msgstr "Необходимо указать метку типа реферала."
 
 #: includes/class-referrals-graph.php:142
 msgid "Unpaid Referral Earnings"
@@ -4853,55 +4789,43 @@ msgid "Number of creatives: %d"
 msgstr "Количество баннеров: %d"
 
 #: includes/cli/class-customer-sub-commands.php:120
-#, fuzzy
 msgid "A --email value must be specified to add a new customer."
-msgstr ""
-"В --значение имени должно быть указано, чтобы добавить новое объявление."
+msgstr "--email должен быть указан, чтобы добавить нового клиента."
 
 #: includes/cli/class-customer-sub-commands.php:136
-#, fuzzy
 msgid "A customer with the ID %d has been successfully created."
-msgstr "Баннер с идентификатором %D был успешно создан."
+msgstr "Клиент с ID %d был успешно создан."
 
 #: includes/cli/class-customer-sub-commands.php:140
-#, fuzzy
 msgid "The customer could not be created."
-msgstr "Визит не может быть создан."
+msgstr "Клиент не может быть создан."
 
 #: includes/cli/class-customer-sub-commands.php:183
 #: includes/cli/class-customer-sub-commands.php:191
 #: includes/cli/class-customer-sub-commands.php:239
 #: includes/cli/class-customer-sub-commands.php:247
-#, fuzzy
 msgid "A valid customer ID is required to proceed."
-msgstr ""
-"Действительный посещении необходимо предъявить удостоверение личности, чтобы "
-"продолжить."
+msgstr "Требуется действительный ID клиента, чтобы продолжить."
 
 #: includes/cli/class-customer-sub-commands.php:207
-#, fuzzy
 msgid "The customer was successfully updated."
-msgstr "Рекламный материал успешно обновлен."
+msgstr "Клиент был успешно обновлен."
 
 #: includes/cli/class-customer-sub-commands.php:211
-#, fuzzy
 msgid "The customer could not be updated."
-msgstr "Визит был успешно удален."
+msgstr "Клиент не может быть обновлен."
 
 #: includes/cli/class-customer-sub-commands.php:255
-#, fuzzy
 msgid "The customer was successfully deleted."
-msgstr "Рекламный материал успешно удален."
+msgstr "Клиент был успешно удалён."
 
 #: includes/cli/class-customer-sub-commands.php:259
-#, fuzzy
 msgid "The customer could not be deleted."
-msgstr "Визит не может быть удален."
+msgstr "Клиент не может быть удалён."
 
 #: includes/cli/class-customer-sub-commands.php:332
-#, fuzzy
 msgid "Number of customers: %d"
-msgstr "Количество визитов: %d"
+msgstr "Количество клиентов: %d"
 
 #: includes/cli/class-payout-sub-commands.php:152
 msgid "No referrals were found matching your criteria. Please try again."
@@ -5141,7 +5065,7 @@ msgstr "Просмотр ожидающих заявок: %s"
 #: includes/emails/actions.php:75 includes/emails/actions.php:149
 #: includes/emails/actions.php:209
 msgid "To set your password, visit the following address:"
-msgstr ""
+msgstr "Чтобы установить пароль, перейдите по ссылке:"
 
 #: includes/emails/actions.php:133 includes/emails/actions.php:299
 msgid "Congratulations %s!"
@@ -5187,10 +5111,9 @@ msgstr ""
 "Вы не можете отсылать сообщения с AffWP_Emails до достижения init/admin_init"
 
 #: includes/emails/class-affwp-emails.php:422
-#, fuzzy
 msgid ""
 "The display name of the affiliate, as set on the affiliate's user profile."
-msgstr "Имя пользователя Партнера на сайте"
+msgstr "Отображаемое имя партнера, указанное в профиле пользователя партнера."
 
 #: includes/emails/class-affwp-emails.php:427
 msgid "The user name of the affiliate on the site"
@@ -5278,9 +5201,8 @@ msgstr "Разрешить создание рефералов для этой �
 
 #: includes/integrations/class-caldera-forms.php:278
 #: includes/integrations/class-formidablepro.php:136
-#, fuzzy
 msgid "Select the referral type for this form."
-msgstr "Разрешить создание рефералов для этой формы"
+msgstr "Выберите тип реферала для этой формы."
 
 #: includes/integrations/class-contactform7.php:110
 msgid "Contact Form 7"
@@ -5307,9 +5229,8 @@ msgid "Enable referrals for specific Contact Form 7 forms"
 msgstr "Разрешить создание рефералов для этой формы"
 
 #: includes/integrations/class-contactform7.php:162
-#, fuzzy
 msgid "Referral type for %s (Form ID: %d)"
-msgstr "Реферал #%d за %s записано за %s"
+msgstr "Тип реферала для %s (Form ID: %d)"
 
 #: includes/integrations/class-contactform7.php:220
 msgid "Form ID: "
@@ -5319,9 +5240,8 @@ msgstr "Form ID: "
 #: includes/integrations/class-edd.php:442
 #: includes/integrations/class-jigoshop.php:215
 #: includes/integrations/class-woocommerce.php:233
-#, fuzzy
 msgid "Referral %1$s for %2$s recorded for %3$s"
-msgstr "Реферал #%d за %s записано за %s"
+msgstr "Реферал %1$s для %2$s записано за %3$s"
 
 #: includes/integrations/class-edd.php:572
 #: includes/integrations/class-pmp.php:255
@@ -5403,9 +5323,8 @@ msgstr ""
 
 #: includes/integrations/class-edd.php:756
 #: includes/integrations/class-edd.php:775
-#, fuzzy
 msgid "The referral rate for this %s category."
-msgstr "Разрешить создание рефералов для этой формы"
+msgstr "Реферальная ставка для этой категории %s."
 
 #: includes/integrations/class-exchange.php:318
 msgid "Affiliate coupon?"
@@ -5610,26 +5529,24 @@ msgid ""
 "No opt-in platform has been configured. Please configure a platform in "
 "settings."
 msgstr ""
+"Opt-in платформа не была настроена. Пожалуйста, настройте платформу в "
+"настройках."
 
 #: includes/integrations/class-opt-in.php:95
-#, fuzzy
 msgid "Please enter your first name"
 msgstr "Пожалуйста, введите свое имя"
 
 #: includes/integrations/class-opt-in.php:99
-#, fuzzy
 msgid "Please enter your last name"
-msgstr "Пожалуйста, введите свое имя"
+msgstr "Пожалуйста, введите свою фамилию"
 
 #: includes/integrations/class-opt-in.php:103
-#, fuzzy
 msgid "Please enter your email address"
-msgstr "Пожалуйста, введите свое имя"
+msgstr "Пожалуйста, введите свой email"
 
 #: includes/integrations/class-opt-in.php:107
-#, fuzzy
 msgid "Please enter a valid email address"
-msgstr "Пожалуйста, введите корректный URL вашего сайта"
+msgstr "Пожалуйста, введите корректный email"
 
 #: includes/integrations/class-paypal.php:104
 msgid "Pending PayPal referral"
@@ -5680,9 +5597,8 @@ msgstr "Отменить рефералы на этот продукт."
 
 #. translators: 1: Referral link, 2: Amount, 3: Affiliate Name
 #: includes/integrations/class-woocommerce.php:272
-#, fuzzy
 msgid "Referral %1$s updated. Amount %2$s recorded for %3$s"
-msgstr "Реферал #%d за %s записано за %s"
+msgstr "Реферал %1$s обновлен. Сумма %2$s записана для %3$s"
 
 #: includes/integrations/class-woocommerce.php:313
 #: includes/integrations/class-woocommerce.php:580
@@ -5690,29 +5606,25 @@ msgid "(Variation ID %d)"
 msgstr "(Variation ID %d)"
 
 #: includes/integrations/class-woocommerce.php:625
-#, fuzzy
 msgid ""
 "Configure affiliate rates for this product. These settings will be used to "
 "calculate affiliate earnings per-sale."
 msgstr ""
-"Эти настройки будут использоваться для расчета заработка за одну продажу. "
-"Оставьте пустым, чтобы использовать стандартные ставки."
+"Настройте партнерские ставки для этого продукта. Эти настройки будут "
+"использоваться для расчета прибыли партнеров с продажи."
 
 #: includes/integrations/class-woocommerce.php:629
-#, fuzzy
 msgid "Affiliate Rate Type"
-msgstr "Ставка Партнера"
+msgstr "Тип партнерской ставки"
 
 #: includes/integrations/class-woocommerce.php:632
-#, fuzzy
 msgid "Earnings can be based on either a percentage or a flat rate amount."
 msgstr ""
-"Рефералы будут выплачиваться, исходя из процентной ставки или чистой суммы."
+"Прибыль может быть основана либо на процентах, либо на фиксированной ставке."
 
 #: includes/integrations/class-woocommerce.php:638
-#, fuzzy
 msgid "Leave blank to use default affiliate rates."
-msgstr "Оставьте пустым для активации Партнера."
+msgstr "Оставьте пустым, чтобы использовать ставки по умолчанию."
 
 #: includes/integrations/class-woocommerce.php:642
 msgid "Disable referrals"
@@ -5751,20 +5663,17 @@ msgstr "Показывать ссылку на Кабинет партнера �
 
 #: includes/integrations/class-woocommerce.php:1074
 #: includes/integrations/class-woocommerce.php:1094
-#, fuzzy
 msgid "The referral rate for this category."
-msgstr "Разрешить создание рефералов для этой формы"
+msgstr "Реферальная ставка для этой категории."
 
 #: includes/integrations/class-woocommerce.php:1131
 #: includes/integrations/class-woocommerce.php:1180
-#, fuzzy
 msgid "Affiliate Referral"
-msgstr "Ставка Партнера"
+msgstr "Реферал Партнера"
 
 #: includes/integrations/class-wpforms.php:50
-#, fuzzy
 msgid "Referral type"
-msgstr "Реферальная ставка"
+msgstr "Тип реферала"
 
 #: includes/integrations/extras/class-exchange-feature.php:27
 msgid ""
@@ -5797,90 +5706,82 @@ msgstr "Перенаправление на Paypal..."
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-activecampaign.php:43
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-mailchimp.php:52
 msgid "%s is already subscribed to this list."
-msgstr ""
+msgstr "%s уже подписан на этот список."
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-activecampaign.php:114
-#, fuzzy
 msgid "ActiveCampaign API URL"
-msgstr "Самые активные кампании (%s)"
+msgstr "ActiveCampaign API URL"
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-activecampaign.php:116
 msgid "Enter your ActiveCampaign API URL."
-msgstr ""
+msgstr "Введите свой ActiveCampaign API URL."
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-activecampaign.php:120
-#, fuzzy
 msgid "ActiveCampaign API Key"
-msgstr "Самые активные кампании (%s)"
+msgstr "Ключ API ActiveCampaign"
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-activecampaign.php:122
 msgid "Enter your ActiveCampaign API key."
-msgstr ""
+msgstr "Введите свой ключ API ActiveCampaign."
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-activecampaign.php:126
-#, fuzzy
 msgid "ActiveCampaign List ID"
-msgstr "Самые активные кампании (%s)"
+msgstr "ID списка ActiveCampaign"
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-activecampaign.php:128
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-mailchimp.php:140
 msgid "Enter the ID of the list you wish to subscribe contacts to."
-msgstr ""
+msgstr "Введите ID списка, на который вы хотите подписать контакты."
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-convertkit.php:61
-#, fuzzy
 msgid "ConvertKit API Key"
-msgstr "Генерировать новые ключи API"
+msgstr "Ключ API ConvertKit"
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-convertkit.php:63
 msgid "Enter your ConvertKit API key."
-msgstr ""
+msgstr "Введите свой ключ API ConvertKit."
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-convertkit.php:67
-#, fuzzy
 msgid "ConvertKit Form ID"
-msgstr "Contact Form 7"
+msgstr "ID формы ConvertKit"
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-convertkit.php:69
 msgid "Enter the ID of the form you wish to subscribe contacts to."
-msgstr ""
+msgstr "Введите ID формы, через которую вы хотите подписать контакты."
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-mailchimp.php:132
 msgid "MailChimp API Key"
-msgstr ""
+msgstr "Ключ API MailChimp"
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-mailchimp.php:134
 msgid "Enter your MailChimp API key."
-msgstr ""
+msgstr "Введите свой ключ API MailChimp."
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-mailchimp.php:138
 msgid "MailChimp List ID"
-msgstr ""
+msgstr "ID списка MailChimp"
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-mailchimp.php:144
 msgid "Double Opt-In"
-msgstr ""
+msgstr "Двойное подтверждение"
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-mailchimp.php:146
 msgid ""
 "Should subscribers need to verify their subscription through a double opt-in "
 "email?"
-msgstr ""
+msgstr "Нужно ли подписчикам подтверждать свою подписку через email?"
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-registry.php:88
-#, fuzzy
 msgid "A platform class must be specified."
-msgstr "Пакетное класс процесс должен быть указан."
+msgstr "Необходимо указать класс платформы."
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-registry.php:92
-#, fuzzy
 msgid "A platform file must be specified."
-msgstr "Пакетное класс процесс должен быть указан."
+msgstr "Необходимо указать файл платформы."
 
 #: includes/integrations/opt-in-platforms/class-opt-in-platform-registry.php:96
-#, fuzzy
 msgid "A platform label must be specified."
-msgstr "Пакетное класс процесс должен быть указан."
+msgstr "Должна быть указана метка платформы."
 
 #: includes/misc-functions.php:26
 msgid "US Dollars"
@@ -5904,7 +5805,7 @@ msgstr "Бангладешские Таки"
 
 #: includes/misc-functions.php:31
 msgid "Bitcoin"
-msgstr ""
+msgstr "Биткоин"
 
 #: includes/misc-functions.php:32
 msgid "Brazilian Real"
@@ -5984,7 +5885,7 @@ msgstr "Японская йена"
 
 #: includes/misc-functions.php:51
 msgid "Kenyan Shilling"
-msgstr ""
+msgstr "Кенийский шиллинг"
 
 #: includes/misc-functions.php:52
 msgid "Kazakhstani Tenge"
@@ -6166,16 +6067,16 @@ msgid ""
 "The user you entered does not exist. Enter an email below to create a new "
 "user and affiliate at the same time."
 msgstr ""
+"Пользователь, которого вы ввели, не существует. Введите email ниже, чтобы "
+"создать нового пользователя и партнера одновременно."
 
 #: includes/scripts.php:137
-#, fuzzy
 msgid "An affiliate already exists for this username."
-msgstr "Филиал уже существует для этой учетной записи пользователя."
+msgstr "Партнер уже существует для этой учетной записи пользователя."
 
 #: includes/scripts.php:138
-#, fuzzy
 msgid "View Affiliate"
-msgstr "Новый Партнер"
+msgstr "Посмотреть Партнера"
 
 #: includes/scripts.php:179
 msgid "Please enter a valid URL for this site"
@@ -6350,13 +6251,12 @@ msgid "The affiliate area is available only for registered affiliates."
 msgstr "Кабинет Партнера доступен только для зарегистрированных Партнеров."
 
 #: templates/opt-in.php:9
-#, fuzzy
 msgid "You have subscribed successfully."
-msgstr "Выплата #%d успешно обновлена."
+msgstr "Вы успешно подписались."
 
 #: templates/opt-in.php:39
 msgid "Subscribe"
-msgstr ""
+msgstr "Подписаться"
 
 #: templates/register.php:56
 msgid "Register a new affiliate account"
@@ -6406,10 +6306,9 @@ msgid "URL"
 msgstr "Ссылка"
 
 #: includes/admin/overview/metaboxes/class-metabox-overview-highest-converting-urls.php:58
-#, fuzzy
 msgctxt "Conversions column table header"
 msgid "Conversions"
-msgstr "Конверсия"
+msgstr "Конверсии"
 
 #: includes/admin/overview/metaboxes/class-metabox-overview-most-valuable.php:74
 #: includes/admin/overview/metaboxes/class-metabox-overview-recent-referral-visits.php:66

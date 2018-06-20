@@ -230,7 +230,7 @@ class AffWP_Referrals_Table extends List_Table {
 
 			case 'description' :
 				$value       = $referral ? wp_trim_words( $referral->description, 10 ) : '—';
-				$description = $referral ? $$referral->description : '—';
+				$description = $referral ? $referral->description : '—';
 
 				/**
 				 * Filters the referral description column data in the referrals list table.

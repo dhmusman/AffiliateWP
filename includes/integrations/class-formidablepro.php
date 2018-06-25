@@ -72,7 +72,7 @@ class Affiliate_WP_Formidable_Pro extends Affiliate_WP_Base {
 				content: "\e000";
 			}
 		</style>
-		<h2><span class="icon-affiliatewp"></span><?php _e( ' AffiliateWP', 'affiliate-wp' ); ?></h2>
+		<h2><span class="icon-affiliatewp"></span> <?php _e( 'AffiliateWP', 'affiliate-wp' ); ?></h2>
 
 		<table class="form-table">
 			<tr>

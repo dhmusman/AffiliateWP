@@ -637,6 +637,10 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			}
 		}
 
+		// Select valid referrals only
+		$where .= empty( $where ) ? "WHERE " : "AND ";
+		$where .= "`$this->primary_key` > 0";
+
 		$orderby = array_key_exists( $args['orderby'], $this->get_columns() ) ? $args['orderby'] : $this->primary_key;
 
 		// Non-column orderby exception;

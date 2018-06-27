@@ -225,11 +225,12 @@ class AffWP_Referrals_Table extends List_Table {
 		switch( $column_name ) {
 
 			case 'date' :
-				$value = $referral->date_i18n();
+				$value = $referral ? $referral->date_i18n() : '—';
 				break;
 
 			case 'description' :
-				$value = wp_trim_words( $referral->description, 10 );
+				$value       = $referral ? wp_trim_words( $referral->description, 10 ) : '—';
+				$description = $referral ? $referral->description : '—';
 
 				/**
 				 * Filters the referral description column data in the referrals list table.
@@ -237,22 +238,24 @@ class AffWP_Referrals_Table extends List_Table {
 				 * @param string $value       Data shown in the Description column.
 				 * @param array  $description The referral description.
 				 */
-				$value = (string) apply_filters( 'affwp_referral_description_column', $value, $referral->description );
+				$value = (string) apply_filters( 'affwp_referral_description_column', $value, $description );
 				break;
 
 			case 'type' :
+				$value = $referral ? $referral->type() : '—';
+				$type  = $referral ? $referral->type : '—';
 
 				/**
 				 * Filters the referral type column data in the referrals list table.
 				 *
-				 * @param string $value       Data shown in the type column.
-				 * @param array  $type The referral type.
+				 * @param string $value Data shown in the type column.
+				 * @param array  $type  The referral type.
 				 */
-				$value = (string) apply_filters( 'affwp_referral_type_column', $referral->type(), $referral->type );
+				$value = (string) apply_filters( 'affwp_referral_type_column', $value, $type );
 				break;
 
 			default:
-				$value = isset( $referral->$column_name ) ? $referral->$column_name : '';
+				$value = isset( $referral->$column_name ) ? $referral->$column_name : '—';
 				break;
 		}
 
@@ -280,6 +283,10 @@ class AffWP_Referrals_Table extends List_Table {
 	 * @return string Displays a checkbox
 	 */
 	public function column_cb( $referral ) {
+		if ( ! $referral ) {
+			return '';
+		}
+
 		return '<input type="checkbox" name="referral_id[]" value="' . absint( $referral->referral_id ) . '" />';
 	}
 
@@ -293,6 +300,10 @@ class AffWP_Referrals_Table extends List_Table {
 	 * @return string Displays the referral amount
 	 */
 	public function column_amount( $referral ) {
+		if ( ! $referral ) {
+			return affwp_currency_filter( affwp_format_amount( 0.00 ) );
+		}
+
 		$value = affwp_currency_filter( affwp_format_amount( $referral->amount ) );
 
 		/**
@@ -314,6 +325,10 @@ class AffWP_Referrals_Table extends List_Table {
 	 * @return string Displays the referral status
 	 */
 	public function column_status( $referral ) {
+		if ( ! $referral ) {
+			return '—';
+		}
+
 		$value ='<span class="affwp-status ' . $referral->status . '"><i></i>' . affwp_get_referral_status_label( $referral ) . '</span>';
 
 		/**
@@ -335,6 +350,9 @@ class AffWP_Referrals_Table extends List_Table {
 	 * @return string The affiliate
 	 */
 	public function column_affiliate( $referral ) {
+		if ( ! $referral ) {
+			return '—';
+		}
 
 		$value = affwp_admin_link(
 			'referrals',
@@ -372,6 +390,9 @@ class AffWP_Referrals_Table extends List_Table {
 	 * @return string The reference.
 	 */
 	public function column_reference( $referral ) {
+		if ( ! $referral ) {
+			return '—';
+		}
 
 		/**
 		 * Filters the referral reference column value in the referrals list table.
@@ -400,6 +421,9 @@ class AffWP_Referrals_Table extends List_Table {
 	 * @return string The actions HTML.
 	 */
 	public function column_actions( $referral ) {
+		if ( ! $referral ) {
+			return '—';
+		}
 
 		$row_actions = array();
 

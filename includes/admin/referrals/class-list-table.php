@@ -165,6 +165,7 @@ class AffWP_Referrals_Table extends List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'          => '<input type="checkbox" />',
+			'referral_id' => __( 'Referral ID', 'affiliate-wp' ),
 			'amount'      => __( 'Amount', 'affiliate-wp' ),
 			'affiliate'   => __( 'Affiliate', 'affiliate-wp' ),
 			'reference'   => __( 'Reference', 'affiliate-wp' ),
@@ -194,11 +195,12 @@ class AffWP_Referrals_Table extends List_Table {
 	 */
 	public function get_sortable_columns() {
 		$columns = array(
-			'amount'    => array( 'amount', false ),
-			'affiliate' => array( 'affiliate_id', false ),
-			'type'      => array( 'type', false ),
-			'date'      => array( 'date', false ),
-			'status'    => array( 'status', false ),
+			'referral_id' => array( 'referral_id', false ),
+			'amount'      => array( 'amount', false ),
+			'affiliate'   => array( 'affiliate_id', false ),
+			'type'        => array( 'type', false ),
+			'date'        => array( 'date', false ),
+			'status'      => array( 'status', false ),
 		);
 
 		/**

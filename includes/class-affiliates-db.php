@@ -270,6 +270,10 @@ class Affiliate_WP_DB_Affiliates extends Affiliate_WP_DB {
 			$where = $this->prepare_date_query( $where, $args['date'], 'date_registered' );
 		}
 
+		// Select valid affiliates only
+		$where .= empty( $where ) ? "WHERE " : "AND ";
+		$where .= "`$this->primary_key` > 0";
+
 		if ( 'DESC' === strtoupper( $args['order'] ) ) {
 			$order = 'DESC';
 		} else {

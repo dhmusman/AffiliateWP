@@ -333,6 +333,10 @@ class Affiliate_WP_Visits_DB extends Affiliate_WP_DB {
 			}
 		}
 
+		// Select valid visits only
+		$where .= empty( $where ) ? "WHERE " : "AND ";
+		$where .= "`$this->primary_key` > 0";
+
 		if ( 'DESC' === strtoupper( $args['order'] ) ) {
 			$order = 'DESC';
 		} else {

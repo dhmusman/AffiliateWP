@@ -130,14 +130,23 @@ class Opt_In {
 
 				if( affiliate_wp()->tracking->was_referred() ) {
 
+					$affiliate_id = affiliate_wp()->tracking->get_affiliate_id();
+
 					$referral_args = array(
 						'description'  => $data['affwp_first_name'] . ' ' . $data['affwp_last_name'],
 						'amount'       => affiliate_wp()->settings->get( 'opt_in_referral_amount', 0.00 ),
-						'affiliate_id' => affiliate_wp()->tracking->get_affiliate_id(),
+						'affiliate_id' => $affiliate_id,
 						'type'         => 'opt-in',
 						'visit_id'     => affiliate_wp()->tracking->get_visit_id(),
 						'reference'    => $data['affwp_email'],
-						'status'       => affiliate_wp()->settings->get( 'opt_in_referral_status', 'pending' )
+						'status'       => affiliate_wp()->settings->get( 'opt_in_referral_status', 'pending' ),
+						'customer'     => array(
+							'first_name'   => $data['affwp_first_name'],
+							'last_name'    => $data['affwp_last_name'],
+							'email'        => $data['affwp_email'],
+							'ip'           => affiliate_wp()->tracking->get_ip(),
+							'affiliate_id' => $affiliate_id
+						),
 					);
 
 					$referral_id = affiliate_wp()->referrals->add( $referral_args );

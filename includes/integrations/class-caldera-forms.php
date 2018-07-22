@@ -152,6 +152,15 @@ class Affiliate_WP_Caldera_Forms extends Affiliate_WP_Base {
 		// get customer email
 		$this->email = $this->get_field_value( 'email', $form );
 
+		// Only one referral can be created per referred customer.
+		if ( $this->is_referral_restricted( $this->email ) ) {
+
+			$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+			return false;
+
+		}
+
 		// Customers cannot refer themselves
 		if ( $this->is_affiliate_email( $this->email, $affiliate_id ) ) {
 

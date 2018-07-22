@@ -106,6 +106,15 @@ class Affiliate_WP_Exchange extends Affiliate_WP_Base {
 			$guest_checkout_email = it_exchange_get_transaction_customer_email( $transaction_id );
 			$this->email                = isset( $guest_checkout_email ) ? $guest_checkout_email : $this->transaction->shipping_address['email'];
 
+			// Only one referral can be created per referred customer.
+			if ( $this->is_referral_restricted( $this->email ) ) {
+
+				$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+				return false;
+
+			}
+
 			if ( $this->is_affiliate_email( $this->email, $affiliate_id ) ) {
 
 				$this->log( 'Referral not created because affiliate\'s own account was used.' );

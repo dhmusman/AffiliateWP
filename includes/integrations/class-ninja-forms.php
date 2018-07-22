@@ -48,6 +48,15 @@ class Affiliate_WP_Ninja_Forms extends Affiliate_WP_Base {
 			return;
 		}
 
+		// Only one referral can be created per referred customer.
+		if ( $this->is_referral_restricted( $customer_email ) ) {
+
+			$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+			return false;
+
+		}
+
 		// Customers cannot refer themselves
 		if ( $this->is_affiliate_email( $customer_email ) ) {
 
@@ -207,6 +216,15 @@ class Affiliate_WP_Ninja_Forms extends Affiliate_WP_Base {
 
 		if ( ! $ninja_forms_processing->get_form_setting( 'affwp_allow_referrals' ) ) {
 			return;
+		}
+
+		// Only one referral can be created per referred customer.
+		if ( $this->is_referral_restricted( $this->deprecated_get_submitted_email() ) ) {
+
+			$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+			return false;
+
 		}
 
 		// Customers cannot refer themselves

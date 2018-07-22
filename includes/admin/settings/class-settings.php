@@ -538,6 +538,11 @@ class Affiliate_WP_Settings {
 						'step' => '0.01',
 						'std' => '20'
 					),
+					'restrict_referral' => array(
+						'name' => __( 'Restrict Referral', 'affiliate-wp' ),
+						'desc' => __( 'Restrict referral to only one per customer.', 'affiliate-wp' ),
+						'type' => 'checkbox'
+					),
 					'exclude_shipping' => array(
 						'name' => __( 'Exclude Shipping', 'affiliate-wp' ),
 						'desc' => __( 'Exclude shipping costs from referral calculations.', 'affiliate-wp' ),

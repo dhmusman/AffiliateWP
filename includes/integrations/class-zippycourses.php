@@ -167,6 +167,15 @@ class Affiliate_WP_ZippyCourses extends Affiliate_WP_Base {
 
 				$this->email = $customer->getEmail();
 
+				// Only one referral can be created per referred customer.
+				if ( $this->is_referral_restricted( $this->email ) ) {
+
+					$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+					return false;
+
+				}
+
 				if ( $customer === null || $this->is_affiliate_email( $this->email ) ) {
    
 					$this->log( 'Referral not created because affiliate\'s own account was used.' );

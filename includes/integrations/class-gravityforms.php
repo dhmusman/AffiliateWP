@@ -70,6 +70,16 @@ class Affiliate_WP_Gravity_Forms extends Affiliate_WP_Base {
 		// Block referral if any of the affiliate's emails have been submitted
 		if ( $emails ) {
 			foreach ( $emails as $customer_email ) {
+
+				// Only one referral can be created per referred customer.
+				if ( $this->is_referral_restricted( $customer_email ) ) {
+
+					$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+					return false;
+
+				}
+
 				if ( $this->is_affiliate_email( $customer_email, $this->affiliate_id ) ) {
 
 					$this->log( 'Referral not created because affiliate\'s own account was used.' );

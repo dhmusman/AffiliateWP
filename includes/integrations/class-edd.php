@@ -63,6 +63,15 @@ class Affiliate_WP_EDD extends Affiliate_WP_Base {
 			// get customer email
 			$customer_email = edd_get_payment_user_email( $payment_id );
 
+			// Only one referral can be created per referred customer.
+			if ( $this->is_referral_restricted( $customer_email ) ) {
+
+				$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+				return false;
+
+			}
+
 			// Customers cannot refer themselves
 			if ( $this->is_affiliate_email( $customer_email, $affiliate_id ) ) {
 

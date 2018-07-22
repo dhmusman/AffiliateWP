@@ -207,10 +207,19 @@ class Affiliate_WP_PMS extends Affiliate_WP_Base {
 
         if ( $this->was_referred() && ! $affiliate_discount ) {
 
+	        // Only one referral can be created per referred customer.
+	        if ( $this->is_referral_restricted( $payment_data['user_data']['user_email'] ) ) {
+
+		        $this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+		        return false;
+
+	        }
+
             /**
              * Check to see if the subscriber is also an affiliate. Return if true.
              */
-            if ( $this->is_affiliate_email( $payment_data['user_data']['user_id'] ) ) {
+            if ( $this->is_affiliate_email( $payment_data['user_data']['user_email'], $this->affiliate_id ) ) {
 
 				$this->log( 'PMS: Referral not created because affiliate\'s own account was used.' );
 

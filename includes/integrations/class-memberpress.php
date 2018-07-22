@@ -60,6 +60,15 @@ class Affiliate_WP_MemberPress extends Affiliate_WP_Base {
 
 			$user = get_userdata( $txn->user_id );
 
+			// Only one referral can be created per referred customer.
+			if ( ! empty( $user->user_email ) && $this->is_referral_restricted( $user->user_email ) ) {
+
+				$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+				return false;
+
+			}
+
 			// Customers cannot refer themselves
 			if ( ! empty( $user->user_email ) && $this->is_affiliate_email( $user->user_email ) ) {
 

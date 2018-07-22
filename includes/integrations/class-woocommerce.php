@@ -111,6 +111,15 @@ class Affiliate_WP_WooCommerce extends Affiliate_WP_Base {
 				$this->email = $this->order->billing_email;
 			}
 
+			// Only one referral can be created per referred customer.
+			if ( $this->is_referral_restricted( $this->email ) ) {
+
+				$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
+
+				return false;
+
+			}
+
 			// Customers cannot refer themselves
 			if ( $this->is_affiliate_email( $this->email, $affiliate_id ) ) {
 

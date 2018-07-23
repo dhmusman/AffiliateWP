@@ -81,7 +81,7 @@ class Affiliate_WP_PMP extends Affiliate_WP_Base {
 			$user = get_userdata( $order->user_id );
 
 			// Only one referral can be created per referred customer.
-			if ( $user instanceof WP_User && $this->is_referral_restricted( $user->user_email ) ) {
+			if ( $user instanceof WP_User && $this->is_referral_limited( $user->user_email ) ) {
 
 				$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
 

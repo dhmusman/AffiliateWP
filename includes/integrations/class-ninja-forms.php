@@ -49,7 +49,7 @@ class Affiliate_WP_Ninja_Forms extends Affiliate_WP_Base {
 		}
 
 		// Only one referral can be created per referred customer.
-		if ( $this->is_referral_restricted( $customer_email ) ) {
+		if ( $this->is_referral_limited( $customer_email ) ) {
 
 			$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
 
@@ -219,7 +219,7 @@ class Affiliate_WP_Ninja_Forms extends Affiliate_WP_Base {
 		}
 
 		// Only one referral can be created per referred customer.
-		if ( $this->is_referral_restricted( $this->deprecated_get_submitted_email() ) ) {
+		if ( $this->is_referral_limited( $this->deprecated_get_submitted_email() ) ) {
 
 			$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
 

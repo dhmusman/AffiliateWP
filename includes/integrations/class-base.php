@@ -491,10 +491,10 @@ abstract class Affiliate_WP_Base {
 	}
 
 	/**
-	 * Determine if referrals should be restricted to one per referred customer based on the passed email.
+	 * Determine if referrals should be limited to one per referred customer based on the passed email.
 	 *
 	 * Checks a given email address to see if the customer exists
-	 * to restrict referrals to one per referred customer.
+	 * to limit referrals to one per referred customer.
 	 *
 	 * @access public
 	 * @since  2.3
@@ -503,11 +503,11 @@ abstract class Affiliate_WP_Base {
 	 *
 	 * @return bool
 	 */
-	public function is_referral_restricted( $email ) {
+	public function is_referral_limited( $email ) {
 
 		$return = false;
 
-		if ( affiliate_wp()->settings->get( 'restrict_referral' ) ) {
+		if ( affiliate_wp()->settings->get( 'limit_referrals' ) ) {
 
 			$customer = affwp_get_customer( $email );
 
@@ -519,14 +519,14 @@ abstract class Affiliate_WP_Base {
 		}
 
 		/**
-		 * Filters whether to restrict referral creation to one per referred customer.
+		 * Filters whether to limit referral creation to one per referred customer.
 		 *
 		 * @since 2.3
 		 *
-		 * @param bool   $return Whether to restrict referral creation or not.
+		 * @param bool   $return Whether to limit referral creation or not.
 		 * @param string $email  The customer email address being checked.
 		 */
-		return (bool) apply_filters( 'affwp_referral_restricted', $return, $email );
+		return (bool) apply_filters( 'affwp_referral_limited', $return, $email );
 	}
 
 	/**

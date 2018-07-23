@@ -538,9 +538,9 @@ class Affiliate_WP_Settings {
 						'step' => '0.01',
 						'std' => '20'
 					),
-					'restrict_referral' => array(
-						'name' => __( 'Restrict Referral', 'affiliate-wp' ),
-						'desc' => __( 'Restrict referral to only one per customer.', 'affiliate-wp' ),
+					'limit_referrals' => array(
+						'name' => __( 'Limit Referrals', 'affiliate-wp' ),
+						'desc' => __( 'Limit referrals to one per customer.', 'affiliate-wp' ),
 						'type' => 'checkbox'
 					),
 					'exclude_shipping' => array(

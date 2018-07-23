@@ -50,7 +50,7 @@ class Affiliate_WP_Give extends Affiliate_WP_Base {
 		$customer_email = give_get_payment_user_email( $payment_id );
 
 		// Only one referral can be created per referred customer.
-		if ( $this->is_referral_restricted( $customer_email ) ) {
+		if ( $this->is_referral_limited( $customer_email ) ) {
 
 			$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
 

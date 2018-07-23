@@ -210,7 +210,7 @@ class Affiliate_WP_OptimizeMember extends Affiliate_WP_Base {
 			$customer_email = $user->user_email;
 
 			// Only one referral can be created per referred customer.
-			if ( $this->is_referral_restricted( $customer_email ) ) {
+			if ( $this->is_referral_limited( $customer_email ) ) {
 
 				$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
 

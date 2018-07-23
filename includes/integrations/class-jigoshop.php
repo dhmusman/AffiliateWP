@@ -66,7 +66,7 @@ class Affiliate_WP_Jigoshop extends Affiliate_WP_Base {
 			$this->order = apply_filters( 'affwp_get_jigoshop_order', new jigoshop_order( $order_id ) ); // Fetch order
 
 			// Only one referral can be created per referred customer.
-			if ( $this->is_referral_restricted( $this->order->billing_email ) ) {
+			if ( $this->is_referral_limited( $this->order->billing_email ) ) {
 
 				$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
 

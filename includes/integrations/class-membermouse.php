@@ -27,7 +27,7 @@ class Affiliate_WP_Membermouse extends Affiliate_WP_Base {
 			}
 
 			// Only one referral can be created per referred customer.
-			if ( $this->is_referral_restricted( $member_data['email'] ) ) {
+			if ( $this->is_referral_limited( $member_data['email'] ) ) {
 
 				$this->log( __( 'Referral not created because only one referral can be created per referred customer.', 'affiliate-wp' ) );
 

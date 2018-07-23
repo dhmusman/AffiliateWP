@@ -341,6 +341,43 @@ class Affiliate_WP_PMS extends Affiliate_WP_Base {
 
     }
 
+	/**
+	 * Retrieves the customer details for a payment.
+	 *
+	 * @since 2.2.7
+	 *
+	 * @param int $payment_id The ID of the payment to retrieve customer details for.
+	 * @return array An array of the customer details
+	 */
+	public function get_customer( $payment_id = 0 ) {
+
+		$customer = array();
+
+		if ( function_exists( 'pms_get_payment' ) ) {
+
+			$payment = pms_get_payment( $payment_id );
+
+			if ( $payment->user_id ) {
+
+				$user = get_userdata( $payment->user_id );
+
+				if ( $user ) {
+
+					$customer['user_id']    = $payment->user_id;
+					$customer['email']      = $user->user_email;
+					$customer['first_name'] = $user->first_name;
+					$customer['last_name']  = $user->last_name;
+					$customer['ip']         = $payment->ip_address;
+
+				}
+
+			}
+
+		}
+
+		return $customer;
+	}
+
 }
 
 if ( class_exists( 'Paid_Member_Subscriptions' ) ) {

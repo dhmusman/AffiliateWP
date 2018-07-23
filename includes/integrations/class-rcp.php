@@ -186,8 +186,8 @@ class Affiliate_WP_RCP extends Affiliate_WP_Base {
 				$user = get_userdata( $user_id );
 
 				$customer = array(
-					'first_name'   => $user ? $user->last_name : '',
-					'last_name'    => $user ? $user->first_name : '',
+					'first_name'   => $user ? $user->first_name : '',
+					'last_name'    => $user ? $user->last_name : '',
 					'email'        => $user ? $user->user_email : '',
 					'user_id'      => $user_id,
 					'affiliate_id' => $this->affiliate_id
@@ -200,8 +200,8 @@ class Affiliate_WP_RCP extends Affiliate_WP_Base {
 		if( empty( $customer ) ) {
 
 			$customer = array(
-				'first_name'   => is_user_logged_in() ? wp_get_current_user()->last_name : '',
-				'last_name'    => is_user_logged_in() ? wp_get_current_user()->first_name : '',
+				'first_name'   => is_user_logged_in() ? wp_get_current_user()->first_name : '',
+				'last_name'    => is_user_logged_in() ? wp_get_current_user()->last_name : '',
 				'email'        => is_user_logged_in() ? wp_get_current_user()->user_email : '',
 				'user_id'      => get_current_user_id(),
 				'ip'           => affiliate_wp()->tracking->get_ip(),

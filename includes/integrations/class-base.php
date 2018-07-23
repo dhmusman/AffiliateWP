@@ -513,9 +513,16 @@ abstract class Affiliate_WP_Base {
 
 			if ( $customer ) {
 
-				$return = true;
+				$referral = affiliate_wp()->referrals->get_by( 'customer_id', $customer->customer_id );
+
+				if ( $referral ) {
+
+					return true;
+
+				}
 
 			}
+
 		}
 
 		/**

@@ -988,6 +988,17 @@ class Affiliate_WP_Referrals_DB extends Affiliate_WP_DB  {
 			// Update the customer record
 			$args['customer_id'] = $customer_id;
 
+			if ( ! $customer->user_id ) {
+
+				$user = get_user_by( 'email', $customer->email );
+
+				if ( $user ) {
+
+					$args['user_id'] = $user->ID;
+
+				}
+			}
+
 			affwp_update_customer( $args );
 
 		} else {
